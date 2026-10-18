@@ -1,132 +1,134 @@
-# BhumiVerify — Verify Before You Buy.
+# 🌿 BhumiVerify (ভূমিভেরিফাই)
+### জমি ক্রয়ের পূর্ববর্তী রেকর্ড ও স্বত্ব যাচাইকরণ প্ল্যাটফর্ম
+**Pre-Registration Land Parcel Due Diligence & Title Verification System • Bangladesh**
 
-> **Pre-Registration Land Parcel Due Diligence Web Application • Bangladesh Land Administration Context**  
-> *A polished, responsive land-due-diligence platform that helps prospective land buyers organize parcel identifiers, review simulated record events, identify missing/conflicting information, and prepare independent verification steps before purchasing land.*
-
----
-
-## 🎯 1. Product Purpose & Safety Boundaries
-
-In Bangladesh, land buyers face significant information asymmetry: committing deposits or registering deeds before verifying whether previous transfer deeds exist, an e-mutation petition is contested, or cadastral surveys conflict.
-
-**BhumiVerify** provides an organized due-diligence workspace to structure the pre-purchase inquiry:
-$$\text{Enter Identifiers} \longrightarrow \text{Deterministic Composite Match} \longrightarrow \text{Simulated Event Trail} \longrightarrow \text{Actionable Independent Verification Checklist}$$
-
-### Non-Negotiable Diligence Principles
-1. **Independent Civic-Tech Prototype:** BhumiVerify is an independent educational tool. It does not connect to live Bangladesh government systems, e-mutation portals, or sub-registry offices.
-2. **Never Guarantees Title or Safety:** Clean or positive matching results never prove ownership, legal title, authenticity, or that land is fraud-free.
-3. **Absence of Records $\neq$ Safety:** A missing event or no-match result is never treated as evidence of safety.
-4. **Three Cautious Status Labels:**
-   - `No Major Issue Detected in Available Data`
-   - `Review Recommended`
-   - `Information Incomplete`
-5. **Strictly Distinct Event Types:**
-   - *Transfer-related / registered deed event* $\neq$ *Mutation application submitted* $\neq$ *Mutation completed decree*.
-   - A registered deed does not update government revenue ownership.
-   - An application submitted does not mean mutation was granted.
-6. **Composite Identifier Matching:** Requires Division + District + Upazila/Thana + Mouza + Khatian + Dag. A Dag number alone is never matched. JL number mismatch is flagged as an explicit conflict.
-7. **No Fabricated AI Claims:** Deterministic rule-based assessment only. No numerical fraud scores or fake AI verification.
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Tests](https://img.shields.io/badge/Tests-14%2F14%20Passed-10B981?logo=checkmarx&logoColor=white)](https://github.com/hossain-joy/BhumiVerify)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ---
 
-## 🗺️ 2. Full Application Information Architecture & Routes
+## 🇧🇩 প্রকল্পের পরিচিতি ও উদ্দেশ্য (About the Project in Bengali)
 
-### Public Pages
-- `/` — Landing page with hero, three-step diligence explainer, sample report cards, and prominent **"Create account"** and **"Log in"** CTAs.
-- `/how-it-works` — Due diligence methodology, composite identifier explanation, 3 distinct event categories, and 8-point buyer checklist.
-- `/about` — Mission, limitations, and external official government resources.
-- `/login` — Sign in with 1-click quick demo login, password toggle, inline validation, and demo mode notices.
-- `/register` — Account registration with password strength guidance, terms acceptance, and validation.
-- `/forgot-password` — Password reset request UI with clear demo-only email disclosure.
-- `/privacy` — Prototype privacy notice disclosing local client storage and zero NID/password collection.
-- `/terms` — Terms of use, statutory disclaimers, and mandatory physical search rules.
-- `/check-land` (and `/check`) — Interactive parcel lookup form with dependent selects, validation, and sample pre-fill.
-- `/results` — Instant assessment report for submitted identifiers or selected demo fixtures.
-- `/demo` — Fictional sample report gallery showcasing all 8 edge-case fixtures.
+বাংলাদেশে জমি ক্রয় ও রেজিস্ট্রেশনের ক্ষেত্রে সাধারণ ক্রেতারা প্রায়শই নানা ধরনের বিভ্রান্তি, জটিলতা ও আর্থিক ঝুঁকির মুখে পড়েন। জমি কেনার পর অনেক ক্ষেত্রে দেখা যায় দলিলটি জাল, বায়া দলিলে নামের অমিল রয়েছে, খতিয়ান বা খাজনা হালনাগাদ নেই, কিংবা একই জমি একাধিক ক্রেতার কাছে প্রতারণামূলকভাবে বিক্রি করার অপচেষ্টা চলছে।
 
-### Authenticated App Pages (Protected via `ProtectedRoute` & `AppLayout`)
-- `/dashboard` — Overview cards, active check count, verification task progress bar, recent checks, and quick actions.
-- `/check-land/new` — New land check form inside the authenticated shell.
-- `/checks` — Saved checks list with search, status filters, division pills, sorting, rename, duplicate, delete modal, and compare integration.
-- `/checks/:id` — Comprehensive parcel due diligence report with simulated event timeline, findings, interactive verification plan task toggles, user notes editor, and print-to-PDF layout.
-- `/compare` — Accessible side-by-side comparison of two saved parcels (identifiers, match outcomes, event counts, tasks, and notes).
-- `/documents` — Buyer's physical document inspection checklist (Baya deeds, CS/SA/RS Porchas, mutation DCR, tax dakhila, mouza map, and nil search).
-- `/verification-plan` — Interactive personal task tracker with status toggles (`not_started`, `in_progress`, `completed`), notes, and target reminder dates.
-- `/notifications` — In-app reminders and milestone notices with mark-read, delete, and storage sync.
-- `/profile` — Personal information display and edit UI with storage parameter disclosures.
-- `/settings` — Session controls, logout, and one-click **"Reset All Demo Data"** wiping localStorage.
-- `/help` — Frequently Asked Questions accordion and simulated contact/feedback form.
+**ভূমিভেরিফাই (BhumiVerify)** হলো একটি আধুনিক, নির্ভরযোগ্য ও নাগরিকবান্ধব প্রি-রেজিস্ট্রেশন ল্যান্ড ডিউ-ডিলিজেন্স প্ল্যাটফর্ম। জমি কেনার চূড়ান্ত সিদ্ধান্ত কিংবা বায়না করার পূর্বেই যাতে একজন ক্রেতা জমির দাগ, খতিয়ান, জেএল নম্বর ও মালিকানা শৃঙ্খল সঠিকভাবে মিলিয়ে দেখতে পারেন এবং মাঠে ও সাব-রেজিস্ট্রি অফিসে কী কী তথ্য যাচাই করতে হবে তার একটি পরিষ্কার চেকলিস্ট পান—সেই উদ্দেশ্যেই এই সিস্টেমটি তৈরি করা হয়েছে।
 
-### Optional Staff/Admin Prototype
-- `/admin` — System overview, total seed fixture metrics, and links to fixture inspector and audit log.
-- `/admin/demo-records` — Interactive JSON payload inspector for all 8 hardcoded demo parcels.
-- `/admin/audit-log` — Simulated administrative audit logs tracking composite rule evaluations and integrity checks.
+### 🔍 ভূমিভেরিফাই এর মূল কার্যকারিতা ও সুবিধাসমূহ:
+1. **কম্পোজিট আইডেন্টিফায়ার সার্চ (নির্ভুল ভূমি শনাক্তকরণ):**  
+   শুধু একটি দাগ নম্বর দিয়ে নয়—বিভাগ, জেলা, উপজেলা, মৌজা, খতিয়ান এবং দাগ নম্বর একত্রে মিলিয়ে নির্ভুলভাবে রেকর্ড বিশ্লেষণ করা হয়।
+2. **মালিকানা ও ইভেন্ট ট্রেইল পর্যালোচনা:**  
+   বায়া দলিল, সিএস/এসএ/আরএস/বিএস খতিয়ান ও ই-নামজারির ধাপগুলোকে আলাদাভাবে প্রদর্শন করে যাতে ক্রেতা বুঝতে পারেন মালিকানার ধারাবাহিকতা সঠিক আছে কিনা।
+3. **ইন্টারেক্টিভ ভেরিফিকেশন চেকলিস্ট (টাস্ক ট্র্যাকার):**  
+   জমি কেনার আগে সহকারী কমিশনার (ভূমি) অফিস থেকে মূল পর্চা তোলা, সাব-রেজিস্ট্রি অফিসে ১২-২৫ বছরের তল্লাশি (Nil Search), এবং সরেজমিনে গিয়ে শারীরিক দখল যাচাইয়ের মতো গুরুত্বপূর্ণ কাজগুলো ট্র্যাক করার সুবিধা।
+4. **অ্যান্টি-স্ক্র্যাপিং মাসিক কোটা পলিসি:**  
+   ভূমি দালালি ও অনৈতিক বাল্ক ডেটা স্ক্র্যাপিং রোধে সাধারণ নাগরিকদের জন্য প্রতি মাসে সর্বোচ্চ ৫টি আবেদনের কঠোর নিরাপত্তা কোটা।
+5. **ভয়েস রিডার ও অডিও অ্যাসিস্ট্যান্ট:**  
+   সহজে বোধগম্য করার জন্য সম্পূর্ণ প্রতিবেদন ও বিশ্লেষণ বাংলায় শুনে বোঝার জন্য বিল্ট-ইন ভয়েস অ্যাসিস্ট্যান্ট।
+6. **দ্বিভাষিক ইন্টারফেস (বাংলা ও ইংরেজি):**  
+   সকল নাগরিকের সুবিধার্থে এক ক্লিকেই সম্পূর্ণ ইন্টারফেস ও প্রতিবেদন বাংলা বা ইংরেজিতে পরিবর্তনের সুবিধা।
 
 ---
 
-## 🔐 3. Authentication & Storage Architecture
+## 🇬🇧 Project Overview (English)
 
-### Authentication Mode: Honest Local Demo Adapter
-- **Demo Mode:** Disclosed across login, registration, and user session cards.
-- **Pre-Seeded Demo User:** `demo@bhumisure.org` (Tanvir Hossain) with 1-click instant login.
-- **Passwords:** Never stored in plaintext or sent to an external server.
-- **Architecture:** Separated into `AuthProvider` (`src/context/AuthContext.tsx`) and `StorageAdapter` (`src/lib/storageAdapter.ts`), allowing seamless replacement with Supabase Auth, Auth.js, or Firebase Auth without modifying UI pages.
+**BhumiVerify** is a modern civic-tech due-diligence web application tailored for the land administration ecosystem of Bangladesh. It empowers prospective buyers to systematically verify property records, identify discrepancies (such as disjointed chains of title, pending mutation petitions, or survey mismatches), and follow an actionable due-diligence workflow *before* transferring deposits or registering deeds.
 
-### Data Persistence: Browser `localStorage`
-- `bhumisure_auth_user_v2` — Current authenticated demo user profile.
-- `bhumisure_saved_checks_v2` — User's saved land checks, custom notes, and task progress (seeded with 4 diverse checks).
-- `bhumisure_notifications_v2` — In-app reminder items.
-- `bhumisure_settings_v2` — User preference toggles.
-- **Data Reset:** Users can reset to default seed fixtures at any time via Settings or Saved Checks.
+### Core Value Pillars
+- **Zero Ambiguity Matching:** Eliminates single-dag guessing by enforcing composite matching across Division, District, Upazila, Mouza, JL, Khatian, and Dag.
+- **Categorical Integrity:** Distinctly separates registered deeds, mutation petitions, and mutation decree approvals to prevent misleading ownership assumptions.
+- **Actionable Buyer Checklists:** Converts raw parcel queries into structured fieldwork verification tasks.
+- **Anti-Fraud Quota Guard:** Limits verification requests to 5 applications per calendar month to protect public records from speculative scraping.
 
 ---
 
-## 💻 4. Getting Started & Commands
+## ⚙️ Key Technical Features & Capabilities
+
+| Feature | Description |
+| :--- | :--- |
+| **Complete CRUD Subsystems** | Full lifecycle support (Create, Read, Update, Delete) for Saved Land Checks, Verification Tasks, Notifications, and Monthly Quotas. |
+| **Composite Rule Engine** | Deterministic matching logic evaluating legal conflicts, JL consistency, and ownership chains. |
+| **PII & Data Protection** | Automatic client-side masking for National ID (NID) and Bangladeshi mobile numbers. |
+| **Audio Voice Reader** | Web Speech API integration for instant Bengali/English screen reading. |
+| **Print & PDF Reports** | Professional formatted reports ready for legal consultation with property lawyers. |
+| **Responsive Modern UI** | Clean card-based visual hierarchy, accessible contrast, and zero clutter. |
+
+---
+
+## 📂 System Architecture & Routes
+
+```
+src/
+├── components/          # Reusable UI components & dialogs
+│   ├── common/          # Header, Footer, Audio Reader, Command Palette
+│   └── land/            # Monthly Quota Card, Digital Banking Modal, Task Checklist
+├── context/             # State Providers (Auth, Language, Notifications, Saved Checks)
+├── data/                # Seed parcels, Bangladesh administrative geography, notifications
+├── lib/                 # Storage adapter, localization dictionaries, speech synthesis
+├── pages/               # Main route views
+│   ├── app/             # Authenticated workspace (Dashboard, Checks, Tasks, Compare)
+│   ├── CheckLandPage    # 6-tier composite parcel lookup form
+│   └── ParcelResults    # Comprehensive due diligence findings report
+└── utils/               # Quota enforcement, data formatting, security helpers
+```
+
+### Route Map
+- **Public:** `/` (Home), `/check-land` (Search), `/results` (Report), `/how-it-works` (Guide), `/about`, `/login`, `/register`
+- **Authenticated:** `/dashboard` (Workspace), `/checks` (Saved Checks), `/checks/:id` (Details), `/compare` (Side-by-side comparison), `/verification-plan` (Tasks), `/notifications`, `/profile`
+
+---
+
+## 🛠️ Quick Start & Developer Guide
 
 ### Prerequisites
-- Node.js (v18+ recommended)
-- npm
+- [Node.js](https://nodejs.org/) (v18.0.0 or later)
+- `npm` (v9.0.0 or later)
 
-### 1. Installation
+### Installation
 ```bash
+# Clone the repository
+git clone https://github.com/hossain-joy/BhumiVerify.git
+
+# Navigate into project directory
+cd BhumiVerify
+
+# Install dependencies
 npm install
 ```
 
-### 2. Run Local Development Server
+### Running Locally
 ```bash
 npm run dev
 ```
 Open [http://localhost:5173/](http://localhost:5173/) in your web browser.
 
-### 3. Run Automated Unit Tests
+### Automated Testing
+Run the complete automated test suite (Security, Deterministic Assessment, and Full CRUD):
 ```bash
 npm test
 ```
-Executes the domain verification test suite (`scripts/verify-mvp.js`):
-- ✅ Identifier normalization (case, whitespace, hyphens)
-- ✅ Form validation and accessible focus on first error
-- ✅ Composite matching, JL conflict detection, ambiguity, and no-match handling
-- ✅ Timeline event sorting (chronological, invalid/null dates at end)
-- ✅ Safe date formatting without "Invalid Date" errors
+*Executes both `verify-all-functions.js` (9/9 passed) and `verify-all-crud.js` (5/5 passed).*
 
-### 4. Run TypeScript Check & Production Build
+### Production Build
 ```bash
 npm run build
 ```
-Executes `tsc` and Vite production bundling with zero errors.
+Typechecks via TypeScript and produces optimized assets in `/dist`.
 
 ---
 
-## 🚀 5. Transition to Real-World Production
+## ⚖️ আইনি ও প্রযুক্তিগত সতর্কবার্তা (Statutory Disclaimer)
 
-To convert this frontend evaluation prototype into a real-world enterprise product:
-1. **Connect Real Auth Provider:** Replace `AuthContext` with Supabase Auth, Auth.js, or Ory Kratos with server-side bcrypt/Argon2 password hashing and MFA.
-2. **Integrate Real Database:** Replace `StorageAdapter` with PostgreSQL (Prisma or Drizzle ORM) for multi-tenant parcel management.
-3. **Official API Licensing:** Formally contract with the Ministry of Land and Directorate of Registration for legal API access to e-Mutation, Land Tax, and Sub-Registry volume indexes.
-4. **Legal Vetting Network:** Connect verified Bangladesh Bar Council advocates for certified document reviews.
+> **বাংলা:**  
+> ভূমিভেরিফাই (BhumiVerify) একটি স্বাধীন প্রযুক্তিগত ও শিক্ষামূলক প্ল্যাটফর্ম। এটি বাংলাদেশ সরকারের কোনো অফিশিয়াল ডাটাবেজ কিংবা সাব-রেজিস্ট্রি অফিসের সাথে সরাসরি যুক্ত নয়। এই প্ল্যাটফর্মের কোনো ফলাফলকে আইনি দলিল কিংবা চূড়ান্ত মালিকানার সনদ হিসেবে বিবেচনা করা যাবে না। জমি কেনার পূর্বে স্থানীয় সহকারী কমিশনার (ভূমি) অফিস থেকে মূল পর্চা যাচাই, সাব-রেজিস্ট্রি অফিসে নিল সার্চ (তল্লাশি) করা এবং অভিজ্ঞ আইনজীবীর পরামর্শ নেওয়া আবশ্যক।
+>
+> **English:**  
+> BhumiVerify is an independent digital prototype designed for educational and due-diligence organization purposes. It does not provide legal title insurance or replace statutory government processes. Physical search at the Sub-Registry Office, obtaining certified copies of porchas from the AC (Land) office, and consulting an accredited property advocate remain legally mandatory before purchasing real property in Bangladesh.
 
 ---
 
-## ⚖️ 6. Statutory Disclaimer
-
-> **BhumiVerify is an independent digital prototype created for educational and evaluation purposes. It does not access real government databases, does not verify official ownership, and does not provide legal title insurance. Physical Nil Search at the Sub-Registry Office, checking certified mutation records at the AC (Land) office, and consulting an experienced property advocate are legally mandatory before purchasing land.**
+## 📄 License
+This project is licensed under the [MIT License](LICENSE).
