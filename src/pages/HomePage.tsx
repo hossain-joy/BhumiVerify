@@ -49,7 +49,7 @@ export const HomePage: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-10 pb-12 animate-fade-up max-w-4xl mx-auto">
+    <div className="space-y-10 pb-12 animate-fade-up w-full max-w-5xl xl:max-w-6xl mx-auto">
       {/* Hero Section */}
       <section className="bg-white rounded-3xl border border-slate-200 p-8 sm:p-12 shadow-2xs text-center space-y-6">
         {/* Civic Logo Pill */}

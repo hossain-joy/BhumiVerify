@@ -426,7 +426,7 @@ export const CheckLandPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 pb-16 animate-fade-up max-w-4xl mx-auto">
+    <div className="space-y-6 pb-16 animate-fade-up w-full max-w-5xl xl:max-w-6xl mx-auto">
       {/* Page Header */}
       <div className="border-b border-slate-200 pb-4 space-y-1">
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">

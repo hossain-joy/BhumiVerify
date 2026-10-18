@@ -28,7 +28,7 @@ export const AboutPage: React.FC = () => {
   const selectedDivData = BANGLADESH_GEO_DATA[activeDivision];
 
   return (
-    <div className="max-w-4xl mx-auto space-y-10 pb-16 animate-fade-up">
+    <div className="w-full max-w-6xl xl:max-w-7xl mx-auto space-y-10 pb-16 animate-fade-up">
       {/* Header */}
       <div className="border-b border-slate-200 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-2">

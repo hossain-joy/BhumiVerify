@@ -140,7 +140,7 @@ export const VerificationPlanPage: React.FC = () => {
   });
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-16 animate-fade-up">
+    <div className="w-full max-w-6xl xl:max-w-7xl mx-auto space-y-8 pb-16 animate-fade-up">
       {/* Due Diligence Workspace SubNav */}
       <DiligenceSubNav
         activeTab="plan"

@@ -356,7 +356,7 @@ export const ParcelResultsPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 pb-16 animate-fade-up max-w-4xl mx-auto">
+    <div className="space-y-8 pb-16 animate-fade-up w-full">
       {/* 0. Verified Payment & Approval Banner */}
       <div className="rounded-xl border border-emerald-300 bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 p-4 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-fade-in">
         <div className="flex items-center gap-3">

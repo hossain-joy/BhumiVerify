@@ -61,7 +61,7 @@ export const DashboardPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-up max-w-5xl mx-auto">
+    <div className="w-full space-y-6 animate-fade-up">
       {/* Welcome & Primary Actions Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-2xs">
         <div className="space-y-3">

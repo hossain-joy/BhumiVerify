@@ -220,7 +220,7 @@ export const CheckReportPage: React.FC = () => {
   const isCompared = compareIds.includes(check.id);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-16 animate-fade-up">
+    <div className="w-full space-y-8 pb-16 animate-fade-up">
       {/* Top Breadcrumb & Print/Action Bar (hidden in print) */}
       <div className="flex flex-wrap items-center justify-between gap-3 print:hidden">
         <Link

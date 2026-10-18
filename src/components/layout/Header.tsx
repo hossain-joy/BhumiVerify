@@ -132,7 +132,7 @@ export const Header: React.FC = () => {
     >
       {/* Top Civic Ribbon */}
       <div className="bg-slate-900 text-slate-300 text-[11px] py-1 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="max-w-7xl xl:max-w-[1400px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
             <img src="/logo.png" alt="গণপ্রজাতন্ত্রী বাংলাদেশ সরকার" className="w-3.5 h-3.5 rounded-full bg-white object-contain" />
             <span className="font-semibold text-slate-200">
@@ -142,70 +142,60 @@ export const Header: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-3">
           {/* 1. Left: Brand & Wordmark */}
           <Link
             to={isAuthenticated ? '/dashboard' : '/'}
-            className="flex items-center gap-2.5 sm:gap-3 group shrink-0"
+            className="flex items-center gap-3 group shrink-0"
             aria-label="BhumiVerify Home"
           >
-            <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center p-0.5 transition-transform duration-200 group-hover:scale-105 shrink-0 overflow-hidden">
+            <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center p-1 transition-transform duration-200 group-hover:scale-105 shrink-0 overflow-hidden">
               <img
                 src="/logo.png"
                 alt="ভূমি মন্ত্রণালয় / BhumiVerify"
                 className="w-full h-full object-contain"
               />
             </div>
-            <div>
+            <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
-                <span className="text-base font-extrabold tracking-tight text-slate-900 group-hover:text-gov-primary transition-colors">
+                <span className="text-base sm:text-lg font-black tracking-tight text-slate-900 group-hover:text-gov-primary transition-colors">
                   {isBn ? 'ভূমিভেরিফাই' : 'BhumiVerify'}
                 </span>
-                <span className="text-[10px] font-semibold bg-emerald-50 text-gov-primary border border-emerald-200/80 px-1.5 py-0.2 rounded hidden sm:inline-flex items-center">
-                  {isBn ? 'ভূমি মন্ত্রণালয়' : 'Ministry of Land'}
+                <span className="text-[10px] font-bold bg-emerald-100 text-gov-primary px-1.5 py-0.2 rounded hidden sm:inline-block">
+                  {isBn ? 'অনলাইন' : 'Digital'}
                 </span>
               </div>
+              <span className="text-[11px] text-slate-500 font-medium hidden sm:block -mt-0.5">
+                {isBn ? 'ভূমি প্রাক-নিবন্ধন যাচাই পোর্টাল' : 'Land Due Diligence Portal'}
+              </span>
             </div>
           </Link>
 
-          {/* 2. Center: Logical Navigation Groups (Desktop) */}
+          {/* 2. Center: Harmonious Navigation Menu (Desktop) */}
           <nav
             aria-label={isBn ? 'প্রধান মেনু' : 'Main Navigation'}
-            className="hidden lg:flex items-center gap-1.5"
+            className="hidden lg:flex items-center gap-1 xl:gap-2"
           >
             {/* Home or Dashboard */}
             <Link
               to={isAuthenticated ? '/dashboard' : '/'}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-bold transition-colors ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs xl:text-sm font-semibold transition-all ${
                 (isAuthenticated && location.pathname === '/dashboard') ||
                 (!isAuthenticated && location.pathname === '/')
-                  ? 'bg-emerald-50 text-gov-primary border border-emerald-200/80 shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                  ? 'bg-emerald-50 text-gov-primary font-bold shadow-2xs border border-emerald-200/70'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
               }`}
             >
               {isAuthenticated ? (
-                <LayoutDashboard className="w-4 h-4" />
+                <LayoutDashboard className="w-4 h-4 text-gov-primary" />
               ) : (
-                <Home className="w-4 h-4" />
+                <Home className="w-4 h-4 text-slate-500" />
               )}
-              <span>{isBn ? (isAuthenticated ? 'ড্যাশবোর্ড' : 'হোম') : (isAuthenticated ? 'Dashboard' : 'Home')}</span>
+              <span>{isBn ? (isAuthenticated ? 'ড্যাশবোর্ড' : 'মূল পাতা') : (isAuthenticated ? 'Dashboard' : 'Home')}</span>
             </Link>
 
-            {/* Check Land Primary Link */}
-            <Link
-              to="/check-land"
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-bold transition-colors ${
-                location.pathname.startsWith('/check') || location.pathname.startsWith('/results')
-                  ? 'bg-emerald-50 text-gov-primary border border-emerald-200/80 shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-              }`}
-            >
-              <Search className="w-4 h-4 text-gov-primary" />
-              <span>{isBn ? 'জমি যাচাই' : 'Check Land'}</span>
-            </Link>
-
-            {/* Section 1: My Records (When Authenticated) */}
+            {/* Section 1: Saved Records (When Authenticated) */}
             {isAuthenticated && (
               <div className="relative" ref={recordsRef}>
                 <button
@@ -215,35 +205,35 @@ export const Header: React.FC = () => {
                     setDiligenceDropdownOpen(false);
                     setResourcesDropdownOpen(false);
                   }}
-                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-bold transition-colors cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs xl:text-sm font-semibold transition-all cursor-pointer ${
                     isRecordsActive
-                      ? 'bg-emerald-50 text-gov-primary border border-emerald-200/80 shadow-2xs'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                      ? 'bg-emerald-50 text-gov-primary font-bold shadow-2xs border border-emerald-200/70'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
                   }`}
                   aria-expanded={recordsDropdownOpen}
                 >
                   <FileText className="w-4 h-4 text-slate-500" />
-                  <span>{isBn ? 'আমার রেকর্ড' : 'My Records'}</span>
+                  <span>{isBn ? 'সংরক্ষিত রেকর্ড' : 'Saved Records'}</span>
                   {totalChecks > 0 && (
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold ml-0.5">
+                    <span className="text-[11px] px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700 font-mono font-bold">
                       {isBn ? toBengaliNumerals(totalChecks) : totalChecks}
                     </span>
                   )}
-                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-0.5" />
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
                 </button>
 
                 {recordsDropdownOpen && (
                   <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 animate-scale-up">
                     <Link
                       to="/checks"
-                      className="flex items-center justify-between px-4 py-2.5 text-sm font-bold text-slate-800 hover:bg-slate-50 hover:text-gov-primary transition-colors"
+                      className="flex items-center justify-between px-4 py-2.5 text-xs xl:text-sm font-semibold text-slate-800 hover:bg-slate-50 hover:text-gov-primary transition-colors"
                     >
                       <div className="flex items-center gap-2.5">
                         <FileText className="w-4 h-4 text-gov-primary" />
-                        <span>{isBn ? 'সংরক্ষিত জমি' : 'Saved Checks'}</span>
+                        <span>{isBn ? 'সংরক্ষিত জমি তালিকা' : 'Saved Checks List'}</span>
                       </div>
                       {totalChecks > 0 && (
-                        <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
                           {isBn ? toBengaliNumerals(totalChecks) : totalChecks}
                         </span>
                       )}
@@ -251,7 +241,7 @@ export const Header: React.FC = () => {
 
                     <Link
                       to="/compare"
-                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-bold text-slate-800 hover:bg-slate-50 hover:text-gov-primary transition-colors"
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-xs xl:text-sm font-semibold text-slate-800 hover:bg-slate-50 hover:text-gov-primary transition-colors"
                     >
                       <GitCompare className="w-4 h-4 text-gov-primary" />
                       <span>{isBn ? 'প্রতিবেদন তুলনা' : 'Compare Reports'}</span>
@@ -261,7 +251,7 @@ export const Header: React.FC = () => {
               </div>
             )}
 
-            {/* Section 2: Due Diligence Hub */}
+            {/* Section 2: Diligence & Checklist */}
             <div className="relative" ref={diligenceRef}>
               <button
                 type="button"
@@ -270,32 +260,32 @@ export const Header: React.FC = () => {
                   setRecordsDropdownOpen(false);
                   setResourcesDropdownOpen(false);
                 }}
-                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-bold transition-colors cursor-pointer ${
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs xl:text-sm font-semibold transition-all cursor-pointer ${
                   isDiligenceActive
-                    ? 'bg-emerald-50 text-gov-primary border border-emerald-200/80 shadow-2xs'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                    ? 'bg-emerald-50 text-gov-primary font-bold shadow-2xs border border-emerald-200/70'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
                 }`}
                 aria-expanded={diligenceDropdownOpen}
               >
                 <CheckSquare className="w-4 h-4 text-slate-500" />
-                <span>{isBn ? 'ডিউ ডিলিজেন্স' : 'Due Diligence'}</span>
+                <span>{isBn ? 'যাচাই চেকলিস্ট' : 'Due Diligence'}</span>
                 {pendingTasks > 0 && (
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-bold ml-0.5">
+                  <span className="text-[11px] px-1.5 py-0.2 rounded-full bg-amber-50 text-amber-800 font-mono font-bold border border-amber-200">
                     {isBn ? toBengaliNumerals(pendingTasks) : pendingTasks}
                   </span>
                 )}
-                <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-0.5" />
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
               </button>
 
               {diligenceDropdownOpen && (
                 <div className="absolute top-full left-0 mt-2 w-60 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 animate-scale-up">
                   <Link
                     to="/verification-plan"
-                    className="flex items-center justify-between px-4 py-2.5 text-sm font-bold text-slate-800 hover:bg-slate-50 hover:text-gov-primary transition-colors"
+                    className="flex items-center justify-between px-4 py-2.5 text-xs xl:text-sm font-semibold text-slate-800 hover:bg-slate-50 hover:text-gov-primary transition-colors"
                   >
                     <div className="flex items-center gap-2.5">
                       <CheckSquare className="w-4 h-4 text-gov-primary" />
-                      <span>{isBn ? 'যাচাই পরিকল্পনা' : 'Verification Plan'}</span>
+                      <span>{isBn ? 'যাচাই পরিকল্পনা ট্র্যাকার' : 'Verification Plan Tracker'}</span>
                     </div>
                     {pendingTasks > 0 && (
                       <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
@@ -306,10 +296,10 @@ export const Header: React.FC = () => {
 
                   <Link
                     to="/documents"
-                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-bold text-slate-800 hover:bg-slate-50 hover:text-gov-primary transition-colors"
+                    className="flex items-center gap-2.5 px-4 py-2.5 text-xs xl:text-sm font-semibold text-slate-800 hover:bg-slate-50 hover:text-gov-primary transition-colors"
                   >
                     <FolderOpen className="w-4 h-4 text-gov-primary" />
-                    <span>{isBn ? 'দলিল চেকলিস্ট' : 'Document Checklist'}</span>
+                    <span>{isBn ? 'প্রয়োজনীয় দলিল চেকলিস্ট' : 'Document Checklist'}</span>
                   </Link>
                 </div>
               )}
@@ -324,23 +314,23 @@ export const Header: React.FC = () => {
                   setRecordsDropdownOpen(false);
                   setDiligenceDropdownOpen(false);
                 }}
-                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-bold transition-colors cursor-pointer ${
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs xl:text-sm font-semibold transition-all cursor-pointer ${
                   isResourcesActive
-                    ? 'bg-emerald-50 text-gov-primary border border-emerald-200/80 shadow-2xs'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                    ? 'bg-emerald-50 text-gov-primary font-bold shadow-2xs border border-emerald-200/70'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
                 }`}
                 aria-expanded={resourcesDropdownOpen}
               >
                 <HelpCircle className="w-4 h-4 text-slate-500" />
-                <span>{isBn ? 'সহায়িকা ও তথ্য' : 'Resources'}</span>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-0.5" />
+                <span>{isBn ? 'সহায়িকা' : 'Resources'}</span>
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
               </button>
 
               {resourcesDropdownOpen && (
                 <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 animate-scale-up">
                   <Link
                     to="/how-it-works"
-                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-gov-primary transition-colors"
+                    className="flex items-center gap-2.5 px-4 py-2.5 text-xs xl:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-gov-primary transition-colors"
                   >
                     <HelpCircle className="w-4 h-4 text-gov-primary" />
                     <span>{isBn ? 'কিভাবে কাজ করে' : 'How It Works'}</span>
@@ -348,7 +338,7 @@ export const Header: React.FC = () => {
 
                   <Link
                     to="/demo"
-                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-gov-primary transition-colors"
+                    className="flex items-center gap-2.5 px-4 py-2.5 text-xs xl:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-gov-primary transition-colors"
                   >
                     <FileSearch className="w-4 h-4 text-gov-primary" />
                     <span>{isBn ? 'প্রতিবেদন গ্যালারি' : 'Report Gallery'}</span>
@@ -356,7 +346,7 @@ export const Header: React.FC = () => {
 
                   <Link
                     to="/help"
-                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-gov-primary transition-colors"
+                    className="flex items-center gap-2.5 px-4 py-2.5 text-xs xl:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-gov-primary transition-colors"
                   >
                     <HelpCircle className="w-4 h-4 text-gov-primary" />
                     <span>{isBn ? 'প্রশ্নোত্তর ও সাহায্য' : 'FAQ & Support'}</span>
@@ -364,7 +354,7 @@ export const Header: React.FC = () => {
 
                   <Link
                     to="/about"
-                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-gov-primary transition-colors"
+                    className="flex items-center gap-2.5 px-4 py-2.5 text-xs xl:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-gov-primary transition-colors"
                   >
                     <Info className="w-4 h-4 text-gov-primary" />
                     <span>{isBn ? 'আমাদের সম্পর্কে' : 'About Platform'}</span>
@@ -374,15 +364,15 @@ export const Header: React.FC = () => {
             </div>
           </nav>
 
-          {/* 3. Right: Fast Actions, Language, Notifications & User Menu */}
+          {/* 3. Right: Primary CTA, Language, Notifications & User Menu */}
           <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-            {/* Quick Action: New Check CTA Button (Always visible on desktop) */}
+            {/* Primary Action CTA: Single, prominent Check Land button */}
             <Link
               to="/check-land"
-              className="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-gov-primary hover:bg-gov-primaryHover shadow-2xs transition-transform active:scale-95"
+              className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-white bg-gov-primary hover:bg-gov-primaryHover shadow-xs transition-transform active:scale-95"
             >
               <Search className="w-4 h-4" />
-              <span>{isBn ? 'নতুন জমি যাচাই' : 'New Check'}</span>
+              <span>{isBn ? 'জমি অনুসন্ধান' : 'Check Land'}</span>
             </Link>
 
             {/* Language Switcher */}
@@ -623,10 +613,10 @@ export const Header: React.FC = () => {
               )}
             </div>
 
-            {/* Section 2: Due Diligence */}
+            {/* Section 2: Verification Checklist & Plan */}
             <div className="space-y-1 pt-2 border-t border-slate-100">
               <span className="text-[10px] uppercase font-bold text-slate-400 px-3 tracking-wider block">
-                {isBn ? '২. ডিউ ডিলিজেন্স হাব' : '2. Due Diligence Hub'}
+                {isBn ? '২. যাচাই চেকলিস্ট ও পরিকল্পনা' : '2. Verification Checklist & Plan'}
               </span>
 
               <Link
