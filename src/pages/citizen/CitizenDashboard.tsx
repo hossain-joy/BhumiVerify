@@ -27,6 +27,8 @@ import {
   ClipboardCheck,
   Scale,
   Bot,
+  ArrowLeftRight,
+  Keyboard,
 } from 'lucide-react';
 
 export const CitizenDashboard: React.FC = () => {
@@ -39,6 +41,8 @@ export const CitizenDashboard: React.FC = () => {
     openChecklist,
     openUnitConverter,
     openAssistant,
+    openComparator,
+    openShortcuts,
   } = useUI();
   const { showToast } = useToast();
 
@@ -104,7 +108,24 @@ export const CitizenDashboard: React.FC = () => {
       </div>
 
       {/* Interactive Tools Quick Access Bar */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-gov-primary" />
+            {language === 'bn' ? 'ইন্টারঅ্যাক্টিভ ভূমি ডিলিজেন্স টুলকিট' : 'Interactive Diligence Toolbox'}
+          </h2>
+          <button
+            type="button"
+            onClick={openShortcuts}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium transition-colors cursor-pointer"
+            title={language === 'bn' ? 'কীবোর্ড শর্টকাট দেখুন' : 'View Keyboard Shortcuts'}
+          >
+            <Keyboard className="w-3.5 h-3.5 text-slate-500" />
+            <span>{language === 'bn' ? 'শর্টকাট (?)' : 'Shortcuts (?)'}</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
         <button
           onClick={() => openCadastralMap()}
           className="p-4 rounded-2xl bg-gradient-to-br from-teal-50/80 via-white to-emerald-50/50 border border-teal-200/80 hover:border-teal-300 text-left flex items-center justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
@@ -224,7 +245,28 @@ export const CitizenDashboard: React.FC = () => {
           </div>
           <ArrowRight className="w-4 h-4 text-violet-600 group-hover:translate-x-1 transition-transform" />
         </button>
+
+        <button
+          onClick={openComparator}
+          className="p-4 rounded-2xl bg-gradient-to-br from-purple-50/80 via-white to-pink-50/50 border border-purple-200/80 hover:border-purple-300 text-left flex items-center justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5 cursor-pointer sm:col-span-2 lg:col-span-3"
+        >
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+              <ArrowLeftRight className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-900 group-hover:text-purple-700 transition-colors">
+                {language === 'bn' ? 'পার্সেল দ্বৈত তুলনা ম্যাট্রিক্স (Side-by-Side)' : 'Side-by-Side Parcel Comparator'}
+              </p>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                {language === 'bn' ? 'যেকোনো দুটি প্লটের খতিয়ান, দাগ, আয়তন ও ঝুঁকি সরাসরি পাশাপাশি তুলনা করুন' : 'Compare two parcels side-by-side with difference highlights'}
+              </p>
+            </div>
+          </div>
+          <ArrowRight className="w-4 h-4 text-purple-600 group-hover:translate-x-1 transition-transform" />
+        </button>
       </div>
+    </div>
 
 
       {/* Action Notice if payment or more-info is pending */}

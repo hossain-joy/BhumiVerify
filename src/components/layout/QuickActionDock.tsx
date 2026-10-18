@@ -15,6 +15,8 @@ import {
   ClipboardCheck,
   ArrowRightLeft,
   MessageSquare,
+  Keyboard,
+  ArrowLeftRight,
 } from 'lucide-react';
 
 export const QuickActionDock: React.FC = () => {
@@ -26,6 +28,8 @@ export const QuickActionDock: React.FC = () => {
     openChecklist,
     openUnitConverter,
     toggleAssistant,
+    openComparator,
+    openShortcuts,
     soundEnabled,
     toggleSound,
   } = useUI();
@@ -160,10 +164,42 @@ export const QuickActionDock: React.FC = () => {
             </div>
           </button>
 
+          {/* Parcel Comparator */}
+          <button
+            onClick={() => {
+              setExpanded(false);
+              openComparator();
+            }}
+            className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/95 backdrop-blur-md border border-slate-200/90 text-slate-800 shadow-float hover:bg-purple-50 hover:text-purple-700 hover:border-purple-200 transition-all text-xs font-bold group cursor-pointer"
+          >
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity text-[11px] text-slate-500 font-medium">
+              {isBn ? 'পার্সেল দ্বৈত তুলনা' : 'Parcel Comparator'}
+            </span>
+            <div className="w-7 h-7 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center shrink-0">
+              <ArrowLeftRight className="w-4 h-4" />
+            </div>
+          </button>
+
+          {/* Keyboard Shortcuts (?) */}
+          <button
+            onClick={() => {
+              setExpanded(false);
+              openShortcuts();
+            }}
+            className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/95 backdrop-blur-md border border-slate-200/90 text-slate-800 shadow-float hover:bg-slate-50 hover:text-slate-900 transition-all text-xs font-bold group cursor-pointer"
+          >
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity text-[11px] text-slate-500 font-medium">
+              {isBn ? 'কীবোর্ড শর্টকাট (?)' : 'Keyboard Shortcuts (?)'}
+            </span>
+            <div className="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
+              <Keyboard className="w-4 h-4" />
+            </div>
+          </button>
+
           {/* Sound Toggle */}
           <button
             onClick={handleSoundToggle}
-            className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/95 backdrop-blur-md border border-slate-200/90 text-slate-800 shadow-float hover:bg-slate-50 transition-all text-xs font-bold group"
+            className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/95 backdrop-blur-md border border-slate-200/90 text-slate-800 shadow-float hover:bg-slate-50 transition-all text-xs font-bold group cursor-pointer"
           >
             <span className="opacity-0 group-hover:opacity-100 transition-opacity text-[11px] text-slate-500 font-medium">
               {soundEnabled ? (isBn ? 'সাউন্ড মিউট করুন' : 'Mute Sounds') : (isBn ? 'সাউন্ড অন করুন' : 'Enable Sounds')}

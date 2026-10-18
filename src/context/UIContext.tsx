@@ -38,6 +38,14 @@ interface UIContextType {
   closeCertificate: () => void;
   activeCertificateRequest?: AccessRequest;
 
+  isComparatorOpen: boolean;
+  openComparator: () => void;
+  closeComparator: () => void;
+
+  isShortcutsOpen: boolean;
+  openShortcuts: () => void;
+  closeShortcuts: () => void;
+
   soundEnabled: boolean;
   toggleSound: () => boolean;
 }
@@ -55,6 +63,8 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [isCertificateOpen, setIsCertificateOpen] = useState(false);
   const [activeCertificateRequest, setActiveCertificateRequest] = useState<AccessRequest | undefined>(undefined);
+  const [isComparatorOpen, setIsComparatorOpen] = useState(false);
+  const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(() => soundEffects.isEnabled());
 
   const openCommandPalette = useCallback(() => {
@@ -136,19 +146,39 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     setIsCertificateOpen(false);
   }, []);
 
+  const openComparator = useCallback(() => {
+    soundEffects.playClick();
+    setIsComparatorOpen(true);
+  }, []);
+
+  const closeComparator = useCallback(() => {
+    setIsComparatorOpen(false);
+  }, []);
+
+  const openShortcuts = useCallback(() => {
+    soundEffects.playClick();
+    setIsShortcutsOpen(true);
+  }, []);
+
+  const closeShortcuts = useCallback(() => {
+    setIsShortcutsOpen(false);
+  }, []);
+
   const toggleSound = useCallback(() => {
     const newState = soundEffects.toggle();
     setSoundEnabled(newState);
     return newState;
   }, []);
 
-  // Global keyboard shortcut for Command Palette: Ctrl+K or Cmd+K
+  // Global keyboard shortcuts: Ctrl+K, Escape, and single-key accelerators
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         setIsCommandPaletteOpen((prev) => !prev);
+        return;
       }
+
       if (e.key === 'Escape') {
         setIsCommandPaletteOpen(false);
         setIsCadastralMapOpen(false);
@@ -158,6 +188,51 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
         setIsUnitConverterOpen(false);
         setIsAssistantOpen(false);
         setIsCertificateOpen(false);
+        setIsComparatorOpen(false);
+        setIsShortcutsOpen(false);
+        return;
+      }
+
+      // Check if user is typing in form controls
+      const target = e.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.tagName === 'SELECT' ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
+
+      // Hotkeys when no input is focused
+      if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+        e.preventDefault();
+        setIsShortcutsOpen((prev) => !prev);
+      } else if (e.key.toLowerCase() === 'm' && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        setIsCadastralMapOpen((prev) => !prev);
+      } else if (e.key.toLowerCase() === 'c' && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        setIsCalculatorOpen((prev) => !prev);
+      } else if (e.key.toLowerCase() === 'u' && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        setIsUnitConverterOpen((prev) => !prev);
+      } else if (e.key.toLowerCase() === 'l' && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        setIsChecklistOpen((prev) => !prev);
+      } else if (e.key.toLowerCase() === 'p' && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        setIsComparatorOpen((prev) => !prev);
+      } else if (e.key.toLowerCase() === 'b' && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        setIsAssistantOpen((prev) => !prev);
+      } else if (e.key.toLowerCase() === 't' && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        setIsTourOpen((prev) => !prev);
+      } else if (e.key.toLowerCase() === 's' && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        setSoundEnabled(soundEffects.toggle());
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -194,6 +269,12 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
         openCertificate,
         closeCertificate,
         activeCertificateRequest,
+        isComparatorOpen,
+        openComparator,
+        closeComparator,
+        isShortcutsOpen,
+        openShortcuts,
+        closeShortcuts,
         soundEnabled,
         toggleSound,
       }}

@@ -12,13 +12,18 @@ import { BuyerDiligenceChecklistModal } from '../common/BuyerDiligenceChecklistM
 import { LandUnitConverterModal } from '../common/LandUnitConverterModal';
 import { LandAssistantWidget } from '../common/LandAssistantWidget';
 import { OfficialCertificateModal } from '../common/OfficialCertificateModal';
+import { ParcelComparatorModal } from '../land/ParcelComparatorModal';
+import { KeyboardShortcutsModal } from '../common/KeyboardShortcutsModal';
 import { ToastContainer } from '../common/ToastContainer';
+import { useUI } from '../../context/UIContext';
 
 interface AppShellProps {
   children: React.ReactNode;
 }
 
 export const AppShell: React.FC<AppShellProps> = ({ children }) => {
+  const { isComparatorOpen, closeComparator, isShortcutsOpen, closeShortcuts } = useUI();
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 relative selection:bg-teal-700 selection:text-white">
       <a className="skip-link" href="#main-content">
@@ -33,6 +38,8 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
       <BuyerDiligenceChecklistModal />
       <LandUnitConverterModal />
       <OfficialCertificateModal />
+      <ParcelComparatorModal isOpen={isComparatorOpen} onClose={closeComparator} />
+      <KeyboardShortcutsModal isOpen={isShortcutsOpen} onClose={closeShortcuts} />
       <LandAssistantWidget />
       <ToastContainer />
 

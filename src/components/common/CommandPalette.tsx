@@ -49,6 +49,8 @@ export const CommandPalette: React.FC = () => {
     openUnitConverter,
     openAssistant,
     openCertificate,
+    openComparator,
+    openShortcuts,
   } = useUI();
   const { setRole, resetAllDemoData, verifyCitizenIdentity, requests } = useApp();
   const { language, setLanguage } = useLanguage();
@@ -217,6 +219,32 @@ export const CommandPalette: React.FC = () => {
           closeCommandPalette();
           const targetReq = requests[2] || requests[0];
           openCertificate(targetReq);
+        },
+      },
+      {
+        id: 'tool-comparator',
+        title: isBn ? 'পার্সেল দ্বৈত তুলনা ম্যাট্রিক্স (Parcel Comparator)' : 'Side-by-Side Parcel Comparator',
+        subtitle: isBn ? 'দুটি ভিন্ন প্লটের খতিয়ান, দাগ, আয়তন ও ঝুঁকি পাশাপাশি তুলনা করুন' : 'Compare two land parcels side-by-side with difference highlights',
+        category: 'tools',
+        icon: <ArrowRightLeft className="w-4 h-4 text-purple-600" />,
+        badge: isBn ? 'তুলনা' : 'Compare',
+        badgeColor: 'bg-purple-100 text-purple-800 border-purple-200',
+        action: () => {
+          closeCommandPalette();
+          openComparator();
+        },
+      },
+      {
+        id: 'tool-shortcuts',
+        title: isBn ? 'কীবোর্ড শর্টকাট সহায়িকা (Keyboard Shortcuts Help)' : 'Global Keyboard Shortcuts Help',
+        subtitle: isBn ? 'প্ল্যাটফর্মের সকল কীবোর্ড হটকি ও শর্টকাটের তালিকা দেখুন (?)' : 'View list of all single-key shortcuts and hotkeys (?)',
+        category: 'tools',
+        icon: <Command className="w-4 h-4 text-slate-600" />,
+        badge: isBn ? 'শর্টকাট' : 'Hotkeys',
+        badgeColor: 'bg-slate-100 text-slate-800 border-slate-200',
+        action: () => {
+          closeCommandPalette();
+          openShortcuts();
         },
       },
 
