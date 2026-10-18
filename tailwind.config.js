@@ -30,6 +30,19 @@ export default {
       fontFamily: {
         sans: ['"Hind Siliguri"', 'Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
       },
+      fontSize: {
+        '3xs': ['0.8125rem', { lineHeight: '1.25rem' }],
+        '2xs': ['0.875rem', { lineHeight: '1.35rem' }],
+        'xs': ['0.95rem', { lineHeight: '1.5rem' }],
+        'sm': ['1.05rem', { lineHeight: '1.65rem' }],
+        'base': ['1.15rem', { lineHeight: '1.8rem' }],
+        'lg': ['1.3rem', { lineHeight: '1.9rem' }],
+        'xl': ['1.5rem', { lineHeight: '2.1rem' }],
+        '2xl': ['1.85rem', { lineHeight: '2.4rem' }],
+        '3xl': ['2.35rem', { lineHeight: '2.8rem' }],
+        '4xl': ['2.85rem', { lineHeight: '3.2rem' }],
+        '5xl': ['3.6rem', { lineHeight: '1.2' }],
+      },
       boxShadow: {
         '2xs': '0 1px 2px 0 rgba(0, 0, 0, 0.03)',
         'xs': '0 1px 3px 0 rgba(0, 0, 0, 0.05)',

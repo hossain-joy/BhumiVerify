@@ -50,26 +50,26 @@ export const MonthlyQuotaCard: React.FC<MonthlyQuotaCardProps> = ({
           ) : (
             <ShieldAlert className="w-4 h-4 text-emerald-700 shrink-0" />
           )}
-          <span className="font-bold text-xs">
+          <span className="font-bold text-sm">
             {isBn ? 'কোটা:' : 'Quota:'}{' '}
             <span className="font-mono">
               {isBn ? toBengaliNumerals(quota.used) : quota.used}/{isBn ? toBengaliNumerals(quota.limit) : quota.limit}
             </span>{' '}
-            <span className="text-[11px] font-semibold text-slate-600">
+            <span className="text-xs font-semibold text-slate-600">
               ({isBn ? `${toBengaliNumerals(quota.remaining)}টি বাকি` : `${quota.remaining} left`})
             </span>
           </span>
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="w-16 sm:w-20 bg-white rounded-full h-1.5 overflow-hidden border border-slate-200">
+          <div className="w-16 sm:w-20 bg-white rounded-full h-2 overflow-hidden border border-slate-200">
             <div
-              className={`h-1.5 rounded-full transition-all duration-300 ${getProgressBarColor()}`}
+              className={`h-2 rounded-full transition-all duration-300 ${getProgressBarColor()}`}
               style={{ width: `${quota.percentage}%` }}
             />
           </div>
           {quota.isExceeded && (
-            <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-rose-600 text-white">
+            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-rose-600 text-white">
               {isBn ? 'পূর্ণ' : 'Full'}
             </span>
           )}
@@ -80,7 +80,7 @@ export const MonthlyQuotaCard: React.FC<MonthlyQuotaCardProps> = ({
 
   return (
     <div
-      className={`rounded-2xl border p-5 shadow-2xs space-y-3 transition-all ${
+      className={`rounded-2xl border p-5 shadow-2xs space-y-3.5 transition-all ${
         quota.isExceeded
           ? 'bg-rose-50/60 border-rose-200'
           : quota.used >= 4
@@ -90,9 +90,9 @@ export const MonthlyQuotaCard: React.FC<MonthlyQuotaCardProps> = ({
     >
       {/* Clean Header & Count */}
       <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-3">
           <div
-            className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+            className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-2xs ${
               quota.isExceeded
                 ? 'bg-rose-100 text-rose-700 border border-rose-200'
                 : quota.used >= 4
@@ -101,31 +101,31 @@ export const MonthlyQuotaCard: React.FC<MonthlyQuotaCardProps> = ({
             }`}
           >
             {quota.isExceeded ? (
-              <AlertOctagon className="w-4 h-4" />
+              <AlertOctagon className="w-5 h-5" />
             ) : (
-              <ShieldAlert className="w-4 h-4" />
+              <ShieldAlert className="w-5 h-5" />
             )}
           </div>
           <div>
-            <h2 className="text-sm font-bold text-slate-900">
+            <h2 className="text-base font-bold text-slate-900">
               {isBn ? 'মাসিক আবেদন কোটা' : 'Monthly Verification Quota'}
             </h2>
-            <span className="text-[11px] text-slate-500 font-medium">
+            <span className="text-xs text-slate-500 font-medium">
               {isBn ? `নবায়ন: ${quota.resetDateFormattedBn}` : `Resets: ${quota.resetDateFormatted}`}
             </span>
           </div>
         </div>
 
         {/* Counter Badge */}
-        <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
-          <span className="text-lg font-black text-slate-900 font-mono">
+        <div className="flex items-center gap-2 bg-slate-50 px-3.5 py-1.5 rounded-xl border border-slate-200">
+          <span className="text-xl font-black text-slate-900 font-mono">
             {isBn ? toBengaliNumerals(quota.used) : quota.used}
           </span>
-          <span className="text-xs font-bold text-slate-400">/</span>
-          <span className="text-xs font-bold text-slate-500 font-mono">
+          <span className="text-sm font-bold text-slate-400">/</span>
+          <span className="text-sm font-bold text-slate-500 font-mono">
             {isBn ? toBengaliNumerals(quota.limit) : quota.limit}
           </span>
-          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ml-1 ${getTierColor()}`}>
+          <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ml-1 ${getTierColor()}`}>
             {quota.isExceeded
               ? (isBn ? 'পূর্ণ' : 'FULL')
               : (isBn ? `${toBengaliNumerals(quota.remaining)}টি বাকি` : `${quota.remaining} LEFT`)}
@@ -134,18 +134,18 @@ export const MonthlyQuotaCard: React.FC<MonthlyQuotaCardProps> = ({
       </div>
 
       {/* Progress Bar */}
-      <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200/50">
+      <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden border border-slate-200/50">
         <div
-          className={`h-2 rounded-full transition-all duration-300 ${getProgressBarColor()}`}
+          className={`h-2.5 rounded-full transition-all duration-300 ${getProgressBarColor()}`}
           style={{ width: `${quota.percentage}%` }}
         />
       </div>
 
       {/* Exceeded Warning Notice if Exceeded */}
       {quota.isExceeded && (
-        <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-950 flex items-center gap-2">
-          <AlertOctagon className="w-4 h-4 shrink-0 text-rose-600" />
-          <p className="font-semibold">
+        <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-sm text-rose-950 flex items-center gap-2.5">
+          <AlertOctagon className="w-5 h-5 shrink-0 text-rose-600" />
+          <p className="font-semibold leading-relaxed">
             {isBn
               ? `চলতি মাসের কোটা পূর্ণ। আগামী ${quota.resetDateFormattedBn} তারিখে রিসেট হবে।`
               : `Monthly limit reached. Resets on ${quota.resetDateFormatted}.`}
