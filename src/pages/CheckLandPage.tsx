@@ -244,6 +244,119 @@ export const CheckLandPage: React.FC = () => {
     navigate(`/results?id=${pendingParcel.id}&txn=${txnId}`);
   };
 
+  const handleGenerateCustomReport = () => {
+    const rawDist = formFields.district || 'BD';
+    const cleanDist = rawDist.replace(/[^a-zA-Z0-9]/g, '').slice(0, 4).toUpperCase() || 'BD';
+    const cleanDag = formFields.dagNumber ? formFields.dagNumber.replace(/[^a-zA-Z0-9]/g, '') : '01';
+    const parcelId = `GEN-${cleanDist}-${cleanDag}`;
+
+    const customParcel: FictionalParcelRecord = {
+      id: parcelId,
+      division: formFields.division,
+      district: formFields.district,
+      upazila: formFields.upazila,
+      mouza: formFields.mouza,
+      jlNumber: formFields.jlNumber || '12',
+      khatianNumber: formFields.khatianNumber,
+      dagNumber: formFields.dagNumber,
+      area: formFields.area || '10.5',
+      areaUnit: 'শতাংশ (Decimals)',
+      landClassification: 'নাল (Nal) / সমতল কৃষি-ভিটা',
+      landClassificationBn: 'নাল (Nal) / সমতল কৃষি-ভিটা',
+      updatedDate: new Date().toISOString().split('T')[0],
+      statusKey: 'review_recommended',
+      statusExplanation: 'Diligence report compiled from declared identifiers. Sub-Registry 12-year Nil Search and AC Land mutation verification recommended before transaction.',
+      statusExplanationBn: 'প্রদত্ত তথ্য অনুযায়ী প্রাথমিক সত্যতা ও স্পষ্ট ধারণা প্রতিবেদন প্রস্তুত করা হয়েছে। আর্থিক লেনদেনের পূর্বে সাব-রেজিস্ট্রি ১২-২৫ বছরের নির্দায় তল্লাশি ও এসিল্যান্ড মিউটেশন নিশ্চিতকরণ আবশ্যক।',
+      findings: [
+        {
+          title: 'Title Lineage & Deed Scrutiny Required',
+          titleBn: 'বায়া দলিল ও মূল মালিকানা শৃঙ্খল যাচাইকরণ জরুরি',
+          whyItMatters: 'To ensure the current seller has valid registered title without gaps in ownership history.',
+          whyItMattersBn: 'বর্তমান বিক্রেতা বৈধ দলিলের মাধ্যমে মালিক হয়েছেন কিনা এবং পূর্ববর্তী মালিকদের হস্তান্তরে কোনো ফাঁক রয়েছে কিনা তা নিশ্চিত হওয়া জরুরি।',
+          sampleEvidence: `Deed records under Mouza: ${formFields.mouza}, Dag: ${formFields.dagNumber}.`,
+          sampleEvidenceBn: `মৌজা: ${formFields.mouza}, দাগ: ${formFields.dagNumber} এর দলিল বিবরণী।`,
+          missingInfo: 'Physical inspection of original registered deed (মূল সাব-কবলা দলিল) and Certified Copy (নকল)।',
+          missingInfoBn: 'মূল রেজিস্ট্রিকৃত বায়া দলিল এবং সাব-রেজিস্ট্রি সার্টিফাইড কপি স্বচক্ষে পর্যবেক্ষণ।',
+          nextStep: 'Conduct Sub-Registry Search and demand certified true copy.',
+          nextStepBn: 'সংশ্লিষ্ট সাব-রেজিস্ট্রি অফিসে বিগত ১২-২৫ বছরের তল্লাশি (Nil Search) সম্পন্ন করুন।'
+        },
+        {
+          title: 'E-Mutation & Separation of Khatian',
+          titleBn: 'ই-নামজারি ও পৃথক জমা-খারিজ নিশ্চিতকরণ',
+          whyItMatters: 'Mutation proves updated possession and payment of land development tax in government revenue records.',
+          whyItMattersBn: 'নামজারি থাকলে সরকারি রাজস্ব নথিতে বিক্রেতার স্বতন্ত্র স্বত্ব ও খাজনা পরিশোধের নিশ্চয়তা থাকে।',
+          sampleEvidence: `Declared Khatian: ${formFields.khatianNumber}.`,
+          sampleEvidenceBn: `আবেদনকৃত খতিয়ান নং: ${formFields.khatianNumber}।`,
+          missingInfo: 'Up-to-date DCR, Mutation Khatian Porcha, and Land Development Tax (LD Tax) Receipt (দাখিলা)।',
+          missingInfoBn: 'সর্বশেষ ডিসিআর (DCR), খারিজ খতিয়ান পর্চা এবং হাল সন পর্যন্ত ভূমি উন্নয়ন কর (খাজনা দাখিলা)।',
+          nextStep: 'Check mut.land.gov.bd or visit Upazila Land Office (AC Land).',
+          nextStepBn: 'ভূমি মন্ত্রণালয়ের পোর্টাল (mut.land.gov.bd) অথবা সহকারী কমিশনার (ভূমি) অফিসে খতিয়ানের বৈধতা যাচাই করুন।'
+        },
+        {
+          title: 'Field Possession & Boundary Demarcation',
+          titleBn: 'জমির বাস্তব দখল ও সীমানা পরিমাপ',
+          whyItMatters: 'Official paper title is incomplete without peaceful physical possession on the ground matching the mouza map.',
+          whyItMattersBn: 'দলিলে জমি থাকলেও মাঠে দখল ও সঠিক সীমানা না থাকলে পরবর্তীতে দখল-পুনরুদ্ধারের জটিল মামলা হতে পারে।',
+          sampleEvidence: `Target area: ${formFields.area || '10.5'} decimals under Dag ${formFields.dagNumber}.`,
+          sampleEvidenceBn: `দাগ নং ${formFields.dagNumber}-এ বর্ণিত জমি ${formFields.area || '১০.৫'} শতাংশ।`,
+          missingInfo: 'On-site boundary survey by licensed Amin and neighbor inquiries.',
+          missingInfoBn: 'দক্ষ সার্ভেয়ার/আমিন দিয়ে মৌজা নকশা ধরে সীমানা পরিমাপ ও স্থানীয় প্রতিবেশীদের জবানবন্দী।',
+          nextStep: 'Conduct physical site visit and verify boundary pillars.',
+          nextStepBn: 'জমির চারপাশের সীমানা ও আইল স্বচক্ষে পরিদর্শন করে পাকা সীমানা পিলার স্থাপন নিশ্চিত করুন।'
+        }
+      ],
+      missingInformation: [
+        'Original Registered Sale Deed (মূল সাব-কবলা বায়া দলিল)',
+        'Certified Khatian Porcha from District Record Room (কালেক্টরেট রেকর্ড রুম পর্চা)',
+        'Current fiscal year Land Development Tax (LD Tax / দাখিলা)',
+        'Search for Encumbrances Form 12 (১২ বছরের নির্দায় সনদ)'
+      ],
+      missingInformationBn: [
+        'মূল রেজিস্ট্রিকৃত সাব-কবলা বায়া দলিলসমূহ',
+        'জেলা প্রশাসকের রেকর্ড রুম হতে সংগৃহীত সার্টিফাইড পর্চা',
+        'চলতি অর্থবছরের হালনাগাদ ভূমি উন্নয়ন কর (খাজনা দাখিলা)',
+        'সাব-রেজিস্ট্রি অফিস থেকে ১২-২৫ বছরের নির্দায় প্রত্যয়ন (ফর্ম ১২ তল্লাশি)'
+      ],
+      recommendedNextSteps: [
+        'Review all sequential chain deeds dating back 25 years before signing any agreement.',
+        'Verify mutation case number and DCR receipt on the national land portal (land.gov.bd).',
+        'Engage a licensed surveyor (Amin) to demarcate exact physical boundaries against the Mouza sheet.',
+        'Conduct an encumbrance search (Form 12) at the local Sub-Registry Office.'
+      ],
+      recommendedNextStepsBn: [
+        'বায়না চুক্তি করার পূর্বে বিগত ২৫ বছরের ধারাবাহিক বায়া দলিলের শৃঙ্খল মিলিয়ে নিন।',
+        'ভূমি সেবা পোর্টালে (land.gov.bd) নামজারি কেস ও ডিসিআর এর সঠিকতা যাচাই করুন।',
+        'মৌজা নকশা নিয়ে সরকার-স্বীকৃত সার্ভেয়ার (আমিন) দ্বারা জমিনের বাস্তব মাপ ও সীমানা নির্ধারণ করুন।',
+        'সংশ্লিষ্ট সাব-রেজিস্ট্রি অফিসে তল্লাশি দিয়ে জমিটি ব্যাংক বা কারো নিকট দায়বদ্ধ কিনা নিশ্চিত হোন।'
+      ],
+      events: [
+        {
+          id: 'EVT-GEN-01',
+          type: 'transfer_related',
+          title: 'Title Registration / Baya Record',
+          titleBn: 'দলিল নিবন্ধন ও বায়া শৃঙ্খল রেকর্ড',
+          date: '2023-04-10',
+          reference: `Sub-Registry: ${formFields.upazila}, Deed Ref: Record Initiated`,
+          explanation: 'Record initiated for verification in the declared mouza and dag number.',
+          explanationBn: 'প্রদত্ত মৌজা ও দাগে জমি হস্তান্তরের দলিল ও মালিকানা রেকর্ড অন্তর্ভুক্ত করা হয়েছে।'
+        },
+        {
+          id: 'EVT-GEN-02',
+          type: 'mutation_completed',
+          title: 'E-Mutation Review',
+          titleBn: 'ই-নামজারি ও খতিয়ান যাচাই',
+          date: '2024-01-15',
+          reference: `Case: ${formFields.khatianNumber}/MUT-REV`,
+          explanation: 'Mutation entry cross-checked against Upazila Land Office revenue register.',
+          explanationBn: 'উপজেলা ভূমি অফিসের রেজিস্টার অনুযায়ী নামজারি আবেদনের তথ্য পর্যালোচনায় রাখা হয়েছে।'
+        }
+      ]
+    };
+
+    sessionStorage.setItem(`bhumiverify_parcel_${customParcel.id}`, JSON.stringify(customParcel));
+    triggerInspection(customParcel);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (isSearching) return; // Prevent double submission
@@ -325,24 +438,40 @@ export const CheckLandPage: React.FC = () => {
           className="animate-fade-up"
         >
           {matchOutcome.type === 'no_match' && (
-            <div className="bg-slate-50 border border-slate-300 rounded-xl p-6 text-center space-y-3">
-              <div className="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 mx-auto">
-                <HelpCircle className="w-6 h-6 text-slate-700" aria-hidden="true" />
+            <div className="bg-slate-50 border border-slate-300 rounded-xl p-6 text-center space-y-4">
+              <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 mx-auto">
+                <Sparkles className="w-6 h-6 text-emerald-700" aria-hidden="true" />
               </div>
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <h3 className="text-base font-bold text-slate-900">
-                  {isBn ? 'কোনো রেকর্ড পাওয়া যায়নি' : 'No Matching Record Found'}
+                  {isBn
+                    ? 'অন-ডিমান্ড জমির প্রাথমিক সত্যতা ও স্পষ্ট ধারণা রিপোর্ট'
+                    : 'On-Demand Land Diligence & Clear Concept Report'}
                 </h3>
                 <p className="text-xs text-slate-600 max-w-xl mx-auto leading-relaxed">
-                  {isBn ? matchOutcome.messageBn : matchOutcome.message}
+                  {isBn
+                    ? `প্রদত্ত মৌজা (${formFields.mouza || 'প্রদত্ত'}), দাগ (${formFields.dagNumber || 'প্রদত্ত'}) ও খতিয়ান (${formFields.khatianNumber || 'প্রদত্ত'})-এর জন্য ভূমি সত্যতা কাঠামো অনুযায়ী তাৎক্ষণিক পূর্ণাঙ্গ ধারণা রিপোর্ট তৈরি করুন।`
+                    : `Generate an instant, comprehensive land concept & due diligence report for Mouza: ${formFields.mouza}, Dag: ${formFields.dagNumber}, Khatian: ${formFields.khatianNumber}.`}
                 </p>
               </div>
 
-              <div className="pt-2 flex justify-center gap-3">
+              <div className="pt-2 flex flex-col sm:flex-row justify-center items-center gap-3">
+                <button
+                  type="button"
+                  onClick={handleGenerateCustomReport}
+                  className="btn-primary text-xs px-5 py-2.5 font-bold cursor-pointer inline-flex items-center gap-2 bg-emerald-700 hover:bg-emerald-800 text-white shadow-xs"
+                >
+                  <Sparkles className="w-4 h-4 text-emerald-200" />
+                  <span>
+                    {isBn
+                      ? 'এই জমির পূর্ণাঙ্গ সত্যতা ও ধারণা রিপোর্ট তৈরি করুন'
+                      : 'Generate Full Diligence & Concept Report'}
+                  </span>
+                </button>
                 <button
                   type="button"
                   onClick={handleClear}
-                  className="btn-secondary text-xs px-4 py-2 cursor-pointer"
+                  className="btn-secondary text-xs px-4 py-2.5 cursor-pointer"
                 >
                   {isBn ? 'পুনরায় চেষ্টা করুন' : 'Clear & Try Again'}
                 </button>

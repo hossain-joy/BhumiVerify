@@ -10,6 +10,7 @@ import { DigitalBankingModal } from '../components/land/DigitalBankingModal';
 import { isParcelPaid, markParcelPaid, getParcelTxnId } from '../utils/paymentStorage';
 import { useAuth } from '../context/AuthContext';
 import { MonthlyQuotaCard } from '../components/land/MonthlyQuotaCard';
+import { ClearLandConceptCard } from '../components/land/ClearLandConceptCard';
 import { getMonthlyQuota, recordVerificationApplication, QuotaStatus } from '../utils/quotaService';
 import {
   ArrowLeft,
@@ -65,7 +66,18 @@ export const ParcelResultsPage: React.FC = () => {
     let target = MOCK_PARCELS[0];
     if (id) {
       const match = MOCK_PARCELS.find((p) => p.id === id);
-      if (match) target = match;
+      if (match) {
+        target = match;
+      } else {
+        const storedCustom = sessionStorage.getItem(`bhumiverify_parcel_${id}`);
+        if (storedCustom) {
+          try {
+            target = JSON.parse(storedCustom);
+          } catch {
+            // ignore
+          }
+        }
+      }
     }
     setParcel(target);
 
@@ -456,6 +468,9 @@ export const ParcelResultsPage: React.FC = () => {
             : 'This summary presents an automated rule-based analysis of recorded land events and identifiers.'}
         </p>
       </div>
+
+      {/* 1.5. Clear Land Concept & Buyer Verdict (Plain-Language Transparency) */}
+      <ClearLandConceptCard parcel={parcel} isBn={isBn} />
 
       {/* 2. Assessment Summary Card (Only 3 Cautious Statuses, No Fraud Score, Visible Limitation Note) */}
       <section className="bg-white rounded-xl border border-slate-200 p-6 shadow-2xs space-y-4">

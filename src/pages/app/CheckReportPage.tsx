@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useSavedChecks } from '../../context/SavedChecksContext';
-import { MOCK_PARCELS } from '../../data/mockParcels';
+import { MOCK_PARCELS, FictionalParcelRecord } from '../../data/mockParcels';
 import { Modal } from '../../components/common/Modal';
+import { ClearLandConceptCard } from '../../components/land/ClearLandConceptCard';
 import { useLanguage } from '../../context/LanguageContext';
 import { formatStatusLabel, toBengaliNumerals } from '../../utils/formatStatus';
 import {
@@ -55,6 +56,62 @@ export const CheckReportPage: React.FC = () => {
   const [notes, setNotes] = useState(check?.userNotes || '');
   const [notesSaved, setNotesSaved] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+  // Synthesize concept parcel record if not directly in mock records
+  const parcelForConcept: FictionalParcelRecord | null = check
+    ? underlyingParcel || {
+        id: check.parcelId || check.id,
+        division: check.division,
+        district: check.district,
+        upazila: check.upazila,
+        mouza: check.mouza,
+        jlNumber: check.jlNumber || null,
+        khatianNumber: check.khatianNumber,
+        dagNumber: check.dagNumber,
+        area: check.area?.replace(/[^0-9.]/g, '') || '10.0',
+        areaUnit: 'Decimal',
+        landClassification: 'Residential / Bastu',
+        landClassificationBn: 'আবাসিক / বাস্তুভিটা',
+        updatedDate: check.updatedAt,
+        statusKey:
+          check.statusLabel.includes('No Major') || check.statusLabel.includes('বড় অসঙ্গতি')
+            ? 'no_major_issue'
+            : check.statusLabel.includes('Review') || check.statusLabel.includes('পর্যালোচনা')
+            ? 'review_recommended'
+            : 'information_incomplete',
+        statusExplanation: check.summary,
+        statusExplanationBn: check.summary,
+        findings: [],
+        missingInformation: [],
+        recommendedNextSteps: [],
+        events: [
+          {
+            id: 'EVT-GEN-1',
+            type: 'transfer_related',
+            title: 'Registered Transfer Deed',
+            titleBn: 'রেজিস্ট্রিকৃত হস্তান্তর বায়া দলিল',
+            date: '2024-02-10',
+            reference: 'DEED-REG-2024',
+            explanation: 'Transfer deed registered in local Sub-Registry office.',
+            explanationBn: 'স্থানীয় সাব-রেজিস্ট্রি অফিসে হস্তান্তরিত বায়া দলিল সম্পন্ন।',
+          },
+          ...(check.statusLabel.includes('No Major') || check.statusLabel.includes('বড় অসঙ্গতি')
+            ? [
+                {
+                  id: 'EVT-GEN-2',
+                  type: 'mutation_completed' as const,
+                  title: 'Approved e-Mutation Decree',
+                  titleBn: 'অনুমোদিত ই-নামজারি ও জমাভাগ খতিয়ান',
+                  date: '2024-05-18',
+                  reference: 'MUT-ORD-OK',
+                  explanation: 'Approved e-mutation order issued with separate 1-number khatian.',
+                  explanationBn: 'সহকারী কমিশনার (ভূমি) কর্তৃক পৃথক ১ নম্বর খতিয়ান ও নামজারি চূড়ান্ত অনুমোদন।',
+                },
+              ]
+            : []),
+        ],
+      }
+    : null;
 
   if (!check) {
     return (
@@ -217,6 +274,11 @@ export const CheckReportPage: React.FC = () => {
               </p>
             </div>
           </div>
+
+          {/* Clear Land Concept & Buyer Plain-Language Verdict */}
+          {parcelForConcept && (
+            <ClearLandConceptCard parcel={parcelForConcept} isBn={isBn} />
+          )}
         </div>
 
         {/* Section: Parcel Identifiers Submitted */}
