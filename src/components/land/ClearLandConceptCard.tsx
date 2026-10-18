@@ -30,10 +30,13 @@ export const ClearLandConceptCard: React.FC<ClearLandConceptCardProps> = ({
   const hasMutationApp = events.some((e) => e.type === 'mutation_application');
   const hasMutationDone = events.some((e) => e.type === 'mutation_completed');
 
+  const subReg = parcel.subRegistryData;
+  const hasLitigation = Boolean(subReg?.litigation?.hasLitigation);
+
   // Determine Land Concept Category
-  const isNoMajorIssue = parcel.statusKey === 'no_major_issue';
-  const isReviewRecommended = parcel.statusKey === 'review_recommended';
-  const isIncomplete = parcel.statusKey === 'information_incomplete';
+  const isNoMajorIssue = parcel.statusKey === 'no_major_issue' && !hasLitigation;
+  const isReviewRecommended = parcel.statusKey === 'review_recommended' || hasLitigation;
+  const isIncomplete = parcel.statusKey === 'information_incomplete' && !hasLitigation;
 
   // Extract transfer deed & mutation details if available
   const transferEvent = events.find((e) => e.type === 'transfer_related');
@@ -45,23 +48,36 @@ export const ClearLandConceptCard: React.FC<ClearLandConceptCardProps> = ({
       {/* 1. Card Header with Clear Verdict Headline */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200">
         <div className="flex items-start gap-3.5">
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 text-gov-primary border border-emerald-200 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
-            <Sparkles className="w-6 h-6 text-gov-primary" />
+          <div className={`w-12 h-12 rounded-xl border flex items-center justify-center shrink-0 mt-0.5 shadow-2xs ${
+            hasLitigation
+              ? 'bg-rose-50 text-rose-700 border-rose-200'
+              : 'bg-emerald-50 text-gov-primary border-emerald-200'
+          }`}>
+            {hasLitigation ? <AlertOctagon className="w-6 h-6 text-rose-600" /> : <Sparkles className="w-6 h-6 text-gov-primary" />}
           </div>
           <div>
             <div className="flex items-center gap-2.5">
-              <span className="text-sm font-bold uppercase tracking-wider text-gov-primary">
+              <span className={`text-sm font-bold uppercase tracking-wider ${hasLitigation ? 'text-rose-700' : 'text-gov-primary'}`}>
                 {isBn ? 'জমির স্বচ্ছ ও সুস্পষ্ট ধারণা' : 'Clear Land Concept & Verdict'}
               </span>
               <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-slate-100 text-slate-700">
                 {isBn ? 'সহজ বাংলায় বিশ্লেষণ' : 'Plain-Language Breakdown'}
               </span>
+              {hasLitigation && (
+                <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-rose-100 text-rose-900 border border-rose-300">
+                  {isBn ? 'সক্রিয় মামলা চিহ্নিত' : 'Active Lawsuit'}
+                </span>
+              )}
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-1.5 leading-snug">
-              {isNoMajorIssue
+              {hasLitigation
                 ? isBn
-                  ? 'মালিকানার ধারাবাহিকতা সঠিক রয়েছে — শর্তসাপেক্ষে বায়না বিবেচনাযোগ্য'
-                  : 'Consistent Title Chain — Conditional Purchase Recommended'
+                  ? 'সতর্কতা: জমিতে দেওয়ানি মামলা ও নিষেধাজ্ঞা বহাল — ক্রয় বা বায়না সম্পূর্ণ স্থগিত রাখুন'
+                  : 'Warning: Active Lawsuit & Court Injunction — Purchase Prohibited'
+                : isNoMajorIssue
+                ? isBn
+                  ? 'মালিকানার ধারাবাহিকতা সঠিক ও মামলাহীন — শর্তসাপেক্ষে বায়না বিবেচনাযোগ্য'
+                  : 'Consistent Title Chain & Dispute Free — Conditional Purchase Recommended'
                 : isReviewRecommended
                 ? isBn
                   ? 'সতর্কতা: নামজারি বা দলিলের তথ্যে অমিল — সমাধান না হওয়া পর্যন্ত বায়না ঝুঁকিপূর্ণ'
@@ -77,21 +93,28 @@ export const ClearLandConceptCard: React.FC<ClearLandConceptCardProps> = ({
         <div className="self-start sm:self-auto shrink-0">
           <span
             className={`px-4 py-2 rounded-xl text-sm font-black inline-flex items-center gap-2 border shadow-xs ${
-              isNoMajorIssue
+              hasLitigation
+                ? 'bg-rose-600 text-white border-rose-700'
+                : isNoMajorIssue
                 ? 'bg-emerald-600 text-white border-emerald-700'
                 : isReviewRecommended
                 ? 'bg-amber-600 text-white border-amber-700'
                 : 'bg-blue-600 text-white border-blue-700'
             }`}
           >
-            {isNoMajorIssue && <CheckCircle2 className="w-5 h-5" />}
-            {isReviewRecommended && <AlertTriangle className="w-5 h-5" />}
-            {isIncomplete && <HelpCircle className="w-5 h-5" />}
+            {hasLitigation && <AlertOctagon className="w-5 h-5" />}
+            {!hasLitigation && isNoMajorIssue && <CheckCircle2 className="w-5 h-5" />}
+            {!hasLitigation && isReviewRecommended && <AlertTriangle className="w-5 h-5" />}
+            {!hasLitigation && isIncomplete && <HelpCircle className="w-5 h-5" />}
             <span>
-              {isNoMajorIssue
+              {hasLitigation
                 ? isBn
-                  ? 'গ্রিন সিগন্যাল (অনুকূল)'
-                  : 'Satisfactory Chain'
+                  ? 'মামলা বিদ্যমান (ঝুঁকিপূর্ণ)'
+                  : 'Active Litigation'
+                : isNoMajorIssue
+                ? isBn
+                  ? 'গ্রিন সিগন্যাল (মামলামুক্ত)'
+                  : 'Satisfactory & Clean'
                 : isReviewRecommended
                 ? isBn
                   ? 'সতর্কবার্তা (পর্যালোচনা প্রয়োজন)'
@@ -211,25 +234,68 @@ export const ClearLandConceptCard: React.FC<ClearLandConceptCardProps> = ({
           </div>
         </div>
 
-        {/* Pillar 4: আইনি নির্দায়তা ও বন্ধক যাচাই */}
-        <div className="p-5 rounded-xl border border-slate-200 bg-slate-50/80 space-y-3 shadow-2xs">
-          <div className="flex items-center gap-2.5 text-base sm:text-lg font-bold text-slate-900">
-            <Scale className="w-5 h-5 text-gov-primary shrink-0" />
-            <span>{isBn ? '৪. মামলা, বন্ধক ও নির্দায়তা যাচাই' : '4. Encumbrances & Nil Search'}</span>
+        {/* Pillar 4: আইনি নির্দায়তা ও বন্ধক যাচাই (মামলা আছে নাকি নাই) */}
+        <div className={`p-5 rounded-xl border space-y-3 shadow-2xs ${
+          hasLitigation
+            ? 'border-rose-300 bg-rose-50/70'
+            : 'border-slate-200 bg-slate-50/80'
+        }`}>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5 text-base sm:text-lg font-bold text-slate-900">
+              <Scale className={`w-5 h-5 shrink-0 ${hasLitigation ? 'text-rose-600' : 'text-gov-primary'}`} />
+              <span>{isBn ? '৪. মামলা, বন্ধক ও আইনি নির্দায়তা' : '4. Litigation, Mortgages & Encumbrance'}</span>
+            </div>
+            <span className={`text-xs px-2.5 py-0.5 rounded-full font-black uppercase border ${
+              hasLitigation
+                ? 'bg-rose-600 text-white border-rose-700'
+                : 'bg-emerald-600 text-white border-emerald-700'
+            }`}>
+              {hasLitigation
+                ? (isBn ? 'মামলা আছে' : 'Lawsuit Detected')
+                : (isBn ? 'মামলা নাই' : 'Litigation Free')}
+            </span>
           </div>
+
           <p className="text-sm sm:text-base text-slate-700 leading-relaxed">
-            {isBn ? (
-              <>
-                ডিজিটাল ডাটাবেজ ব্যাংক বন্ধক (Mortgage) বা আদালতের স্থগিতাদেশ নিশ্চিত করে না। সাব-রেজিস্ট্রি অফিসে <strong>১২ থেকে ২৫ বছরের তল্লাশি (Nil Search)</strong> দিয়ে নিশ্চিত হতে হবে যে জমিটি কোনো ব্যাংক বা ব্যক্তির কাছে দায়বদ্ধ নয়।
-              </>
+            {hasLitigation ? (
+              isBn ? (
+                <>
+                  <strong className="text-rose-900">সাব-রেজিস্ট্রি ও আদালত সংযোগে জমিতে সক্রিয় দেওয়ানি মোকদ্দমা পাওয়া গেছে।</strong>{' '}
+                  {subReg?.litigation?.cases?.[0] ? (
+                    <>
+                      মামলা নং: <span className="font-mono font-bold text-rose-950">{subReg.litigation.cases[0].caseNumber}</span>, আদালত: <span className="font-semibold">{subReg.litigation.cases[0].courtNameBn || subReg.litigation.cases[0].courtName}</span>। 
+                      {subReg.litigation.cases[0].hasInjunction && ' আদালত কর্তৃক অস্থায়ী নিষেধাজ্ঞা (Injunction Order) বহাল রয়েছে।'}
+                    </>
+                  ) : (
+                    'আদালতে স্বত্ব বা বাটোয়ারা সংক্রান্ত বিরোধ বিচারাধীন।'
+                  )}
+                </>
+              ) : (
+                'Active civil court litigation and injunction detected against this parcel through the Sub-Registry connection. Purchase or transfer is legally prohibited.'
+              )
             ) : (
-              'Digital records do not capture off-ledger bank mortgages or court injunctions. A mandatory 12-25 year title search (Nil Search) must be conducted at the Sub-Registry Office.'
+              isBn ? (
+                <>
+                  <strong className="text-emerald-900">জমিতে কোনো দেওয়ানি মামলা বা আইনি নিষেধাজ্ঞা নেই।</strong> সাব-রেজিস্ট্রি অফিসের ১২ থেকে ২৫ বছরের বালাম তল্লাশি (Nil Search) অনুযায়ী জমিটি কোনো ব্যাংক বন্ধক বা ওয়ারিশান মামলার আওতাভুক্ত নয়।
+                </>
+              ) : (
+                'Clean litigation check. A 12-to-25 year Sub-Registry title search (Nil Search) reveals no undisclosed mortgages, pending lawsuits, or court injunctions.'
+              )
             )}
           </p>
-          <div className="text-xs sm:text-sm text-slate-700 bg-white p-2.5 rounded-lg border border-slate-200 font-medium">
-            {isBn
-              ? 'নির্দায়িতা: বিক্রেতার কাছে জাতীয় পরিচয়পত্র (NID) ও ওয়ারিশ সনদের সঠিকতা নিশ্চিত করুন।'
-              : 'Due Diligence: Verify seller NID authenticity and succession certificates before executing contracts.'}
+
+          <div className={`text-xs sm:text-sm p-2.5 rounded-lg border font-medium ${
+            hasLitigation
+              ? 'bg-rose-100/90 text-rose-950 border-rose-300'
+              : 'bg-white text-slate-700 border-slate-200'
+          }`}>
+            {hasLitigation
+              ? (isBn
+                  ? 'আইনি নির্দেশ: নিষেধাজ্ঞা বহাল থাকা অবস্থায় কোনো প্রকার চুক্তি বা রেজিস্ট্রি আইনত অকার্যকর ও বাতিলযোগ্য।'
+                  : 'Legal Notice: Any transaction executed during an active court injunction is legally void.')
+              : (isBn
+                  ? 'তল্লাশি সুপারিশ: চূড়ান্ত রেজিস্ট্রি দলিলের দিন সাব-রেজিস্ট্রার কর্তৃক হালনাগাদ ১২ বছরের তল্লাশি রসিদ নিশ্চিত করুন।'
+                  : 'Due Diligence: Request updated 12-year Nil Search receipt directly from the Sub-Registrar upon deed execution.')}
           </div>
         </div>
       </div>
@@ -237,7 +303,9 @@ export const ClearLandConceptCard: React.FC<ClearLandConceptCardProps> = ({
       {/* 3. Actionable Buyer Verdict Box (ক্রেতার জন্য স্পষ্ট করণীয়) */}
       <div
         className={`p-6 sm:p-7 rounded-2xl border ${
-          isNoMajorIssue
+          hasLitigation
+            ? 'bg-rose-50/95 border-rose-400 text-rose-950'
+            : isNoMajorIssue
             ? 'bg-emerald-50/90 border-emerald-300 text-emerald-950'
             : isReviewRecommended
             ? 'bg-amber-50/90 border-amber-300 text-amber-950'
@@ -245,7 +313,9 @@ export const ClearLandConceptCard: React.FC<ClearLandConceptCardProps> = ({
         } space-y-4`}
       >
         <div className="flex items-center gap-2.5">
-          {isNoMajorIssue ? (
+          {hasLitigation ? (
+            <AlertOctagon className="w-6 h-6 text-rose-700 shrink-0" />
+          ) : isNoMajorIssue ? (
             <CheckCircle2 className="w-6 h-6 text-emerald-700 shrink-0" />
           ) : isReviewRecommended ? (
             <AlertTriangle className="w-6 h-6 text-amber-700 shrink-0" />
@@ -253,18 +323,28 @@ export const ClearLandConceptCard: React.FC<ClearLandConceptCardProps> = ({
             <HelpCircle className="w-6 h-6 text-blue-700 shrink-0" />
           )}
           <h3 className="text-base sm:text-lg font-black uppercase tracking-wide">
-            {isBn ? 'ক্রেতার জন্য চূড়ান্ত রায় ও পরামর্শ (Buyer Verdict):' : 'Clear Decision & Advice for Prospective Buyer:'}
+            {hasLitigation
+              ? (isBn ? 'ক্রেতার জন্য চূড়ান্ত রায়: ক্রয় ও বায়না সম্পূর্ণ স্থগিত রাখুন!' : 'Buyer Verdict: Purchase Prohibited — Active Lawsuit!')
+              : (isBn ? 'ক্রেতার জন্য চূড়ান্ত রায় ও পরামর্শ (Buyer Verdict):' : 'Clear Decision & Advice for Prospective Buyer:')}
           </h3>
         </div>
 
         <p className="text-sm sm:text-base font-medium leading-relaxed">
-          {isNoMajorIssue ? (
+          {hasLitigation ? (
             isBn ? (
               <>
-                <strong>জমিটি কেনার অনুকূল পরিবেশ রয়েছে।</strong> দলিলের ধারাবাহিকতা এবং নামজারি রেকর্ড ইতিবাচক। আপনি বিক্রেতার সাথে রেজিস্ট্রি বায়না চুক্তি করতে পারেন, তবে চূড়ান্ত রেজিস্ট্রির পূর্বে সাব-রেজিস্ট্রি অফিসে ১২ বছরের তল্লাশি রসিদ (Nil Search) এবং সরেজমিনে দখল নিশ্চিত করে নিন।
+                <strong className="text-rose-900">এই জমি কেনা চূড়ান্ত ঝুঁকিপূর্ণ ও বেআইনি।</strong> জমিতে সক্রিয় দেওয়ানি মামলা ও আদালতের নিষেধাজ্ঞা রয়েছে। কোনো অবস্থাতেই বিক্রেতাকে বায়না বা নগদ অর্থ দেবেন না। আদালতের রায় ও মামলা খারিজ ছাড়া এই জমি ক্রয় করলে ভবিষ্যতে মালিকানা সম্পূর্ণ হারানোর ঝুঁকি থাকবে।
               </>
             ) : (
-              'Favorable for purchase. The documentary chain of title and mutation records are consistent. You may proceed with an registered earnest money agreement (Baina), ensuring a 12-year Sub-Registry Nil Search and boundary inspection are concluded prior to final deed execution.'
+              'Do not proceed with any purchase or earnest money. This land is subject to active court litigation and injunction. Transfer of encumbered title without court decree carries total financial and legal loss.'
+            )
+          ) : isNoMajorIssue ? (
+            isBn ? (
+              <>
+                <strong>জমিটি কেনার অনুকূল পরিবেশ রয়েছে — কোনো মামলা নেই।</strong> দলিলের ধারাবাহিকতা এবং নামজারি রেকর্ড ইতিবাচক। আপনি বিক্রেতার সাথে রেজিস্ট্রি বায়না চুক্তি করতে পারেন, তবে চূড়ান্ত রেজিস্ট্রির পূর্বে সাব-রেজিস্ট্রি অফিসে ১২ বছরের তল্লাশি রসিদ (Nil Search) এবং সরেজমিনে দখল নিশ্চিত করে নিন।
+              </>
+            ) : (
+              'Favorable for purchase — dispute free. The documentary chain of title and mutation records are consistent. You may proceed with a registered earnest money agreement (Baina), ensuring a 12-year Sub-Registry Nil Search and boundary inspection are concluded prior to final deed execution.'
             )
           ) : isReviewRecommended ? (
             isBn ? (

@@ -1,4 +1,4 @@
-import { ParcelReference, LandEvent } from '../types';
+import { ParcelReference, LandEvent, SubRegistryIntegrationData } from '../types';
 
 export interface FictionalFinding {
   title: string;
@@ -35,6 +35,7 @@ export interface FictionalParcelRecord {
   missingInformationBn?: string[];
   recommendedNextSteps: string[];
   recommendedNextStepsBn?: string[];
+  subRegistryData?: SubRegistryIntegrationData;
   events: {
     id: string;
     type: 'transfer_related' | 'mutation_application' | 'mutation_completed';
@@ -105,6 +106,37 @@ export const MOCK_PARCELS: FictionalParcelRecord[] = [
       'সরেজমিনে সীমানা পিলার, প্রবেশাধিকার পথ এবং বর্তমান দখলদারের অবস্থান প্রত্যক্ষভাবে পরিদর্শন করুন।',
       'শুধুমাত্র ডিজিটাল তথ্যের ওপর ভিত্তি করে আর্থিক লেনদেনের সিদ্ধান্ত নেবেন না; সরেজমিন যাচাই করুন।',
     ],
+    subRegistryData: {
+      isConnected: true,
+      gatewayName: 'Gulshan Sub-Registry Digital Gateway (SRO-DH-04)',
+      gatewayNameBn: 'গুলশান সাব-রেজিস্ট্রার কার্যালয় ডিজিটাল গেটওয়ে (SRO-DH-04)',
+      lastSyncedAt: '2026-03-24 14:30',
+      ltNotice: {
+        hasNotice: true,
+        noticeNumber: 'LT-2024-GUL-9902',
+        noticeDate: '2024-05-12',
+        subRegistryOffice: 'Gulshan Sub-Registry Office, Dhaka',
+        subRegistryOfficeBn: 'গুলশান সাব-রেজিস্ট্রি অফিস, ঢাকা',
+        registrationStatus: 'registered_and_mutation_completed',
+        statusExplanation: 'Transfer deed registered. Statutory Section 89 LT Notice automatically transmitted to AC (Land) Revenue Circle, where mutation order was successfully finalized.',
+        statusExplanationBn: 'সাফ-কবলা দলিল রেজিস্ট্রি হয়েছে। সাব-রেজিস্ট্রি অফিস থেকে ৮৯ ধারা অনুযায়ী সরাসরি এসি (ল্যান্ড) সার্কেলে এলটি নোটিশ প্রেরণ করা হয় এবং নামজারি প্রক্রিয়া সফলভাবে নিষ্পত্তি হয়েছে।',
+      },
+      nilSearch: {
+        searchYears: 15,
+        balamBook: 'Book 1 & Index 1-2 (15 Years Nil Search)',
+        balamBookBn: '১ নম্বর বালাম ও সূচি বহি (বিগত ১৫ বছরের তল্লাশি)',
+        status: 'clear',
+        summary: '15-year historical index search revealed no undisclosed prior deeds, mortgages, or duplicate transfers.',
+        summaryBn: 'বিগত ১৫ বছরের বালাম বহিতে কোনো গোপন বা অপ্রকাশিত দলিল, ব্যাংক বন্ধক বা দ্বৈত দলিলের অস্তিত্ব পাওয়া যায়নি।',
+      },
+      litigation: {
+        hasLitigation: false,
+        caseCount: 0,
+        verdictLabel: 'No Lawsuits Detected (Clean Title)',
+        verdictLabelBn: 'কোনো মামলা নেই — নির্দায় ও বিরোধমুক্ত জমি',
+        cases: [],
+      },
+    },
     events: [
       {
         id: 'EVT-001-A',
@@ -198,6 +230,37 @@ export const MOCK_PARCELS: FictionalParcelRecord[] = [
       'কোনো ওয়ারিশ বা শরিক পক্ষ লিখিত আপত্তি জানিয়েছে কিনা তা রাজস্ব সার্কেলে খোঁজ নিন।',
       'একজন অভিজ্ঞ ভূমি আইনজীবী বা বিশেষজ্ঞের আইনি পরামর্শ গ্রহণ করুন।',
     ],
+    subRegistryData: {
+      isConnected: true,
+      gatewayName: 'Tejgaon Sub-Registry Digital Gateway (SRO-DH-09)',
+      gatewayNameBn: 'তেজগাঁও সাব-রেজিস্ট্রার কার্যালয় ডিজিটাল গেটওয়ে (SRO-DH-09)',
+      lastSyncedAt: '2026-03-22 11:15',
+      ltNotice: {
+        hasNotice: true,
+        noticeNumber: 'LT-2025-TEJ-4110',
+        noticeDate: '2025-08-16',
+        subRegistryOffice: 'Tejgaon Sub-Registry Office, Dhaka',
+        subRegistryOfficeBn: 'তেজগাঁও সাব-রেজিস্ট্রি অফিস, ঢাকা',
+        registrationStatus: 'registered_and_mutation_pending',
+        statusExplanation: 'Deed executed and LT Notice transmitted to Tejgaon Revenue Circle. AC (Land) mutation hearing is still pending.',
+        statusExplanationBn: 'দলিল রেজিস্ট্রি হয়েছে এবং তেজগাঁও রাজস্ব সার্কেলে এলটি নোটিশ পাঠানো হয়েছে। তবে এসি (ল্যান্ড) অফিসে নামজারি আবেদন শুনানাধীন রয়েছে; এখনো চূড়ান্ত আদেশ হয়নি।',
+      },
+      nilSearch: {
+        searchYears: 15,
+        balamBook: 'Book 1 & Index 1 (15 Years Nil Search)',
+        balamBookBn: '১ নম্বর বালাম ও সূচি বহি (বিগত ১৫ বছরের তল্লাশি)',
+        status: 'clear',
+        summary: 'No undisclosed mortgages or conflicting deeds found in Sub-Registry Book 1.',
+        summaryBn: 'বিগত ১৫ বছরের বালাম তল্লাশে কোনো অপ্রকাশিত বন্ধক বা গোপন দলিল পাওয়া যায়নি।',
+      },
+      litigation: {
+        hasLitigation: false,
+        caseCount: 0,
+        verdictLabel: 'No Active Lawsuits Detected',
+        verdictLabelBn: 'কোনো মামলা নেই — তবে নামজারি অনুমোদন পেন্ডিং',
+        cases: [],
+      },
+    },
     events: [
       {
         id: 'EVT-002-A',
@@ -279,6 +342,35 @@ export const MOCK_PARCELS: FictionalParcelRecord[] = [
       'সংশ্লিষ্ট রাজস্ব ও রেজিস্ট্রি অফিস থেকে বর্তমান স্বত্ব ও নামজারি স্থিতি যাচাই করুন।',
       'বায়না বা অগ্রিম টাকা পরিশোধের পূর্বে একজন অভিজ্ঞ ভূমি আইনজীবীর পরামর্শ নিন।',
     ],
+    subRegistryData: {
+      isConnected: true,
+      gatewayName: 'Dhanmondi Sub-Registry Digital Gateway (SRO-DH-03)',
+      gatewayNameBn: 'ধানমন্ডি সাব-রেজিস্ট্রার কার্যালয় ডিজিটাল গেটওয়ে (SRO-DH-03)',
+      lastSyncedAt: '2026-02-18 16:40',
+      ltNotice: {
+        hasNotice: false,
+        subRegistryOffice: 'Dhanmondi Sub-Registry Office, Dhaka',
+        subRegistryOfficeBn: 'ধানমন্ডি সাব-রেজিস্ট্রি অফিস, ঢাকা',
+        registrationStatus: 'no_recent_registration',
+        statusExplanation: 'No statutory LT Notice or registered transfer deed recorded in the automated gateway for this plot.',
+        statusExplanationBn: 'এই প্লটের বিপরীতে সাব-রেজিস্ট্রি গেটওয়েতে কোনো সাম্প্রতিক দলিল রেজিস্ট্রেশন বা এলটি নোটিশের রেকর্ড নেই।',
+      },
+      nilSearch: {
+        searchYears: 12,
+        balamBook: 'Book 1 (Archival Volumes)',
+        balamBookBn: '১ নম্বর বালাম (পুরনো আর্কাইভ ভলিউম)',
+        status: 'incomplete',
+        summary: 'Chain of Baya deeds missing from central digital index; physical archive inspection required.',
+        summaryBn: '২৫ বছরের বায়া দলিলের চেইন ডিজিটাল ইনডেক্সে অনুপস্থিত; সাব-রেজিস্ট্রির পুরনো বালাম ভলিউমে সরাসরি তল্লাশি আবশ্যক।',
+      },
+      litigation: {
+        hasLitigation: false,
+        caseCount: 0,
+        verdictLabel: 'Records Incomplete for Court Search',
+        verdictLabelBn: 'তথ্য অসম্পূর্ণ — দলিলের রেফারেন্স ছাড়া নিশ্চিত হওয়া যাচ্ছে না',
+        cases: [],
+      },
+    },
     events: [
       {
         id: 'EVT-003-A',
@@ -344,6 +436,50 @@ export const MOCK_PARCELS: FictionalParcelRecord[] = [
       'আর্থিক প্রতিষ্ঠানের কাছে মূল দলিল জমা আছে কিনা তা নিশ্চিত করুন।',
       'অফিশিয়াল ভূমি অফিস ও সাব-রেজিস্ট্রির মাধ্যমে বর্তমান স্বত্ব পর্যালোচনা করুন।',
     ],
+    subRegistryData: {
+      isConnected: true,
+      gatewayName: 'Panchlaish Sub-Registry Digital Gateway (SRO-CTG-02)',
+      gatewayNameBn: 'পাঁচলাইশ সাব-রেজিস্ট্রার কার্যালয় ডিজিটাল গেটওয়ে (SRO-CTG-02)',
+      lastSyncedAt: '2026-03-24 09:20',
+      ltNotice: {
+        hasNotice: true,
+        noticeNumber: 'LT-2024-PAN-771',
+        noticeDate: '2024-07-02',
+        subRegistryOffice: 'Panchlaish Sub-Registry Office, Chattogram',
+        subRegistryOfficeBn: 'পাঁচলাইশ সাব-রেজিস্ট্রি অফিস, চট্টগ্রাম',
+        registrationStatus: 'mortgage_lien_registered',
+        statusExplanation: 'Bank Mortgage Charge registered in favor of Agrani Bank PLC (Ref: MTG-DEMO-771) and Power of Attorney registered.',
+        statusExplanationBn: 'অগ্রণী ব্যাংক পিএলসি-র অনুকূলে আর্থিক মর্টগেজ চার্জ (রেফ: MTG-DEMO-771) এবং অপরাজেয় আমমোক্তারনামা রেজিস্ট্রি হয়েছে।',
+      },
+      nilSearch: {
+        searchYears: 25,
+        balamBook: 'Book 1 & Index 1-2 (25 Years Nil Search)',
+        balamBookBn: '১ নম্বর বালাম ও সূচি বহি (বিগত ২৫ বছরের তল্লাশি)',
+        status: 'disputed',
+        summary: '25-year title search uncovered active bank mortgage lien and pending civil court dispute.',
+        summaryBn: 'বিগত ২৫ বছরের বালাম তল্লাশে সক্রিয় ব্যাংক বন্ধক এবং সাব-রেজিস্ট্রিতে তালিকাভুক্ত দেওয়ানি মোকদ্দমার অস্তিত্ব নিশ্চিত হয়েছে।',
+      },
+      litigation: {
+        hasLitigation: true,
+        caseCount: 1,
+        verdictLabel: 'Active Civil Lawsuit & Injunction Detected!',
+        verdictLabelBn: 'সতর্কতা: জমিতে সক্রিয় দেওয়ানি মামলা ও আদালতের নিষেধাজ্ঞা রয়েছে!',
+        cases: [
+          {
+            caseNumber: 'দেওয়ানি মোকদ্দমা নং ৮৪/২০২৫ (Civil Suit No. 84/2025)',
+            courtName: '১ম যুগ্ম জেলা জজ আদালত, চট্টগ্রাম',
+            courtNameBn: '১ম যুগ্ম জেলা জজ আদালত, চট্টগ্রাম',
+            caseType: 'স্বত্ব ঘোষণা, বাটোয়ারা ও স্থায়ী নিষেধাজ্ঞা মোকদ্দমা',
+            caseTypeBn: 'স্বত্ব ঘোষণা, বাটোয়ারা ও স্থায়ী নিষেধাজ্ঞা মোকদ্দমা',
+            hasInjunction: true,
+            status: 'বিচারাধীন (Pending Trial)',
+            statusBn: 'বিচারাধীন — আদালতের অস্থায়ী নিষেধাজ্ঞা (Ad-interim Injunction) বলবৎ',
+            summary: 'The civil court has granted an interim injunction prohibiting any transfer, registration, or construction on Plot 210 pending final decree. Transfer is legally barred.',
+            summaryBn: 'আদালত ২১০ নম্বর দাগের জমিতে যেকোনো ধরনের বিক্রয়, দলিল রেজিস্ট্রি বা নির্মাণকাজের ওপর অস্থায়ী নিষেধাজ্ঞা জারি করেছেন। মামলা নিষ্পত্তি ছাড়া জমি হস্তান্তর সম্পূর্ণ বেআইনি।',
+          },
+        ],
+      },
+    },
     events: [
       {
         id: 'EVT-004-A',
@@ -416,6 +552,35 @@ export const MOCK_PARCELS: FictionalParcelRecord[] = [
       'টাকা পরিশোধের পূর্বে সংশ্লিষ্ট সহকারী কমিশনার (ভূমি) অফিসে গিয়ে খতিয়ানের অমিল নিষ্পত্তি করুন।',
       'মূল ও সার্টিফাইড পর্চার দাগ ও সীমানার সাথে বাস্তব জমির মাপ তুলনা করুন।',
     ],
+    subRegistryData: {
+      isConnected: true,
+      gatewayName: 'Savar Sub-Registry Digital Gateway (SRO-DH-14)',
+      gatewayNameBn: 'সাভার সাব-রেজিস্ট্রার কার্যালয় ডিজিটাল গেটওয়ে (SRO-DH-14)',
+      lastSyncedAt: '2026-03-20 12:00',
+      ltNotice: {
+        hasNotice: false,
+        subRegistryOffice: 'Savar Sub-Registry Office, Dhaka',
+        subRegistryOfficeBn: 'সাভার সাব-রেজিস্ট্রি অফিস, ঢাকা',
+        registrationStatus: 'no_recent_registration',
+        statusExplanation: 'No recent deed registration or LT notice transmitted for Dag 999 under JL 45.',
+        statusExplanationBn: 'জেএল ৪৫ এর অধীন দাগ ৯৯৯ এর জন্য কোনো সাম্প্রতিক দলিল রেজিস্ট্রি বা এলটি নোটিশ আসেনি।',
+      },
+      nilSearch: {
+        searchYears: 15,
+        balamBook: 'Book 1 (SA Records Archive)',
+        balamBookBn: '১ নম্বর বালাম (এসএ রেকর্ড আর্কাইভ)',
+        status: 'incomplete',
+        summary: 'Cadastral discrepancies detected between SA and RS sheets; joint survey recommended.',
+        summaryBn: 'এসএ ও আরএস খতিয়ানের মধ্যে জমির পরিমাপে অসঙ্গতি রয়েছে; সীমানা নির্ধারণ প্রয়োজন।',
+      },
+      litigation: {
+        hasLitigation: false,
+        caseCount: 0,
+        verdictLabel: 'Boundary Variance Under Review',
+        verdictLabelBn: 'কোনো মামলা নথিবদ্ধ নেই — তবে সীমানা পরিমাপে অমিল',
+        cases: [],
+      },
+    },
     events: [
       {
         id: 'EVT-005-A',
@@ -476,6 +641,35 @@ export const MOCK_PARCELS: FictionalParcelRecord[] = [
       'সহকারী কমিশনার (ভূমি) অফিসের মাধ্যমে খতিয়ানের তথ্যের অমিল দূর করুন।',
       'একজন অভিজ্ঞ ভূমি বিশেষজ্ঞ বা সার্ভেয়ারের পরামর্শ নিন।',
     ],
+    subRegistryData: {
+      isConnected: true,
+      gatewayName: 'Savar Sub-Registry Digital Gateway (SRO-DH-14)',
+      gatewayNameBn: 'সাভার সাব-রেজিস্ট্রার কার্যালয় ডিজিটাল গেটওয়ে (SRO-DH-14)',
+      lastSyncedAt: '2026-03-20 12:00',
+      ltNotice: {
+        hasNotice: false,
+        subRegistryOffice: 'Savar Sub-Registry Office, Dhaka',
+        subRegistryOfficeBn: 'সাভার সাব-রেজিস্ট্রি অফিস, ঢাকা',
+        registrationStatus: 'no_recent_registration',
+        statusExplanation: 'RS survey revision registered without new transfer conveyance.',
+        statusExplanationBn: 'নতুন কোনো হস্তান্তর ছাড়া আরএস জরিপের সংশোধনী এন্ট্রি হয়েছে।',
+      },
+      nilSearch: {
+        searchYears: 15,
+        balamBook: 'Book 1 (Modern Revision)',
+        balamBookBn: '১ নম্বর বালাম (আধুনিক আরএস সংশোধন)',
+        status: 'incomplete',
+        summary: 'Acreage discrepancy under investigation.',
+        summaryBn: 'পরিমাপ হ্রাস পাওয়ার কারণ অনুসন্ধানী পর্যায়ে রয়েছে।',
+      },
+      litigation: {
+        hasLitigation: false,
+        caseCount: 0,
+        verdictLabel: 'No Lawsuit on File',
+        verdictLabelBn: 'কোনো মামলা নথিবদ্ধ নেই',
+        cases: [],
+      },
+    },
     events: [
       {
         id: 'EVT-006-A',
@@ -543,6 +737,35 @@ export const MOCK_PARCELS: FictionalParcelRecord[] = [
       'অফিশিয়াল চ্যানেলের মাধ্যমে বর্তমান রেকর্ড ও নামজারি স্থিতি স্বাধীনভাবে যাচাই করুন।',
       'একজন অভিজ্ঞ ভূমি আইনজীবীর সঙ্গে পরামর্শ করুন।',
     ],
+    subRegistryData: {
+      isConnected: true,
+      gatewayName: 'Sylhet Sadar Sub-Registry Digital Gateway (SRO-SYL-01)',
+      gatewayNameBn: 'সিলেট সদর সাব-রেজিস্ট্রার কার্যালয় ডিজিটাল গেটওয়ে (SRO-SYL-01)',
+      lastSyncedAt: '2026-03-23 10:30',
+      ltNotice: {
+        hasNotice: false,
+        subRegistryOffice: 'Sylhet Sadar Sub-Registry Office',
+        subRegistryOfficeBn: 'সিলেট সদর সাব-রেজিস্ট্রি অফিস',
+        registrationStatus: 'no_recent_registration',
+        statusExplanation: 'No events or LT notices recorded in the gateway.',
+        statusExplanationBn: 'গেটওয়েতে কোনো রেজিস্ট্রি বা এলটি নোটিশ নথিবদ্ধ নেই।',
+      },
+      nilSearch: {
+        searchYears: 12,
+        balamBook: 'Book 1 (Zindabazar Circle)',
+        balamBookBn: '১ নম্বর বালাম (জিন্দাবাজার সার্কেল)',
+        status: 'incomplete',
+        summary: 'Manual ledger inspection required.',
+        summaryBn: 'সশরীরে বালাম পরিদর্শনের প্রয়োজন রয়েছে।',
+      },
+      litigation: {
+        hasLitigation: false,
+        caseCount: 0,
+        verdictLabel: 'Unverified Offline Ledger',
+        verdictLabelBn: 'রেকর্ড অনুপস্থিত — অফলাইন অনুসন্ধান জরুরি',
+        cases: [],
+      },
+    },
     events: [],
   },
 
@@ -595,6 +818,37 @@ export const MOCK_PARCELS: FictionalParcelRecord[] = [
       'মূল ও সার্টিফাইড নথির সাথে দাগ ও খতিয়ান নম্বরের সত্যতা নিশ্চিত করুন।',
       'মূল রেজিস্ট্রিকৃত বায়া দলিল ও সংশ্লিষ্ট প্রমাণাদি পর্যালোচনা করুন।',
     ],
+    subRegistryData: {
+      isConnected: true,
+      gatewayName: 'Gazipur Sadar Sub-Registry Digital Gateway (SRO-GAZ-01)',
+      gatewayNameBn: 'গাজীপুর সদর সাব-রেজিস্ট্রার কার্যালয় ডিজিটাল গেটওয়ে (SRO-GAZ-01)',
+      lastSyncedAt: '2026-03-24 11:45',
+      ltNotice: {
+        hasNotice: true,
+        noticeNumber: 'LT-2025-GAZ-8819',
+        noticeDate: '2025-11-25',
+        subRegistryOffice: 'Gazipur Sadar Sub-Registry Office',
+        subRegistryOfficeBn: 'গাজীপুর সদর সাব-রেজিস্ট্রি অফিস',
+        registrationStatus: 'registered_and_mutation_pending',
+        statusExplanation: 'Recent deed registration recorded; LT Notice transmitted for mutation.',
+        statusExplanationBn: 'সাম্প্রতিক দলিল রেজিস্ট্রি হয়েছে এবং নামজারির জন্য এলটি নোটিশ পাঠানো হয়েছে।',
+      },
+      nilSearch: {
+        searchYears: 15,
+        balamBook: 'Book 1 (Joydebpur Mouza)',
+        balamBookBn: '১ নম্বর বালাম (জয়দেবপুর মৌজা)',
+        status: 'clear',
+        summary: '15-year title search clear of undisclosed liens.',
+        summaryBn: '১৫ বছরের তল্লাশে কোনো অপ্রকাশিত দায় মেলেনি।',
+      },
+      litigation: {
+        hasLitigation: false,
+        caseCount: 0,
+        verdictLabel: 'No Lawsuit on File',
+        verdictLabelBn: 'কোনো মামলা নথিবদ্ধ নেই',
+        cases: [],
+      },
+    },
     events: [
       {
         id: 'EVT-008-A',

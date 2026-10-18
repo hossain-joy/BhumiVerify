@@ -11,6 +11,7 @@ import { isParcelPaid, markParcelPaid, getParcelTxnId } from '../utils/paymentSt
 import { useAuth } from '../context/AuthContext';
 import { MonthlyQuotaCard } from '../components/land/MonthlyQuotaCard';
 import { ClearLandConceptCard } from '../components/land/ClearLandConceptCard';
+import { SubRegistryLiveCard } from '../components/land/SubRegistryLiveCard';
 import { getMonthlyQuota, recordVerificationApplication, QuotaStatus } from '../utils/quotaService';
 import {
   ArrowLeft,
@@ -474,6 +475,9 @@ export const ParcelResultsPage: React.FC = () => {
             : 'This summary presents an automated rule-based analysis of recorded land events and identifiers.'}
         </p>
       </div>
+
+      {/* 1.4. Sub-Registry Office Direct Connection, LT Notice & 12-15 Year Nil Search & Lawsuit Verdict */}
+      <SubRegistryLiveCard subRegistry={parcel.subRegistryData} isBn={isBn} />
 
       {/* 1.5. Clear Land Concept & Buyer Verdict (Plain-Language Transparency) */}
       <ClearLandConceptCard parcel={parcel} isBn={isBn} />

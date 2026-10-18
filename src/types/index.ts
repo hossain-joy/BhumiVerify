@@ -241,3 +241,55 @@ export const DATA_CATEGORIES = [
     description: 'Timestamp of last simulated feed synchronization from respective land authority systems.',
   },
 ];
+
+export interface SubRegistryLTNotice {
+  hasNotice: boolean;
+  noticeNumber?: string;
+  noticeDate?: string;
+  subRegistryOffice: string;
+  subRegistryOfficeBn: string;
+  registrationStatus: 'registered_and_mutation_completed' | 'registered_and_mutation_pending' | 'mortgage_lien_registered' | 'no_recent_registration';
+  statusExplanation: string;
+  statusExplanationBn: string;
+}
+
+export interface SubRegistryNilSearchResult {
+  searchYears: number; // e.g. 12, 15, 25
+  balamBook: string;
+  balamBookBn: string;
+  status: 'clear' | 'disputed' | 'incomplete';
+  summary: string;
+  summaryBn: string;
+}
+
+export interface LitigationCaseDetail {
+  caseNumber: string;
+  courtName: string;
+  courtNameBn: string;
+  caseType: string;
+  caseTypeBn: string;
+  hasInjunction: boolean;
+  status: string;
+  statusBn: string;
+  summary: string;
+  summaryBn: string;
+}
+
+export interface LitigationInfo {
+  hasLitigation: boolean;
+  verdictLabel: string;
+  verdictLabelBn: string;
+  caseCount: number;
+  cases?: LitigationCaseDetail[];
+}
+
+export interface SubRegistryIntegrationData {
+  isConnected: boolean;
+  gatewayName: string;
+  gatewayNameBn: string;
+  lastSyncedAt: string;
+  ltNotice: SubRegistryLTNotice;
+  nilSearch: SubRegistryNilSearchResult;
+  litigation: LitigationInfo;
+}
+

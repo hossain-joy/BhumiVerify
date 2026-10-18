@@ -350,7 +350,38 @@ export const CheckLandPage: React.FC = () => {
           explanation: 'Mutation entry cross-checked against Upazila Land Office revenue register.',
           explanationBn: 'উপজেলা ভূমি অফিসের রেজিস্টার অনুযায়ী নামজারি আবেদনের তথ্য পর্যালোচনায় রাখা হয়েছে।'
         }
-      ]
+      ],
+      subRegistryData: {
+        isConnected: true,
+        gatewayName: `${formFields.upazila || 'Sadar'} Sub-Registry Digital Gateway`,
+        gatewayNameBn: `${formFields.upazila || 'সদর'} সাব-রেজিস্ট্রার কার্যালয় ডিজিটাল গেটওয়ে`,
+        lastSyncedAt: new Date().toISOString().replace('T', ' ').substring(0, 16),
+        ltNotice: {
+          hasNotice: true,
+          noticeNumber: `LT-${new Date().getFullYear()}-${formFields.upazila ? formFields.upazila.substring(0, 3).toUpperCase() : 'REG'}-${Math.floor(1000 + Math.random() * 9000)}`,
+          noticeDate: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          subRegistryOffice: `${formFields.upazila || formFields.district} Sub-Registry Office`,
+          subRegistryOfficeBn: `${formFields.upazila || formFields.district} সাব-রেজিস্ট্রি অফিস`,
+          registrationStatus: 'registered_and_mutation_pending',
+          statusExplanation: 'Deed registration was completed at the Sub-Registry. A statutory Section 89 LT Notice has been transmitted to AC (Land), indicating mutation proceedings are initiated.',
+          statusExplanationBn: 'সাব-রেজিস্ট্রি অফিসে সাফ-কবলা দলিল রেজিস্ট্রি সম্পন্ন হয়েছে। ৮৯ ধারা অনুযায়ী সরাসরি এসি (ল্যান্ড) অফিসে এলটি নোটিশ পাঠানো হয়েছে—যার মাধ্যমে বোঝা যাচ্ছে জমিতে নামজারি (Mutation) প্রক্রিয়া চলমান রয়েছে।',
+        },
+        nilSearch: {
+          searchYears: 15,
+          balamBook: `Book 1 & Index 1-2 (${formFields.mouza || 'Mouza'} Archive)`,
+          balamBookBn: `১ নম্বর বালাম ও সূচি বহি (${formFields.mouza || 'মৌজা'} আর্কাইভ)`,
+          status: 'clear',
+          summary: '15-year Nil Search across volume indexes reveals no registered bank mortgages or undisclosed deeds.',
+          summaryBn: 'বিগত ১৫ বছরের বালাম ও ইনডেক্স তল্লাশে কোনো ব্যাংক বন্ধক বা গোপন বায়া দলিলের বিরোধ মেলেনি।',
+        },
+        litigation: {
+          hasLitigation: false,
+          caseCount: 0,
+          verdictLabel: 'No Lawsuit on File (Clean Title)',
+          verdictLabelBn: 'মামলা নাই — জমিতে কোনো দেওয়ানি মামলা বা নিষেধাজ্ঞা নেই',
+          cases: [],
+        },
+      },
     };
 
     sessionStorage.setItem(`bhumiverify_parcel_${customParcel.id}`, JSON.stringify(customParcel));

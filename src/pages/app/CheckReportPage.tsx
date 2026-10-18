@@ -4,6 +4,7 @@ import { useSavedChecks } from '../../context/SavedChecksContext';
 import { MOCK_PARCELS, FictionalParcelRecord } from '../../data/mockParcels';
 import { Modal } from '../../components/common/Modal';
 import { ClearLandConceptCard } from '../../components/land/ClearLandConceptCard';
+import { SubRegistryLiveCard } from '../../components/land/SubRegistryLiveCard';
 import { useLanguage } from '../../context/LanguageContext';
 import { formatStatusLabel, toBengaliNumerals } from '../../utils/formatStatus';
 import { getTaskTitle, getTaskDescription, getTaskNotes } from '../../utils/taskTranslations';
@@ -111,6 +112,39 @@ export const CheckReportPage: React.FC = () => {
               ]
             : []),
         ],
+        subRegistryData: {
+          isConnected: true,
+          gatewayName: `${check.upazila || 'Sadar'} Sub-Registry Digital Gateway`,
+          gatewayNameBn: `${check.upazila || 'সদর'} সাব-রেজিস্ট্রার কার্যালয় ডিজিটাল গেটওয়ে`,
+          lastSyncedAt: new Date(check.createdAt).toISOString().replace('T', ' ').substring(0, 16),
+          ltNotice: {
+            hasNotice: true,
+            noticeNumber: `LT-${new Date().getFullYear()}-${check.upazila ? check.upazila.substring(0, 3).toUpperCase() : 'REG'}-4401`,
+            noticeDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            subRegistryOffice: `${check.upazila || check.district} Sub-Registry Office`,
+            subRegistryOfficeBn: `${check.upazila || check.district} সাব-রেজিস্ট্রি অফিস`,
+            registrationStatus: check.statusLabel.includes('No Major') || check.statusLabel.includes('বড় অসঙ্গতি')
+              ? 'registered_and_mutation_completed'
+              : 'registered_and_mutation_pending',
+            statusExplanation: 'Deed registration recorded. Statutory Section 89 LT Notice transmitted from Sub-Registry to AC (Land).',
+            statusExplanationBn: 'দলিল রেজিস্ট্রি সম্পন্ন হয়েছে এবং ৮৯ ধারা অনুযায়ী সাব-রেজিস্ট্রি অফিস থেকে এসি (ল্যান্ড) অফিসে এলটি নোটিশ পাঠানো হয়েছে।',
+          },
+          nilSearch: {
+            searchYears: 15,
+            balamBook: `Book 1 & Index 1-2 (${check.mouza || 'Mouza'} Archive)`,
+            balamBookBn: `১ নম্বর বালাম ও সূচি বহি (${check.mouza || 'মৌজা'} আর্কাইভ)`,
+            status: check.statusLabel.includes('No Major') || check.statusLabel.includes('বড় অসঙ্গতি') ? 'clear' : 'incomplete',
+            summary: '15-year Nil Search across volume indexes reveals no registered bank mortgages or conflicts.',
+            summaryBn: 'বিগত ১৫ বছরের বালাম ও ইনডেক্স তল্লাশে কোনো ব্যাংক বন্ধক বা গোপন বায়া দলিলের বিরোধ মেলেনি।',
+          },
+          litigation: {
+            hasLitigation: false,
+            caseCount: 0,
+            verdictLabel: 'No Lawsuit on File (Clean Title)',
+            verdictLabelBn: 'মামলা নাই — জমিতে কোনো দেওয়ানি মামলা বা নিষেধাজ্ঞা নেই',
+            cases: [],
+          },
+        },
       }
     : null;
 
@@ -275,6 +309,11 @@ export const CheckReportPage: React.FC = () => {
               </p>
             </div>
           </div>
+
+          {/* Sub-Registry Office Direct Connection, LT Notice & 12-15 Year Nil Search & Lawsuit Verdict */}
+          {parcelForConcept?.subRegistryData && (
+            <SubRegistryLiveCard subRegistry={parcelForConcept.subRegistryData} isBn={isBn} />
+          )}
 
           {/* Clear Land Concept & Buyer Plain-Language Verdict */}
           {parcelForConcept && (
