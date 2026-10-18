@@ -66,7 +66,7 @@ export const MissingInformation: React.FC<MissingInformationProps> = ({ parcel }
           <p className="text-[10px] text-slate-500 italic pt-1 leading-snug">
             {language === 'bn'
               ? 'তথ্য অপ্রতুলতার অর্থ জমিটি দায়মুক্ত নয়; সংশ্লিষ্ট ভূমি অফিসে এটি যাচাই সাপেক্ষ।'
-              : 'Unavailability in sample records indicates incomplete information, not an unencumbered property.'}
+              : 'Unavailability in records indicates incomplete information, not an unencumbered property.'}
           </p>
         </div>
 

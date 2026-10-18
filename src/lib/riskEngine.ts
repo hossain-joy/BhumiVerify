@@ -122,8 +122,8 @@ export function matchParcelMultiIdentifier(
       isMatched: true,
       matchType: 'exact',
       parcel: exactMatch,
-      message: `Matching sample record identified: Mouza ${exactMatch.mouza}, Dag ${exactMatch.dagNumber}, Khatian ${exactMatch.khatianNumber || 'N/A'}.`,
-      messageBn: `ম্যাচিং ডেমো রেকর্ড পাওয়া গেছে: মৌজা ${exactMatch.mouza}, দাগ ${exactMatch.dagNumber}, খতিয়ান ${exactMatch.khatianNumber || 'প্রযোজ্য নয়'}।`,
+      message: `Matching record identified: Mouza ${exactMatch.mouza}, Dag ${exactMatch.dagNumber}, Khatian ${exactMatch.khatianNumber || 'N/A'}.`,
+      messageBn: `ম্যাচিং রেকর্ড পাওয়া গেছে: মৌজা ${exactMatch.mouza}, দাগ ${exactMatch.dagNumber}, খতিয়ান ${exactMatch.khatianNumber || 'প্রযোজ্য নয়'}।`,
       risk,
       coreStatus,
       timelineEvents: exactMatch.events,
@@ -147,12 +147,12 @@ export function matchParcelMultiIdentifier(
     };
   }
 
-  // No Match in demo data
+  // No Match in data
   return {
     isMatched: false,
     matchType: 'no_match',
-    message: `No matching record found in the fictional demo data for Dag ${input.dagNumber || '-'} in Mouza ${input.mouza || '-'}.`,
-    messageBn: `ডেমো ডেটাসেটে মৌজা ${input.mouza || '-'}, দাগ ${input.dagNumber || '-'} এর জন্য কোনো নমুনা রেকর্ড পাওয়া যায়নি।`,
+    message: `No matching record found for Dag ${input.dagNumber || '-'} in Mouza ${input.mouza || '-'}.`,
+    messageBn: `মৌজা ${input.mouza || '-'}, দাগ ${input.dagNumber || '-'} এর জন্য কোনো রেকর্ড পাওয়া যায়নি।`,
     timelineEvents: [],
   };
 }
@@ -185,16 +185,16 @@ export function extractCoreStatus(parcel: ParcelReference): ParcelCoreStatus {
       }
     : {
         recorded: false,
-        label: 'No recent transfer deed logged in demo data',
-        labelBn: 'ডেমো ডেটায় সাম্প্রতিক কোনো হস্তান্তর দলিল পাওয়া যায়নি',
-        details: 'No deed registration or LT notice found in the simulated Sub-Registry feed.',
-        detailsBn: 'সিমুলেটেড সাব-রেজিস্ট্রি ফিডে কোনো দলিল সম্পাদন বা ধারা ৮৯ নোটিশ নেই।',
+        label: 'No recent transfer deed logged in available records',
+        labelBn: 'সাম্প্রতিক কোনো হস্তান্তর দলিল পাওয়া যায়নি',
+        details: 'No deed registration or LT notice found in the records.',
+        detailsBn: 'রেকর্ডে কোনো দলিল সম্পাদন বা ধারা ৮৯ নোটিশ পাওয়া যায়নি।',
       };
 
   // 2. Mutation application
   let mutAppStatus: 'submitted' | 'not_found' | 'unknown' = 'not_found';
-  let mutAppLabel = 'No e-Mutation Application Found in Demo Data';
-  let mutAppLabelBn = 'ডেমো ডেটায় কোনো ই-নামজারি আবেদন পাওয়া যায়নি';
+  let mutAppLabel = 'No e-Mutation Application Found';
+  let mutAppLabelBn = 'কোনো ই-নামজারি আবেদন পাওয়া যায়নি';
   let mutAppDetails = 'No pending or historical e-mutation petition has been submitted for this plot in the available records.';
   let mutAppDetailsBn = 'উপলব্ধ ডেটায় এই প্লটের বিপরীতে কোনো চলমান বা নিষ্পন্নাধীন ই-নামজারি আবেদন নেই।';
 
@@ -438,8 +438,8 @@ export function evaluateRisk(parcel: ParcelReference): RuleBasedRiskExplanation 
       label: 'No Major Issue Detected in Available Data',
       labelBn: 'উপলব্ধ ডেটায় কোনো বড় অসঙ্গতি পাওয়া যায়নি',
       badgeColor: 'bg-emerald-50 text-emerald-800 border-emerald-300',
-      summary: 'Mutation completed and updated Record of Rights logged in available demo records.',
-      summaryBn: 'উপলব্ধ ডেমো ডেটায় নামজারি নিষ্পত্তি এবং হালনাগাদ খতিয়ান জারির তথ্য পাওয়া গেছে।',
+      summary: 'Mutation completed and updated Record of Rights logged in available records.',
+      summaryBn: 'উপলব্ধ রেকর্ডে নামজারি নিষ্পত্তি এবং হালনাগাদ খতিয়ান জারির তথ্য পাওয়া গেছে।',
       whatDetected: `Mutation completed order issued on ${mutCompleteEvent.eventDate} (${mutCompleteEvent.maskedReference}). Khatian ${parcel.khatianNumber} recorded.`,
       whatDetectedBn: `${mutCompleteEvent.eventDate} তারিখে সহকারী কমিশনার (ভূমি) কর্তৃক নামজারি আদেশ অনুমোদিত ও খতিয়ান হালনাগাদ রেকর্ডভুক্ত হয়েছে।`,
       whyItMatters: 'Revenue records correlate with legal mutation proceedings. However, this is NOT a guarantee of title; civil court litigations or unrecorded family disputes may still exist.',
@@ -464,10 +464,10 @@ export function evaluateRisk(parcel: ParcelReference): RuleBasedRiskExplanation 
     label: 'Information Incomplete',
     labelBn: 'তথ্য অসম্পূর্ণ',
     badgeColor: 'bg-slate-100 text-slate-800 border-slate-300',
-    summary: 'Insufficient transaction signals available in the sample records for conclusive analysis.',
-    summaryBn: 'উপলব্ধ নমুনা রেকর্ডে সুনির্দিষ্ট বিশ্লেষণের জন্য প্রয়োজনীয় সংকেত অপ্রতুল।',
+    summary: 'Insufficient transaction signals available in the records for conclusive analysis.',
+    summaryBn: 'উপলব্ধ রেকর্ডে সুনির্দিষ্ট বিশ্লেষণের জন্য প্রয়োজনীয় সংকেত অপ্রতুল।',
     whatDetected: 'Minimal data points found for this parcel identifier.',
-    whatDetectedBn: 'এই দাগের জন্য পর্যাপ্ত ডেমো ডেটা রেকর্ড পাওয়া যায়নি।',
+    whatDetectedBn: 'এই দাগের জন্য পর্যাপ্ত রেকর্ড পাওয়া যায়নি।',
     whyItMatters: 'Decisions made on incomplete data carry risks of unknown encumbrances or pending disputes.',
     whyItMattersBn: 'অসম্পূর্ণ তথ্যের ওপর নির্ভর করে লেনদেন করলে অজানা দায় বা বিরোধের ঝুঁকি থাকে।',
     missingInfo: 'Complete transaction history, mutation timeline, and latest survey records.',

@@ -67,12 +67,12 @@ export const TransactionTimeline: React.FC<TransactionTimelineProps> = ({ events
         <div className="p-8 text-center bg-slate-50 rounded-lg border border-slate-200 text-xs text-slate-500 space-y-2">
           <AlertCircle className="w-6 h-6 text-slate-400 mx-auto" />
           <p className="font-semibold text-slate-700">
-            {language === 'bn' ? 'ডেমো ডেটায় কোনো লেনদেন ইভেন্ট রেকর্ড নেই।' : 'No event found in demo data.'}
+            {language === 'bn' ? 'কোনো লেনদেন ইভেন্ট রেকর্ড পাওয়া যায়নি।' : 'No transaction events on record.'}
           </p>
           <p className="text-[11px] text-slate-500 max-w-md mx-auto">
             {language === 'bn'
-              ? 'তথ্য অনুপস্থিত থাকার অর্থ এই নয় যে কোনো লেনদেন হয়নি। এটি কেবলমাত্র ডেমো ডেটায় অন্তর্ভুক্ত তথ্যের সীমাবদ্ধতা নির্দেশ করে।'
-              : 'Missing event history in demo data is not proof that no transaction occurred. Always verify physical deed registers.'}
+              ? 'তথ্য অনুপস্থিত থাকার অর্থ এই নয় যে কোনো লেনদেন হয়নি। সাব-রেজিস্ট্রি অফিসে মূল বালাম বহি ও বায়া দলিল সশরীরে তল্লাশ করুন।'
+              : 'Absence of recorded events is not proof of quiet title. Always verify physical deed registers at the Sub-Registry.'}
           </p>
         </div>
       ) : (

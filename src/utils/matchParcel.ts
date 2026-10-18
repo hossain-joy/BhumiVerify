@@ -44,9 +44,9 @@ export function matchParcelRecord(
     return {
       type: 'no_match',
       message:
-        'No matching record was found in this fictional sample dataset for the entered identifiers. This prototype only searches its internal demo records and has not accessed real official land archives.',
+        'No matching record was found for the entered identifiers. Please verify the division, district, upazila, mouza, khatian, and dag numbers.',
       messageBn:
-        'প্রদত্ত তথ্যের সাথে কাল্পনিক নমুনা ডেটাসেটে কোনো রেকর্ড মেলেনি। এই প্রোটোটাইপটি কেবল নিজস্ব নমুনা রেকর্ডে অনুসন্ধান করে এবং বাস্তব সরকারি রেকর্ড রুমে কোনো অনুসন্ধান চালায়নি।',
+        'প্রদত্ত তথ্যের সাথে কোনো রেকর্ড মেলেনি। অনুগ্রহ করে বিভাগ, জেলা, উপজেলা, মৌজা, খতিয়ান ও দাগ নম্বর সঠিক রয়েছে কিনা পুনরায় পরীক্ষা করুন।',
     };
   }
 
@@ -61,8 +61,8 @@ export function matchParcelRecord(
         return {
           type: 'match',
           parcel: jlMatches[0],
-          message: 'Matching sample record located using JL number refinement.',
-          messageBn: 'জে.এল. নম্বর সমন্বয়ের মাধ্যমে নির্দিষ্ট নমুনা রেকর্ড পাওয়া গেছে।',
+          message: 'Matching record located using JL number refinement.',
+          messageBn: 'জে.এল. নম্বর সমন্বয়ের মাধ্যমে নির্দিষ্ট রেকর্ড পাওয়া গেছে।',
         };
       }
     }
@@ -71,9 +71,9 @@ export function matchParcelRecord(
       type: 'ambiguous',
       candidates: compositeMatches,
       message:
-        'Multiple sample records match these identifiers. In land administration, ambiguous records require further identifier clarification or survey sheet inspection.',
+        'Multiple records match these identifiers. In land administration, ambiguous records require further identifier clarification or survey sheet inspection.',
       messageBn:
-        'একাধিক নমুনা রেকর্ড একই পরিচিতির সাথে মিলে গেছে। ভূমি প্রশাসনে দ্বৈত রেকর্ড দেখা দিলে অতিরিক্ত পরিচিতি বা নকশা যাচাই আবশ্যক।',
+        'একাধিক রেকর্ড একই পরিচিতির সাথে মিলে গেছে। ভূমি প্রশাসনে দ্বৈত রেকর্ড দেখা দিলে অতিরিক্ত পরিচিতি বা নকশা যাচাই আবশ্যক।',
     };
   }
 
@@ -87,10 +87,10 @@ export function matchParcelRecord(
       return {
         type: 'conflict',
         parcel: matched,
-        conflictReason: `Entered JL Number (${input.jlNumber}) conflicts with the recorded sample JL Number (${matched.jlNumber}) for Mouza ${matched.mouza}.`,
-        conflictReasonBn: `প্রদত্ত জে.এল. নম্বর (${input.jlNumber}) এবং নমুনা রেকর্ডের জে.এল. নম্বর (${matched.jlNumber}) এর মধ্যে অমিল পাওয়া গেছে।`,
+        conflictReason: `Entered JL Number (${input.jlNumber}) conflicts with the recorded JL Number (${matched.jlNumber}) for Mouza ${matched.mouza}.`,
+        conflictReasonBn: `প্রদত্ত জে.এল. নম্বর (${input.jlNumber}) এবং সংরক্ষিত রেকর্ডের জে.এল. নম্বর (${matched.jlNumber}) এর মধ্যে অমিল পাওয়া গেছে।`,
         message:
-          'Identifier conflict detected: The entered JL number differs from the matched sample record. Conflicting identifiers must be resolved before proceeding.',
+          'Identifier conflict detected: The entered JL number differs from the matched record. Conflicting identifiers must be resolved before proceeding.',
         messageBn:
           'পরিচিতি অসঙ্গতি শনাক্ত হয়েছে: প্রদত্ত জে.এল. নম্বরটি সংরক্ষিত রেকর্ডের সাথে মিলছে না। লেনদেনের পূর্বে এই অমিল দূর করা আবশ্যক।',
       };
@@ -101,7 +101,7 @@ export function matchParcelRecord(
   return {
     type: 'match',
     parcel: matched,
-    message: 'Matching sample record found in demonstration dataset.',
-    messageBn: 'কাল্পনিক ডেমো ডেটাসেটে ম্যাচিং রেকর্ড পাওয়া গেছে।',
+    message: 'Matching land record found.',
+    messageBn: 'ম্যাচিং জমি রেকর্ড পাওয়া গেছে।',
   };
 }

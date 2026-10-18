@@ -16,8 +16,8 @@ export const NotFoundPage: React.FC = () => {
       </h2>
       <p className="text-xs text-slate-500 leading-relaxed">
         {language === 'bn'
-          ? 'অনুরোধকৃত রুট বা পাতাটি ল্যান্ডটেক বিডি প্ল্যাটফর্মে বিদ্যমান নেই।'
-          : 'The requested public service route or dossier does not exist in LandTech BD.'}
+          ? 'অনুরোধকৃত রুট বা পাতাটি ভূমিভেরিফাই প্ল্যাটফর্মে বিদ্যমান নেই।'
+          : 'The requested route or record does not exist in BhumiVerify.'}
       </p>
       <div className="pt-2">
         <Link

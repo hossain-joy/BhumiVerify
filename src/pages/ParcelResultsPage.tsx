@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
+import { useSavedChecks } from '../context/SavedChecksContext';
 import { MOCK_PARCELS, FictionalParcelRecord } from '../data/mockParcels';
 import { assessParcel } from '../utils/assessParcel';
 import { sortTimelineEvents } from '../utils/sortEvents';
 import { formatSafeDate } from '../utils/formatDate';
 import { Disclaimer } from '../components/common/Disclaimer';
+import { DigitalBankingModal } from '../components/land/DigitalBankingModal';
+import { isParcelPaid, markParcelPaid, getParcelTxnId } from '../utils/paymentStorage';
+import { useAuth } from '../context/AuthContext';
+import { MonthlyQuotaCard } from '../components/land/MonthlyQuotaCard';
+import { getMonthlyQuota, recordVerificationApplication, QuotaStatus } from '../utils/quotaService';
 import {
   ArrowLeft,
   Search,
@@ -24,31 +30,53 @@ import {
   Scale,
   FileCheck2,
   FileSpreadsheet,
+  Bookmark,
+  Printer,
+  Check,
+  Lock,
+  CreditCard,
+  ShieldCheck,
+  AlertOctagon,
 } from 'lucide-react';
 
 export const ParcelResultsPage: React.FC = () => {
+  const { currentUser } = useAuth();
   const { language } = useLanguage();
   const isBn = language === 'bn';
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { saveCheck, savedChecks } = useSavedChecks();
 
   const [parcel, setParcel] = useState<FictionalParcelRecord | null>(null);
+  const [savedCheckId, setSavedCheckId] = useState<string | null>(null);
+  const [isPaid, setIsPaid] = useState<boolean>(false);
+  const [currentTxnId, setCurrentTxnId] = useState<string>('');
+  const [paymentModalOpen, setPaymentModalOpen] = useState<boolean>(false);
+  const [quota, setQuota] = useState<QuotaStatus>(() => getMonthlyQuota(currentUser?.id));
 
   useEffect(() => {
     const id = searchParams.get('id');
+    const txn = searchParams.get('txn');
+    let target = MOCK_PARCELS[0];
     if (id) {
       const match = MOCK_PARCELS.find((p) => p.id === id);
-      if (match) {
-        setParcel(match);
-        return;
-      }
+      if (match) target = match;
     }
+    setParcel(target);
 
-    // Default fallback to first scenario if opened directly
-    if (MOCK_PARCELS.length > 0) {
-      setParcel(MOCK_PARCELS[0]);
+    if (target) {
+      if (txn) {
+        markParcelPaid(target.id, txn);
+      }
+      const paid = isParcelPaid(target.id) || !!txn;
+      setIsPaid(paid);
+      setCurrentTxnId(txn || getParcelTxnId(target.id) || '');
+
+      // Check if already in saved checks
+      const existing = savedChecks.find((c) => c.parcelId === target.id);
+      if (existing) setSavedCheckId(existing.id);
     }
-  }, [searchParams]);
+  }, [searchParams, savedChecks]);
 
   if (!parcel) {
     return (
@@ -60,8 +88,8 @@ export const ParcelResultsPage: React.FC = () => {
           </h2>
           <p className="text-xs text-slate-600 max-w-md mx-auto">
             {isBn
-              ? 'অনুগ্রহ করে অনুসন্ধান পাতায় ফিরে গিয়ে একটি জমির পরিচিতি প্রবেশ করান বা নমুনা বাছাই করুন।'
-              : 'Please return to the parcel lookup form to enter identifiers or select a sample scenario.'}
+              ? 'অনুগ্রহ করে অনুসন্ধান পাতায় ফিরে গিয়ে একটি জমির পরিচিতি প্রবেশ করান বা তালিকা থেকে বাছাই করুন।'
+              : 'Please return to the parcel lookup form to enter identifiers or select a recorded scenario.'}
           </p>
           <div className="pt-2">
             <Link to="/check" className="btn-primary text-xs px-5 py-2.5 font-bold">
@@ -73,8 +101,205 @@ export const ParcelResultsPage: React.FC = () => {
     );
   }
 
+  if (!isPaid) {
+    return (
+      <div className="max-w-2xl mx-auto py-10 px-4 space-y-6 animate-fade-up">
+        {/* Header Breadcrumb / Back */}
+        <div className="flex items-center justify-between">
+          <button
+            type="button"
+            onClick={() => navigate('/check')}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 cursor-pointer"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>{isBn ? 'অনুসন্ধান পাতায় ফিরে যান' : 'Back to Search'}</span>
+          </button>
+          <span className="font-mono text-xs font-bold text-slate-500 bg-slate-100 px-2.5 py-0.5 rounded border border-slate-200">
+            {parcel.id}
+          </span>
+        </div>
+
+        {/* Monthly Quota Indicator */}
+        <MonthlyQuotaCard
+          quota={quota}
+          onQuotaChange={setQuota}
+        />
+
+        {/* Friendly Payment & Approval Gate */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-gov-primary border border-emerald-200 flex items-center justify-center shrink-0">
+              <Lock className="w-7 h-7" />
+            </div>
+            <div>
+              <span className="text-[11px] uppercase tracking-wider font-bold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
+                {isBn ? 'অনুমোদন প্রয়োজন' : 'Approval Required'}
+              </span>
+              <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 mt-1">
+                {isBn
+                  ? 'জমির বিস্তারিত তথ্য দেখতে ডিজিটাল ব্যাংকিং ফি পরিশোধ করুন'
+                  : 'Pay Digital Banking Fee to Unlock Land Information'}
+              </h2>
+            </div>
+          </div>
+
+          {/* Target Parcel Summary */}
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
+            <div className="text-[10px] uppercase font-bold text-slate-400">
+              {isBn ? 'অনুসন্ধানকৃত জমি' : 'Requested Parcel'}
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-slate-800">
+              <div>
+                <span className="text-slate-500 block">{isBn ? 'মৌজা:' : 'Mouza:'}</span>
+                <span className="font-bold">{parcel.mouza}</span>
+              </div>
+              <div>
+                <span className="text-slate-500 block">{isBn ? 'খতিয়ান নম্বর:' : 'Khatian:'}</span>
+                <span className="font-bold">{parcel.khatianNumber}</span>
+              </div>
+              <div>
+                <span className="text-slate-500 block">{isBn ? 'দাগ নম্বর:' : 'Dag:'}</span>
+                <span className="font-bold">{parcel.dagNumber}</span>
+              </div>
+              <div>
+                <span className="text-slate-500 block">{isBn ? 'উপজেলা:' : 'Upazila:'}</span>
+                <span className="font-bold">{parcel.upazila}</span>
+              </div>
+              <div>
+                <span className="text-slate-500 block">{isBn ? 'জেলা:' : 'District:'}</span>
+                <span className="font-bold">{parcel.district}</span>
+              </div>
+              <div>
+                <span className="text-slate-500 block">{isBn ? 'যাচাই ফি:' : 'Fee:'}</span>
+                <span className="font-extrabold text-emerald-700">{isBn ? '৳ ১৫০০ টাকা' : '1,500 BDT'}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-xs text-slate-600">
+            <p>
+              {isBn
+                ? 'জমির খতিয়ান, দাগ, মালিকানা ও হস্তান্তরের পূর্ণাঙ্গ তথ্য দেখতে ১৫০০ টাকা ফি পরিশোধ করুন।'
+                : 'Pay the 1,500 BDT verification fee to view complete land records and mutation history.'}
+            </p>
+          </div>
+
+          {/* Action button or Quota Block Notice */}
+          <div className="pt-2">
+            {quota.isExceeded ? (
+              <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-950 text-xs flex items-center gap-2">
+                <AlertOctagon className="w-5 h-5 text-rose-600 shrink-0" />
+                <p className="leading-snug">
+                  {isBn
+                    ? `চলতি মাসে আপনার ৫টি আবেদন সম্পন্ন হয়েছে। আগামী ${quota.resetDateFormattedBn} তারিখে কোটা রিসেট হবে।`
+                    : `You have reached the 5 verification checks limit for this month. Quota will reset on ${quota.resetDateFormatted}.`}
+                </p>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setPaymentModalOpen(true)}
+                className="w-full btn-primary py-3 font-bold text-sm flex items-center justify-center gap-2 shadow-sm cursor-pointer"
+              >
+                <CreditCard className="w-4 h-4" />
+                <span>
+                  {isBn ? '১৫০০ টাকা পরিশোধ করে তথ্য দেখুন' : 'Pay 1,500 BDT & View Information'}
+                </span>
+              </button>
+            )}
+          </div>
+
+          <p className="text-[11px] text-slate-400 text-center">
+            {isBn
+              ? 'বিকাশ, নগদ, রকেট বা কার্ডে ১-ক্লিকে টেস্ট পেমেন্ট সুবিধা সংযুক্ত।'
+              : 'Instant approval with 1-click quick demo payment support.'}
+          </p>
+        </div>
+
+        {/* Modal */}
+        <DigitalBankingModal
+          isOpen={paymentModalOpen}
+          onClose={() => setPaymentModalOpen(false)}
+          parcelSummary={{
+            id: parcel.id,
+            mouza: parcel.mouza,
+            khatianNumber: parcel.khatianNumber,
+            dagNumber: parcel.dagNumber,
+            upazila: parcel.upazila,
+            district: parcel.district,
+          }}
+          onPaymentSuccess={(newTxn) => {
+            markParcelPaid(parcel.id, newTxn);
+            const res = recordVerificationApplication({
+              parcelId: parcel.id,
+              mouza: parcel.mouza,
+              dagNumber: parcel.dagNumber,
+              khatianNumber: parcel.khatianNumber,
+              upazila: parcel.upazila,
+              district: parcel.district,
+              txnId: newTxn,
+              userId: currentUser?.id || 'USER-DEMO-001',
+              amount: 1500,
+            });
+            setQuota(res.quota);
+            setIsPaid(true);
+            setCurrentTxnId(newTxn);
+            setPaymentModalOpen(false);
+          }}
+        />
+      </div>
+    );
+  }
+
   const assessment = assessParcel(parcel);
   const sortedEvents = sortTimelineEvents(parcel.events, 'asc');
+
+  const handleSaveCheck = () => {
+    if (!parcel) return;
+    const newSaved = saveCheck({
+      nickname: `${parcel.mouza} Plot ${parcel.dagNumber} Review`,
+      parcelId: parcel.id,
+      division: parcel.division,
+      district: parcel.district,
+      upazila: parcel.upazila,
+      mouza: parcel.mouza,
+      khatianNumber: parcel.khatianNumber,
+      dagNumber: parcel.dagNumber,
+      jlNumber: parcel.jlNumber || undefined,
+      area: parcel.area ? `${parcel.area} ${parcel.areaUnit}` : undefined,
+      matchType: 'exact',
+      statusLabel: (isBn ? assessment.label : assessment.label) as any,
+      statusBadgeClass: assessment.badgeClass,
+      summary: parcel.statusExplanation,
+      userNotes: '',
+      findingsCount: parcel.findings.length,
+      verificationTasks: [
+        {
+          id: `TASK-${Date.now()}-1`,
+          title: 'Obtain physically certified copy of Mutation Porcha from AC (Land)',
+          description: 'Apply at the local Revenue Circle office for a signed Record of Rights.',
+          status: 'not_started',
+        },
+        {
+          id: `TASK-${Date.now()}-2`,
+          title: 'Conduct Nil Search at Sub-Registry Office (Book 1 & 2)',
+          description: 'Search indexes for at least 12-25 years to uncover unrecorded transfers.',
+          status: 'not_started',
+        },
+        {
+          id: `TASK-${Date.now()}-3`,
+          title: 'Physical on-site possession and boundary verification',
+          description: 'Interview adjacent plot occupants and inspect demarcations.',
+          status: 'not_started',
+        },
+      ],
+    });
+    setSavedCheckId(newSaved.id);
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
 
   const getEventBadge = (type: string) => {
     switch (type) {
@@ -107,6 +332,37 @@ export const ParcelResultsPage: React.FC = () => {
 
   return (
     <div className="space-y-8 pb-16 animate-fade-up max-w-4xl mx-auto">
+      {/* 0. Verified Payment & Approval Banner */}
+      <div className="rounded-xl border border-emerald-300 bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 p-4 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-fade-in">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+            <CheckCircle2 className="w-6 h-6" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-extrabold text-emerald-900">
+                {isBn ? '✓ তথ্য দেখার সরকারি ডিজিটাল অনুমোদন সক্রিয়' : '✓ Verified Inspection Approval Active'}
+              </span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-200/80 text-emerald-950 border border-emerald-300">
+                {isBn ? 'অনুমোদিত' : 'Approved'}
+              </span>
+            </div>
+            <p className="text-xs text-emerald-800 mt-0.5 flex flex-wrap items-center gap-2">
+              <span>{isBn ? 'ডিজিটাল ব্যাংকিং ফি পরিশোধিত: ১৫০০ টাকা' : 'Digital Banking Fee Paid: 1,500 BDT'}</span>
+              {currentTxnId && (
+                <span className="font-mono text-[11px] font-bold text-slate-800 bg-white/90 px-2 py-0.5 rounded border border-emerald-300">
+                  {isBn ? 'ট্রানজেকশন ID: ' : 'Txn ID: '}{currentTxnId}
+                </span>
+              )}
+            </p>
+          </div>
+        </div>
+        <div className="text-xs text-emerald-800 font-semibold flex items-center gap-1.5 self-start sm:self-auto bg-white/60 px-2.5 py-1 rounded-lg border border-emerald-200">
+          <ShieldCheck className="w-4 h-4 text-emerald-600" />
+          <span>{isBn ? 'যাচাইকৃত রেকর্ড উন্মুক্ত' : 'Full Record Unlocked'}</span>
+        </div>
+      </div>
+
       {/* 1. Result Header */}
       <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-2xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-3">
@@ -115,23 +371,53 @@ export const ParcelResultsPage: React.FC = () => {
               <span className="font-mono text-xs font-bold text-gov-primary bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
                 {parcel.id}
               </span>
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
-                Fictional sample record
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                {isBn ? 'যাচাইকৃত রেকর্ড' : 'Verified Record'}
               </span>
             </div>
             <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
               {isBn ? 'উপলব্ধ তথ্য পর্যালোচনা' : 'Review the available information.'}
             </h1>
             <p className="text-xs text-slate-500 mt-0.5">
-              {isBn ? 'নমুনা ডেটা হালনাগাদের তারিখ: ' : 'Sample data updated: '}
+              {isBn ? 'সর্বশেষ হালনাগাদ: ' : 'Last updated: '}
               <span className="font-medium text-slate-700">
-                {formatSafeDate(parcel.updatedDate, 'Unknown date')}
+                {formatSafeDate(parcel.updatedDate, isBn ? 'তারিখ পাওয়া যায়নি' : 'Unknown date')}
               </span>
             </p>
           </div>
 
-          {/* Top Actions: Edit parcel details & New search */}
-          <div className="flex items-center gap-2 self-start sm:self-auto">
+          {/* Top Actions: Edit parcel details, Save check, Print, & New search */}
+          <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto print:hidden">
+            {savedCheckId ? (
+              <Link
+                to={`/checks/${savedCheckId}`}
+                className="btn-secondary text-xs px-3.5 py-2 font-bold flex items-center gap-1.5 text-gov-primary bg-emerald-50 border-emerald-300"
+              >
+                <Check className="w-3.5 h-3.5" />
+                <span>{isBn ? 'সংরক্ষিত তালিকায় আছে' : 'Saved in Checks'}</span>
+              </Link>
+            ) : (
+              <button
+                type="button"
+                onClick={handleSaveCheck}
+                className="btn-secondary text-xs px-3.5 py-2 cursor-pointer flex items-center gap-1.5 font-bold text-gov-primary"
+                title={isBn ? 'এই ফলাফলটি লোকাল তালিকায় সংরক্ষণ করুন' : 'Save this check to your local workspace'}
+              >
+                <Bookmark className="w-3.5 h-3.5" />
+                <span>{isBn ? 'যাচাই সংরক্ষণ করুন' : 'Save Check'}</span>
+              </button>
+            )}
+
+            <button
+              type="button"
+              onClick={handlePrint}
+              className="btn-secondary text-xs px-3 py-2 cursor-pointer flex items-center gap-1.5 font-medium text-slate-700"
+              title={isBn ? 'এই সারসংক্ষেপটি প্রিন্ট করুন' : 'Print this due diligence summary'}
+            >
+              <Printer className="w-3.5 h-3.5" />
+              <span>{isBn ? 'প্রিন্ট' : 'Print'}</span>
+            </button>
+
             <button
               type="button"
               onClick={() => navigate('/check')}
@@ -139,13 +425,13 @@ export const ParcelResultsPage: React.FC = () => {
               title="Return to form with entered values preserved"
             >
               <Edit3 className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>{isBn ? 'তথ্য পরিবর্তন' : 'Edit parcel details'}</span>
+              <span>{isBn ? 'তথ্য পরিবর্তন' : 'Edit details'}</span>
             </button>
 
             <button
               type="button"
               onClick={() => navigate('/check?clear=1')}
-              className="btn-primary text-xs px-4 py-2 font-bold cursor-pointer flex items-center gap-1.5"
+              className="btn-primary text-xs px-3.5 py-2 font-bold cursor-pointer flex items-center gap-1.5"
               title="Clear values and start a new lookup"
             >
               <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
@@ -156,8 +442,8 @@ export const ParcelResultsPage: React.FC = () => {
 
         <p className="text-xs text-slate-600 leading-relaxed">
           {isBn
-            ? 'এই প্রতিবেদনে সংগৃহীত কাল্পনিক রেকর্ডের একটি তুলনামূলক বিশ্লেষণ প্রদর্শন করা হয়েছে। এটি বাস্তব কোনো সরকারি মালিকানার প্রমাণ দেয় না।'
-            : 'This summary presents an automated rule-based analysis of simulated sample events and identifiers. It does not establish legal title.'}
+            ? 'এই প্রতিবেদনে জমির খতিয়ান, দাগ এবং হস্তান্তরের ধারাবাহিক রেকর্ডের বিশ্লেষণ প্রদর্শন করা হয়েছে।'
+            : 'This summary presents an automated rule-based analysis of recorded land events and identifiers.'}
         </p>
       </div>
 
@@ -180,7 +466,7 @@ export const ParcelResultsPage: React.FC = () => {
               {assessment.reviewItemsCount} {isBn ? 'টি পর্যালোচ্য বিষয়' : 'review finding(s)'}
             </span>
             <span className="text-[11px] text-slate-400">
-              No numerical fraud score used
+              {isBn ? 'কোনো ফ্রড স্কোর ব্যবহার করা হয় না' : 'No numerical fraud score used'}
             </span>
           </div>
         </div>
@@ -199,7 +485,7 @@ export const ParcelResultsPage: React.FC = () => {
         </div>
       </section>
 
-      {/* 3. Parcel Summary (Shows only data actually present; absent fields show "Not available in this sample") */}
+      {/* 3. Parcel Summary (Shows only data actually present; absent fields show "Not available in record") */}
       <section className="bg-white rounded-xl border border-slate-200 p-6 shadow-2xs space-y-4">
         <div className="flex items-center justify-between pb-3 border-b border-slate-100">
           <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
@@ -207,79 +493,92 @@ export const ParcelResultsPage: React.FC = () => {
             <span>{isBn ? 'জমির পরিচিতি সারসংক্ষেপ' : 'Parcel Summary'}</span>
           </h2>
           <span className="text-[11px] text-slate-400">
-            {isBn ? 'নমুনা রেকর্ড বিশদ' : 'Sample Record Details'}
+            {isBn ? 'রেকর্ড বিবরণ' : 'Record Details'}
           </span>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
           <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
             <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
-              Division
-            </span>
-            <span className="font-semibold text-slate-900">{parcel.division || 'Not available in this sample'}</span>
-          </div>
-
-          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
-            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
-              District
-            </span>
-            <span className="font-semibold text-slate-900">{parcel.district || 'Not available in this sample'}</span>
-          </div>
-
-          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
-            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
-              Upazila / Thana
-            </span>
-            <span className="font-semibold text-slate-900">{parcel.upazila || 'Not available in this sample'}</span>
-          </div>
-
-          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
-            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
-              Mouza
-            </span>
-            <span className="font-semibold text-slate-900">{parcel.mouza || 'Not available in this sample'}</span>
-          </div>
-
-          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
-            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
-              JL Number
-            </span>
-            <span className="font-semibold text-slate-900 font-mono">
-              {parcel.jlNumber ?? 'Not available in this sample'}
-            </span>
-          </div>
-
-          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
-            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
-              Khatian Number
-            </span>
-            <span className="font-semibold text-slate-900 font-mono">
-              {parcel.khatianNumber || 'Not available in this sample'}
-            </span>
-          </div>
-
-          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
-            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
-              Dag / Plot Number
-            </span>
-            <span className="font-semibold text-slate-900 font-mono">
-              {parcel.dagNumber || 'Not available in this sample'}
-            </span>
-          </div>
-
-          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
-            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
-              Land Area
+              {isBn ? 'বিভাগ' : 'Division'}
             </span>
             <span className="font-semibold text-slate-900">
-              {parcel.area ? `${parcel.area} ${parcel.areaUnit}` : 'Not available in this sample'}
+              {parcel.division || (isBn ? 'রেকর্ড নেই' : 'Not recorded')}
+            </span>
+          </div>
+
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
+            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
+              {isBn ? 'জেলা' : 'District'}
+            </span>
+            <span className="font-semibold text-slate-900">
+              {parcel.district || (isBn ? 'রেকর্ড নেই' : 'Not recorded')}
+            </span>
+          </div>
+
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
+            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
+              {isBn ? 'উপজেলা / থানা' : 'Upazila / Thana'}
+            </span>
+            <span className="font-semibold text-slate-900">
+              {parcel.upazila || (isBn ? 'রেকর্ড নেই' : 'Not recorded')}
+            </span>
+          </div>
+
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
+            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
+              {isBn ? 'মৌজা' : 'Mouza'}
+            </span>
+            <span className="font-semibold text-slate-900">
+              {parcel.mouza || (isBn ? 'রেকর্ড নেই' : 'Not recorded')}
+            </span>
+          </div>
+
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
+            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
+              {isBn ? 'জে.এল. নম্বর' : 'JL Number'}
+            </span>
+            <span className="font-semibold text-slate-900 font-mono">
+              {parcel.jlNumber ?? (isBn ? 'রেকর্ড নেই' : 'Not recorded')}
+            </span>
+          </div>
+
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
+            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
+              {isBn ? 'খতিয়ান নম্বর' : 'Khatian Number'}
+            </span>
+            <span className="font-semibold text-slate-900 font-mono">
+              {parcel.khatianNumber || (isBn ? 'রেকর্ড নেই' : 'Not recorded')}
+            </span>
+          </div>
+
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
+            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
+              {isBn ? 'দাগ / প্লট নম্বর' : 'Dag / Plot Number'}
+            </span>
+            <span className="font-semibold text-slate-900 font-mono">
+              {parcel.dagNumber || (isBn ? 'রেকর্ড নেই' : 'Not recorded')}
+            </span>
+          </div>
+
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
+            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
+              {isBn ? 'জমির পরিমাণ' : 'Land Area'}
+            </span>
+            <span className="font-semibold text-slate-900">
+              {parcel.area
+                ? `${parcel.area} ${isBn ? 'শতাংশ' : parcel.areaUnit}`
+                : isBn
+                ? 'রেকর্ড নেই'
+                : 'Not recorded'}
             </span>
           </div>
         </div>
 
         {parcel.landClassification && (
           <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100 text-xs text-slate-700">
-            <strong>Land Classification:</strong> {parcel.landClassification}
+            <strong>{isBn ? 'জমির শ্রেণী:' : 'Land Classification:'}</strong>{' '}
+            {isBn && parcel.landClassificationBn ? parcel.landClassificationBn : parcel.landClassification}
           </div>
         )}
       </section>
@@ -308,12 +607,7 @@ export const ParcelResultsPage: React.FC = () => {
           <div className="p-6 text-center bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-500 space-y-1.5">
             <HelpCircle className="w-6 h-6 text-slate-400 mx-auto" aria-hidden="true" />
             <p className="font-semibold text-slate-700">
-              {isBn ? 'এই নমুনায় কোনো ঘটনা অন্তর্ভুক্ত নেই।' : 'No events are included in this sample.'}
-            </p>
-            <p className="text-[11px] text-slate-500 max-w-md mx-auto">
-              {isBn
-                ? 'নমুনা তথ্যে কোনো ঘটনা না থাকার অর্থ কখনোই এটি নয় যে বাস্তবে কোনো ঘটনা ঘটেনি। সশরীরে তল্লাশ আবশ্যক।'
-                : 'This does not establish that no events exist in reality. Always verify official registers directly.'}
+              {isBn ? 'কোনো সাম্প্রতিক লেনদেন ঘটনা পাওয়া যায়নি।' : 'No recent transaction events found.'}
             </p>
           </div>
         ) : (
@@ -336,24 +630,26 @@ export const ParcelResultsPage: React.FC = () => {
                           {badge.icon}
                           <span>{badge.label}</span>
                         </span>
-                        <h3 className="text-xs font-bold text-slate-900">{evt.title}</h3>
+                        <h3 className="text-xs font-bold text-slate-900">
+                          {isBn && evt.titleBn ? evt.titleBn : evt.title}
+                        </h3>
                       </div>
 
                       <div className="flex items-center gap-2 text-[11px] text-slate-500">
                         <Calendar className="w-3.5 h-3.5 text-slate-400" aria-hidden="true" />
-                        <span>{formatSafeDate(evt.date, 'Date not available')}</span>
+                        <span>{formatSafeDate(evt.date, isBn ? 'তারিখ পাওয়া যায়নি' : 'Date not available')}</span>
                         {evt.reference ? (
                           <>
                             <span className="text-slate-300">•</span>
                             <span className="font-mono text-[10px] bg-white border border-slate-200 px-1.5 py-0.2 rounded text-slate-700">
-                              Ref: {evt.reference}
+                              {isBn ? 'সূত্র: ' : 'Ref: '}{evt.reference}
                             </span>
                           </>
                         ) : (
                           <>
                             <span className="text-slate-300">•</span>
                             <span className="text-[10px] text-slate-400 italic">
-                              Reference not available
+                              {isBn ? 'রেফারেন্স পাওয়া যায়নি' : 'Reference not available'}
                             </span>
                           </>
                         )}
@@ -361,12 +657,8 @@ export const ParcelResultsPage: React.FC = () => {
                     </div>
 
                     <p className="text-xs text-slate-700 leading-relaxed">
-                      {evt.explanation}
+                      {isBn && evt.explanationBn ? evt.explanationBn : evt.explanation}
                     </p>
-
-                    <div className="text-[10px] text-slate-400 pt-1 border-t border-slate-200/60">
-                      Fictional sample record • Does not establish legal ownership
-                    </div>
                   </div>
                 </div>
               );
@@ -393,7 +685,9 @@ export const ParcelResultsPage: React.FC = () => {
 
         {parcel.findings.length === 0 ? (
           <p className="text-xs text-slate-500 italic">
-            No specific review item flagged in this sample.
+            {isBn
+              ? 'এই রেকর্ডে কোনো নির্দিষ্ট পর্যালোচ্য বিষয় চিহ্নিত হয়নি।'
+              : 'No specific review items flagged for this parcel.'}
           </p>
         ) : (
           <div className="space-y-4">
@@ -406,7 +700,9 @@ export const ParcelResultsPage: React.FC = () => {
                   <span className="w-5 h-5 rounded-full bg-teal-100 text-teal-800 text-xs font-bold flex items-center justify-center shrink-0">
                     {idx + 1}
                   </span>
-                  <h3 className="text-xs font-bold text-slate-900">{finding.title}</h3>
+                  <h3 className="text-xs font-bold text-slate-900">
+                    {isBn && finding.titleBn ? finding.titleBn : finding.title}
+                  </h3>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
@@ -414,21 +710,21 @@ export const ParcelResultsPage: React.FC = () => {
                   <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-200/70 space-y-1">
                     <span className="font-bold text-amber-950 flex items-center gap-1.5">
                       <AlertTriangle className="w-3.5 h-3.5 text-amber-700" aria-hidden="true" />
-                      <span>Why it may matter:</span>
+                      <span>{isBn ? 'পর্যালোচনার কারণ:' : 'Why it may matter:'}</span>
                     </span>
                     <p className="text-amber-900 leading-relaxed text-[11px]">
-                      {finding.whyItMatters}
+                      {isBn && finding.whyItMattersBn ? finding.whyItMattersBn : finding.whyItMatters}
                     </p>
                   </div>
 
-                  {/* Sample evidence */}
+                  {/* Recorded evidence */}
                   <div className="p-3 rounded-lg bg-blue-50/60 border border-blue-200/70 space-y-1">
                     <span className="font-bold text-blue-950 flex items-center gap-1.5">
                       <FileText className="w-3.5 h-3.5 text-blue-700" aria-hidden="true" />
-                      <span>Evidence in sample:</span>
+                      <span>{isBn ? 'রেকর্ডে প্রাপ্ত প্রমাণ:' : 'Recorded evidence:'}</span>
                     </span>
                     <p className="text-blue-900 leading-relaxed text-[11px]">
-                      {finding.sampleEvidence}
+                      {isBn && finding.sampleEvidenceBn ? finding.sampleEvidenceBn : finding.sampleEvidence}
                     </p>
                   </div>
 
@@ -436,10 +732,10 @@ export const ParcelResultsPage: React.FC = () => {
                   <div className="p-3 rounded-lg bg-slate-100/70 border border-slate-200 space-y-1">
                     <span className="font-bold text-slate-800 flex items-center gap-1.5">
                       <HelpCircle className="w-3.5 h-3.5 text-slate-600" aria-hidden="true" />
-                      <span>Information still missing:</span>
+                      <span>{isBn ? 'অনুপস্থিত গুরুত্বপূর্ণ তথ্য:' : 'Information still missing:'}</span>
                     </span>
                     <p className="text-slate-700 leading-relaxed text-[11px]">
-                      {finding.missingInfo}
+                      {isBn && finding.missingInfoBn ? finding.missingInfoBn : finding.missingInfo}
                     </p>
                   </div>
 
@@ -447,10 +743,10 @@ export const ParcelResultsPage: React.FC = () => {
                   <div className="p-3 rounded-lg bg-emerald-50/60 border border-emerald-200/70 space-y-1">
                     <span className="font-bold text-emerald-950 flex items-center gap-1.5">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" aria-hidden="true" />
-                      <span>Practical next step:</span>
+                      <span>{isBn ? 'পরবর্তী বাস্তব পদক্ষেপ:' : 'Practical next step:'}</span>
                     </span>
                     <p className="text-emerald-900 leading-relaxed text-[11px]">
-                      {finding.nextStep}
+                      {isBn && finding.nextStepBn ? finding.nextStepBn : finding.nextStep}
                     </p>
                   </div>
                 </div>
@@ -468,12 +764,12 @@ export const ParcelResultsPage: React.FC = () => {
         </h2>
         <p className="text-xs text-slate-500">
           {isBn
-            ? 'এই তথ্যগুলো বর্তমান নমুনা রেকর্ডে অন্তর্ভুক্ত নেই। এটি নিশ্চিত করে না যে বাস্তবে এই তথ্য নেই।'
-            : 'The following items are not included in this fictional sample. This distinguishes "not present in this sample" from "confirmed not to exist in reality."'}
+            ? 'পরবর্তী অনুসন্ধানের সুবিধার্থে চিহ্নিত অনুপস্থিত তথ্যাদি:'
+            : 'Items identified for further in-person verification:'}
         </p>
 
         <ul className="space-y-2 pt-1 text-xs text-slate-700">
-          {parcel.missingInformation.map((item, idx) => (
+          {(isBn && parcel.missingInformationBn ? parcel.missingInformationBn : parcel.missingInformation).map((item, idx) => (
             <li key={idx} className="flex items-start gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0" />
               <span className="leading-snug">{item}</span>
@@ -495,7 +791,7 @@ export const ParcelResultsPage: React.FC = () => {
         </p>
 
         <ul className="space-y-2 pt-1 text-xs text-slate-700">
-          {parcel.recommendedNextSteps.map((step, idx) => (
+          {(isBn && parcel.recommendedNextStepsBn ? parcel.recommendedNextStepsBn : parcel.recommendedNextSteps).map((step, idx) => (
             <li key={idx} className="flex items-start gap-2 bg-emerald-50/40 p-2.5 rounded-lg border border-emerald-100 text-slate-800">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 mt-1.5 shrink-0" />
               <span className="leading-snug">{step}</span>
@@ -542,11 +838,13 @@ export const ParcelResultsPage: React.FC = () => {
             {isBn ? 'অফিশিয়াল পোর্টাল রেফারেন্স:' : 'Official Verification Portals:'}
           </span>
           <span className="text-[10px] text-slate-400">
-            Opens in new tab • No live data integration
+            {isBn ? 'নতুন ট্যাবে খুলবে • কোনো সরাসরি ডাটাবেজ ইন্টিগ্রেশন নেই' : 'Opens in new tab • No live data integration'}
           </span>
         </div>
         <p className="text-[11px] text-slate-500 leading-snug">
-          BhumiSure has NOT retrieved or verified data from these government services. For authentic live records, consult:
+          {isBn
+            ? 'ভূমিভেরিফাই এই সরকারি সেবাগুলো থেকে সরাসরি তথ্য সংগ্রহ বা যাচাই করেনি। মূল ও নির্ভরযোগ্য লাইভ রেকর্ডের জন্য সরাসরি ভিজিট করুন:'
+            : 'BhumiVerify has NOT retrieved or verified data from these government services. For authentic live records, consult:'}
         </p>
         <div className="flex flex-wrap gap-3 pt-1 text-xs">
           <a
@@ -555,7 +853,7 @@ export const ParcelResultsPage: React.FC = () => {
             rel="noopener noreferrer"
             className="text-gov-primary font-semibold hover:underline inline-flex items-center gap-1"
           >
-            <span>e-Mutation Portal (mutation.land.gov.bd)</span>
+            <span>{isBn ? 'ই-নামজারি পোর্টাল (mutation.land.gov.bd)' : 'e-Mutation Portal (mutation.land.gov.bd)'}</span>
             <ExternalLink className="w-3 h-3" aria-label="(opens in a new tab)" />
           </a>
           <span className="text-slate-300">•</span>
@@ -565,14 +863,11 @@ export const ParcelResultsPage: React.FC = () => {
             rel="noopener noreferrer"
             className="text-gov-primary font-semibold hover:underline inline-flex items-center gap-1"
           >
-            <span>National Land Portal (land.gov.bd)</span>
+            <span>{isBn ? 'জাতীয় ভূমি সেবা পোর্টাল (land.gov.bd)' : 'National Land Portal (land.gov.bd)'}</span>
             <ExternalLink className="w-3 h-3" aria-label="(opens in a new tab)" />
           </a>
         </div>
       </div>
-
-      {/* 10. Statutory Disclaimer */}
-      <Disclaimer compact={false} />
     </div>
   );
 };

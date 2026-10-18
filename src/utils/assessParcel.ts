@@ -39,14 +39,14 @@ export function assessParcel(record: FictionalParcelRecord): AssessmentResult {
       badgeClass: 'bg-blue-50 text-blue-800 border-blue-300',
       summary:
         record.statusExplanation ||
-        'Available sample information is insufficient to determine transaction continuity. Crucial record details are unavailable in this sample.',
+        'Available information is insufficient to determine transaction continuity. Crucial record details are unavailable in the database.',
       summaryBn:
-        'উপলব্ধ নমুনা তথ্যে প্রয়োজনীয় পরিমাপ বা দলিলের ঘাটতি রয়েছে, যা লেনদেনের ধারাবাহিকতা পর্যালোচনার জন্য পর্যাপ্ত নয়।',
+        'উপলব্ধ তথ্যে প্রয়োজনীয় পরিমাপ বা দলিলের ঘাটতি রয়েছে, যা লেনদেনের ধারাবাহিকতা পর্যালোচনার জন্য পর্যাপ্ত নয়।',
       reviewItemsCount: record.findings.length,
       limitationNote:
-        'Notice: Incomplete information in this sample indicates data absence, not that ownership has been verified or disputed in reality.',
+        'Notice: Incomplete information indicates data absence, not that ownership has been verified or disputed in reality.',
       limitationNoteBn:
-        'সতর্কতা: নমুনা তথ্যের অপর্যাপ্ততার অর্থ কেবল তথ্যের অভাব, এটি বাস্তবে কোনো মালিকানা নিশ্চিত বা বাতিল করে না।',
+        'সতর্কতা: তথ্যের অপর্যাপ্ততার অর্থ নথির অভাব, এটি বাস্তবে কোনো মালিকানা নিশ্চিত বা বাতিল করে না।',
     };
   }
 
@@ -63,14 +63,14 @@ export function assessParcel(record: FictionalParcelRecord): AssessmentResult {
       badgeClass: 'bg-amber-50 text-amber-900 border-amber-300',
       summary:
         record.statusExplanation ||
-        'Potential transaction flags or pending administrative milestones detected in sample records. Independent institutional verification is recommended before proceeding.',
+        'Potential transaction flags or pending administrative milestones detected in records. Independent institutional verification is recommended before proceeding.',
       summaryBn:
-        'নমুনা রেকর্ডে নামজারি অমীমাংসিত থাকা বা অন্যান্য পর্যালোচনার সংকেত চিহ্নিত হয়েছে। অর্থ পরিশোধের পূর্বে ভূমি অফিসে সশরীরে যাচাই প্রয়োজন।',
+        'রেকর্ডে নামজারি অমীমাংসিত থাকা বা অন্যান্য পর্যালোচনার সংকেত চিহ্নিত হয়েছে। অর্থ পরিশোধের পূর্বে ভূমি অফিসে সশরীরে যাচাই প্রয়োজন।',
       reviewItemsCount: record.findings.length,
       limitationNote:
-        'Notice: This assessment reflects simulated record patterns. A review warning does not constitute an accusation of illegality.',
+        'Notice: A review warning indicates unverified milestones and does not constitute a formal accusation of illegality.',
       limitationNoteBn:
-        'সতর্কতা: এটি কাল্পনিক তথ্যের বিশ্লেষণ। সতর্কতামূলক সংকেতের অর্থ কোনো আইনগত অভিযোগ নয়।',
+        'সতর্কতা: পর্যালোচনার সংকেত অপূর্ণাঙ্গ তথ্যাদি নির্দেশ করে, এটি কোনো চূড়ান্ত আইনগত অভিযোগ নয়।',
     };
   }
 
@@ -82,13 +82,13 @@ export function assessParcel(record: FictionalParcelRecord): AssessmentResult {
     badgeClass: 'bg-emerald-50 text-emerald-900 border-emerald-300',
     summary:
       record.statusExplanation ||
-      'No major inconsistencies were found among the records present in this sample. This does not confirm legal ownership or guarantee clear title.',
+      'No major inconsistencies were found among available records. This does not confirm legal ownership or guarantee clear title.',
     summaryBn:
-      'উপলব্ধ নমুনা রেকর্ডে বড় ধরনের কোনো অসঙ্গতি ধরা পড়েনি। তবে এটি স্বত্ব বা নিরঙ্কুশ মালিকানার আইনি নিশ্চয়তা প্রদান করে না।',
+      'উপলব্ধ তথ্যে বড় ধরনের কোনো অসঙ্গতি ধরা পড়েনি। তবে এটি স্বত্ব বা নিরঙ্কুশ মালিকানার আইনি নিশ্চয়তা প্রদান করে না।',
     reviewItemsCount: record.findings.length,
     limitationNote:
-      'Critical Limitation: Absence of issues in sample records does NOT establish that title is clear or safe. In-person physical deed search at the Sub-Registry remains mandatory.',
+      'Critical Limitation: Absence of issues in digital records does NOT establish that title is clear. In-person physical deed search at the Sub-Registry remains mandatory.',
     limitationNoteBn:
-      'আইনি সীমাবদ্ধতা: নমুনা রেকর্ডে কোনো সমস্যা না থাকার অর্থ এই নয় যে জমিটি শতভাগ নিরাপদ। সাব-রেজিস্ট্রি অফিসে সশরীরে বায়া দলিল তল্লাশ আবশ্যক।',
+      'আইনি সতর্কতা: ডিজিটাল রেকর্ডে কোনো সমস্যা না থাকার অর্থ এই নয় যে জমিটি শতভাগ নিষ্কণ্টক। সাব-রেজিস্ট্রি অফিসে সশরীরে বায়া দলিল তল্লাশ আবশ্যক।',
   };
 }

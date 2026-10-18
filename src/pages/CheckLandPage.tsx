@@ -6,6 +6,12 @@ import { MOCK_PARCELS, FictionalParcelRecord } from '../data/mockParcels';
 import { validateParcelForm, ParcelFormFields, ParcelValidationErrors } from '../utils/validateParcel';
 import { matchParcelRecord, MatchOutcome } from '../utils/matchParcel';
 import { Disclaimer } from '../components/common/Disclaimer';
+import { DigitalBankingModal } from '../components/land/DigitalBankingModal';
+import { isParcelPaid, markParcelPaid } from '../utils/paymentStorage';
+import { useAuth } from '../context/AuthContext';
+import { MonthlyQuotaCard } from '../components/land/MonthlyQuotaCard';
+import { getMonthlyQuota, recordVerificationApplication, QuotaStatus } from '../utils/quotaService';
+import { toBengaliNumerals } from '../utils/formatStatus';
 import {
   Search,
   RotateCcw,
@@ -20,15 +26,25 @@ import {
   Layers,
   FileText,
   Loader2,
+  ShieldAlert,
 } from 'lucide-react';
 
 const STORAGE_KEY = 'bhumisure_form_state';
 
 export const CheckLandPage: React.FC = () => {
+  const { currentUser } = useAuth();
   const { language } = useLanguage();
   const isBn = language === 'bn';
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+
+  // Monthly 5-application limit quota state
+  const [quota, setQuota] = useState<QuotaStatus>(() => getMonthlyQuota(currentUser?.id));
+  const [quotaAlert, setQuotaAlert] = useState<string | null>(null);
+
+  // Digital Banking Payment Modal State
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [pendingParcel, setPendingParcel] = useState<FictionalParcelRecord | null>(null);
 
   // Form Fields State
   const [formFields, setFormFields] = useState<ParcelFormFields>(() => {
@@ -175,6 +191,54 @@ export const CheckLandPage: React.FC = () => {
     setSearchParams({});
   };
 
+  const triggerInspection = (targetParcel: FictionalParcelRecord) => {
+    // If user already paid for this parcel in the past, allow access without consuming quota
+    if (isParcelPaid(targetParcel.id)) {
+      navigate(`/results?id=${targetParcel.id}`);
+      return;
+    }
+
+    // Check latest monthly quota limit
+    const currentQuota = getMonthlyQuota(currentUser?.id);
+    setQuota(currentQuota);
+
+    if (currentQuota.isExceeded) {
+      setQuotaAlert(
+        isBn
+          ? `মাসিক আবেদন কোটা পূর্ণ (${toBengaliNumerals(currentQuota.limit)}/${toBengaliNumerals(currentQuota.limit)})। আপনি এই মাসে আর নতুন জমির তথ্য যাচাই বা আবেদন করতে পারবেন না। আগামী ${currentQuota.resetDateFormattedBn} তারিখে কোটা রিসেট হবে।`
+          : `Monthly verification quota reached (${currentQuota.limit}/${currentQuota.limit}). Anti-fraud & anti-scraping policy restricts accounts to 5 checks per month. Quota will reset on ${currentQuota.resetDateFormatted}.`
+      );
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    setQuotaAlert(null);
+    setPendingParcel(targetParcel);
+    setPaymentModalOpen(true);
+  };
+
+  const handlePaymentSuccess = (txnId: string) => {
+    if (!pendingParcel) return;
+    markParcelPaid(pendingParcel.id, txnId);
+
+    // Record verification application against the monthly quota
+    const recordResult = recordVerificationApplication({
+      parcelId: pendingParcel.id,
+      mouza: pendingParcel.mouza,
+      dagNumber: pendingParcel.dagNumber,
+      khatianNumber: pendingParcel.khatianNumber,
+      upazila: pendingParcel.upazila,
+      district: pendingParcel.district,
+      txnId,
+      userId: currentUser?.id || 'USER-DEMO-001',
+      amount: 1500,
+    });
+
+    setQuota(recordResult.quota);
+    setPaymentModalOpen(false);
+    navigate(`/results?id=${pendingParcel.id}&txn=${txnId}`);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (isSearching) return; // Prevent double submission
@@ -203,8 +267,8 @@ export const CheckLandPage: React.FC = () => {
       setIsSearching(false);
 
       if (outcome.type === 'match' && outcome.parcel) {
-        // Direct transition to single results screen
-        navigate(`/results?id=${outcome.parcel.id}`);
+        // Digital Banking fee verification flow with quota check
+        triggerInspection(outcome.parcel);
       } else {
         // Stay on page and display dedicated state (conflict, ambiguous, no-match)
         setMatchOutcome(outcome);
@@ -213,91 +277,40 @@ export const CheckLandPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 pb-16 animate-fade-up max-w-4xl mx-auto">
+    <div className="space-y-6 pb-16 animate-fade-up max-w-4xl mx-auto">
       {/* Page Header */}
-      <div className="border-b border-slate-200 pb-5 space-y-1">
-        <div className="flex items-center gap-2">
-          <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-gov-primary border border-emerald-200 text-xs font-semibold">
-            {isBn ? 'ভূমি অনুসন্ধান' : 'Parcel Lookup'}
-          </span>
-          <span className="text-xs text-slate-400">
-            {isBn ? 'কাল্পনিক নমুনা ডেটাসেট' : 'Fictional Demo Dataset'}
-          </span>
-        </div>
+      <div className="border-b border-slate-200 pb-4 space-y-1">
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-          {isBn ? 'জমির পরিচিতি তথ্য যাচাই করুন' : 'Check a Land Parcel'}
+          {isBn ? 'জমি যাচাই করুন' : 'Check Land Parcel'}
         </h1>
-        <p className="text-sm text-slate-600 leading-relaxed max-w-2xl">
+        <p className="text-xs sm:text-sm text-slate-600">
           {isBn
-            ? 'প্রশাসনিক অবস্থান ও প্লট পরিচিতি প্রবেশ করিয়ে নমুনা ডেটাসেটে সংরক্ষিত সংশ্লিষ্ট খতিয়ান, দলিল এবং নামজারি সংক্রান্ত ঘটনাগুলো যাচাই করুন।'
-            : 'Enter parcel identifiers to compare against simulated records. The prototype performs multi-identifier matching on composite keys.'}
+            ? 'জমির প্রশাসনিক অবস্থান ও পরিচিতি তথ্য দিয়ে যাচাই ও অনুসন্ধান করুন।'
+            : 'Enter parcel identifiers to verify land records and mutation status.'}
         </p>
       </div>
 
-      {/* "Try an example" area clearly telling the user it is fictional */}
-      <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs space-y-2.5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
-            <Sparkles className="w-4 h-4 text-gov-primary" aria-hidden="true" />
-            <span>{isBn ? 'একটি কাল্পনিক নমুনা উদাহরণ লোড করুন:' : 'Try an Example (Fictional Sample Scenarios):'}</span>
+      {/* Monthly Quota Alert Banner if Exceeded */}
+      {quotaAlert && (
+        <div className="p-4 rounded-xl bg-rose-50 border border-rose-300 text-rose-900 text-xs flex items-start gap-3 shadow-xs animate-fade-in">
+          <AlertOctagon className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+          <div className="space-y-1">
+            <div className="font-bold text-sm text-rose-950">
+              {isBn ? 'মাসিক আবেদন কোটা পূর্ণ (৫/৫)' : 'Monthly Application Quota Reached (5/5)'}
+            </div>
+            <p className="leading-relaxed">{quotaAlert}</p>
           </div>
-          <span className="text-[11px] text-slate-400">
-            {isBn ? 'ক্লিকের মাধ্যমে ফর্ম পূরণ' : '1-Click Pre-fill'}
-          </span>
         </div>
+      )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
-          <button
-            type="button"
-            onClick={() => loadExample(MOCK_PARCELS[0])}
-            className="text-left p-2.5 rounded-lg border border-emerald-200 bg-emerald-50/50 hover:bg-emerald-100/70 transition-all cursor-pointer"
-          >
-            <div className="text-[11px] font-bold text-emerald-950">1. Consistent Sample</div>
-            <div className="text-[10px] text-emerald-800 truncate">Gulshan • Dag 85</div>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => loadExample(MOCK_PARCELS[1])}
-            className="text-left p-2.5 rounded-lg border border-amber-200 bg-amber-50/50 hover:bg-amber-100/70 transition-all cursor-pointer"
-          >
-            <div className="text-[11px] font-bold text-amber-950">2. Review Recommended</div>
-            <div className="text-[10px] text-amber-800 truncate">Tejgaon • Dag 402</div>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => loadExample(MOCK_PARCELS[2])}
-            className="text-left p-2.5 rounded-lg border border-blue-200 bg-blue-50/50 hover:bg-blue-100/70 transition-all cursor-pointer"
-          >
-            <div className="text-[11px] font-bold text-blue-950">3. Incomplete Details</div>
-            <div className="text-[10px] text-blue-800 truncate">Dhanmondi • Dag 118</div>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              // Pre-fill with deliberate JL conflict to demonstrate conflict detection rule!
-              setFormFields({
-                division: 'Chattogram',
-                district: 'Chattogram',
-                upazila: 'Panchlaish',
-                mouza: 'Nasirabad',
-                khatianNumber: '210',
-                dagNumber: '210',
-                jlNumber: '99', // Mismatched from actual JL 32
-                area: '8.00',
-              });
-              setErrors({});
-              setMatchOutcome(null);
-            }}
-            className="text-left p-2.5 rounded-lg border border-rose-200 bg-rose-50/50 hover:bg-rose-100/70 transition-all cursor-pointer"
-          >
-            <div className="text-[11px] font-bold text-rose-950">4. JL Conflict Test</div>
-            <div className="text-[10px] text-rose-800 truncate">Nasirabad • JL Conflict</div>
-          </button>
-        </div>
-      </div>
+      {/* Monthly 5-Application Quota and Policy Card */}
+      <MonthlyQuotaCard
+        quota={quota}
+        onQuotaChange={(newQuota) => {
+          setQuota(newQuota);
+          setQuotaAlert(null);
+        }}
+      />
 
       {/* Outcome Banner (No-Match, JL Conflict, or Ambiguous Match) */}
       {matchOutcome && (
@@ -307,41 +320,26 @@ export const CheckLandPage: React.FC = () => {
           className="animate-fade-up"
         >
           {matchOutcome.type === 'no_match' && (
-            <div className="bg-slate-50 border border-slate-300 rounded-xl p-6 text-center space-y-4">
+            <div className="bg-slate-50 border border-slate-300 rounded-xl p-6 text-center space-y-3">
               <div className="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 mx-auto">
                 <HelpCircle className="w-6 h-6 text-slate-700" aria-hidden="true" />
               </div>
               <div className="space-y-1">
                 <h3 className="text-base font-bold text-slate-900">
-                  {isBn ? 'কোনো ম্যাচিং রেকর্ড মেলেনি' : 'No Matching Record in Demo Dataset'}
+                  {isBn ? 'কোনো রেকর্ড পাওয়া যায়নি' : 'No Matching Record Found'}
                 </h3>
                 <p className="text-xs text-slate-600 max-w-xl mx-auto leading-relaxed">
                   {isBn ? matchOutcome.messageBn : matchOutcome.message}
                 </p>
               </div>
 
-              {/* Explicit safety note */}
-              <div className="p-3.5 rounded-lg bg-amber-50 border border-amber-200 text-left text-xs text-amber-950 max-w-xl mx-auto leading-relaxed">
-                <strong>{isBn ? 'সতর্কতা:' : 'Notice:'}</strong>{' '}
-                {isBn
-                  ? 'নমুনা ডেটায় রেকর্ড না পাওয়ার অর্থ কখনোই এটি নয় যে জমিটি আইনি ঝামেলা বা প্রতারণামুক্ত। জমি ক্রয়ের পূর্বে সহকারী কমিশনার (ভূমি) এবং সাব-রেজিস্ট্রি অফিসে সশরীরে বায়া দলিল তল্লাশ আবশ্যক।'
-                  : 'The absence of mock records must never be interpreted as evidence that the parcel has clear title or is safe. Physical title searches at official land offices are indispensable.'}
-              </div>
-
-              <div className="pt-1 flex justify-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => loadExample(MOCK_PARCELS[0])}
-                  className="btn-primary text-xs px-4 py-2 font-semibold cursor-pointer"
-                >
-                  {isBn ? 'নমুনা ১ দিয়ে পরীক্ষা করুন' : 'Try Demo Scenario 1'}
-                </button>
+              <div className="pt-2 flex justify-center gap-3">
                 <button
                   type="button"
                   onClick={handleClear}
                   className="btn-secondary text-xs px-4 py-2 cursor-pointer"
                 >
-                  {isBn ? 'ফর্ম খালি করুন' : 'Clear Form'}
+                  {isBn ? 'পুনরায় চেষ্টা করুন' : 'Clear & Try Again'}
                 </button>
               </div>
             </div>
@@ -363,7 +361,7 @@ export const CheckLandPage: React.FC = () => {
                 {matchOutcome.parcel && (
                   <button
                     type="button"
-                    onClick={() => navigate(`/results?id=${matchOutcome.parcel?.id}`)}
+                    onClick={() => triggerInspection(matchOutcome.parcel!)}
                     className="btn-primary text-xs px-4 py-1.5 font-bold cursor-pointer bg-rose-700 hover:bg-rose-800"
                   >
                     {isBn ? 'অসঙ্গতিসহ ফলাফল দেখুন' : 'View Record with Flagged Conflict'}
@@ -391,17 +389,17 @@ export const CheckLandPage: React.FC = () => {
                     <button
                       key={c.id}
                       type="button"
-                      onClick={() => navigate(`/results?id=${c.id}`)}
+                      onClick={() => triggerInspection(c)}
                       className="text-left p-3 rounded-lg bg-white border border-amber-300 hover:border-amber-500 hover:bg-amber-100/50 transition-all cursor-pointer shadow-2xs group"
                     >
                       <div className="flex items-center justify-between font-bold text-slate-900 text-xs mb-1">
-                        <span>{c.mouza} • Dag {c.dagNumber}</span>
+                        <span>{c.mouza} • {isBn ? 'দাগ' : 'Dag'} {c.dagNumber}</span>
                         <span className="font-mono text-[10px] text-gov-primary group-hover:underline">
                           {c.id} →
                         </span>
                       </div>
                       <div className="text-[11px] text-slate-600">
-                        {c.upazila}, {c.district} (JL {c.jlNumber || 'N/A'}, Area: {c.area || 'N/A'} Decimal)
+                        {c.upazila}, {c.district} ({isBn ? 'জে.এল.' : 'JL'} {c.jlNumber || 'N/A'}, {isBn ? 'পরিমাণ' : 'Area'}: {c.area || 'N/A'} {isBn ? 'শতাংশ' : 'Decimal'})
                       </div>
                     </button>
                   ))}
@@ -559,7 +557,7 @@ export const CheckLandPage: React.FC = () => {
                   type="text"
                   value={formFields.mouza}
                   onChange={(e) => handleFieldChange('mouza', e.target.value)}
-                  placeholder="e.g. Gulshan, Tejgaon I/A"
+                  placeholder={isBn ? 'যেমন: গুলশান, তেজগাঁও শিল্প এলাকা' : 'e.g. Gulshan, Tejgaon I/A'}
                   aria-invalid={errors.mouza ? 'true' : 'false'}
                   aria-describedby={errors.mouza ? 'error-mouza' : undefined}
                   className={`w-full text-xs rounded-lg border p-2.5 transition-colors ${
@@ -597,7 +595,7 @@ export const CheckLandPage: React.FC = () => {
                   type="text"
                   value={formFields.khatianNumber}
                   onChange={(e) => handleFieldChange('khatianNumber', e.target.value)}
-                  placeholder="e.g. 541, 1204, 88"
+                  placeholder={isBn ? 'যেমন: ৫৪১, ১২০৪, ৮৮' : 'e.g. 541, 1204, 88'}
                   aria-invalid={errors.khatianNumber ? 'true' : 'false'}
                   aria-describedby={errors.khatianNumber ? 'error-khatian' : undefined}
                   className={`w-full text-xs rounded-lg border p-2.5 transition-colors ${
@@ -625,7 +623,7 @@ export const CheckLandPage: React.FC = () => {
                   type="text"
                   value={formFields.dagNumber}
                   onChange={(e) => handleFieldChange('dagNumber', e.target.value)}
-                  placeholder="e.g. 85, 402, 118"
+                  placeholder={isBn ? 'যেমন: ৮৫, ৪০২, ১১৮' : 'e.g. 85, 402, 118'}
                   aria-invalid={errors.dagNumber ? 'true' : 'false'}
                   aria-describedby={errors.dagNumber ? 'error-dag' : undefined}
                   className={`w-full text-xs rounded-lg border p-2.5 transition-colors ${
@@ -653,7 +651,7 @@ export const CheckLandPage: React.FC = () => {
                   type="text"
                   value={formFields.jlNumber || ''}
                   onChange={(e) => handleFieldChange('jlNumber', e.target.value)}
-                  placeholder="e.g. 24, 14, 08"
+                  placeholder={isBn ? 'যেমন: ২৪, ১৪, ০৮' : 'e.g. 24, 14, 08'}
                   className="w-full text-xs rounded-lg border border-slate-300 p-2.5"
                 />
                 <p className="text-[10px] text-slate-400 mt-1">
@@ -689,7 +687,7 @@ export const CheckLandPage: React.FC = () => {
                     type="text"
                     value={formFields.area || ''}
                     onChange={(e) => handleFieldChange('area', e.target.value)}
-                    placeholder="e.g. 6.50"
+                    placeholder={isBn ? 'যেমন: ৬.৫০' : 'e.g. 6.50'}
                     className="w-full text-xs rounded-lg border border-slate-300 p-2.5"
                   />
                 </div>
@@ -708,29 +706,60 @@ export const CheckLandPage: React.FC = () => {
               <span>{isBn ? 'ফর্ম খালি করুন' : 'Clear Form'}</span>
             </button>
 
-            <button
-              type="submit"
-              disabled={isSearching}
-              className="btn-primary text-xs px-7 py-2.5 font-bold cursor-pointer flex items-center gap-2 disabled:opacity-50"
-            >
-              {isSearching ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
-                  <span>{isBn ? 'যাচাই করা হচ্ছে...' : 'Searching Sample Records...'}</span>
-                </>
-              ) : (
-                <>
-                  <Search className="w-4 h-4" aria-hidden="true" />
-                  <span>{isBn ? 'নমুনা রেকর্ড যাচাই করুন' : 'Check a land parcel'}</span>
-                </>
+            <div className="flex items-center gap-3">
+              {quota.isExceeded && (
+                <span className="text-[11px] font-bold text-rose-700 bg-rose-50 px-2.5 py-1 rounded-lg border border-rose-200 flex items-center gap-1.5">
+                  <AlertOctagon className="w-3.5 h-3.5 text-rose-600" />
+                  <span>{isBn ? 'এই মাসের ৫টি আবেদন সীমা পূর্ণ' : 'Monthly 5-limit reached'}</span>
+                </span>
               )}
-            </button>
+              <button
+                type="submit"
+                disabled={isSearching}
+                className={`text-xs px-6 py-2.5 font-bold cursor-pointer flex items-center gap-2 transition-all rounded-lg shadow-2xs ${
+                  quota.isExceeded
+                    ? 'bg-rose-600 hover:bg-rose-700 text-white'
+                    : 'btn-primary'
+                } disabled:opacity-50`}
+              >
+                {isSearching ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+                    <span>{isBn ? 'যাচাই করা হচ্ছে...' : 'Searching Records...'}</span>
+                  </>
+                ) : quota.isExceeded ? (
+                  <>
+                    <AlertOctagon className="w-4 h-4 text-white" aria-hidden="true" />
+                    <span>{isBn ? 'মাসিক কোটা পূর্ণ (৫/৫)' : 'Monthly Quota Full (5/5)'}</span>
+                  </>
+                ) : (
+                  <>
+                    <Search className="w-4 h-4" aria-hidden="true" />
+                    <span>{isBn ? 'জমি যাচাই করুন' : 'Check Land'}</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </form>
       </div>
 
-      {/* Statutory Diligence Reminder */}
-      <Disclaimer compact={true} />
+      {/* 1500 Tk Digital Banking Approval Modal */}
+      {pendingParcel && (
+        <DigitalBankingModal
+          isOpen={paymentModalOpen}
+          onClose={() => setPaymentModalOpen(false)}
+          parcelSummary={{
+            id: pendingParcel.id,
+            mouza: pendingParcel.mouza,
+            khatianNumber: pendingParcel.khatianNumber,
+            dagNumber: pendingParcel.dagNumber,
+            upazila: pendingParcel.upazila,
+            district: pendingParcel.district,
+          }}
+          onPaymentSuccess={handlePaymentSuccess}
+        />
+      )}
     </div>
   );
 };

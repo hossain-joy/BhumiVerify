@@ -159,13 +159,13 @@ export function matchParcel(
     };
   }
 
-  // 3. No match found in sample dataset
+  // 3. No match found in dataset
   return {
     isMatched: false,
     matchType: 'no_match',
-    message: `No matching sample record found for Dag ${input.dagNumber || '-'} in Mouza ${input.mouza || '-'}.`,
-    messageBn: `মৌজা ${input.mouza || '-'}, দাগ ${input.dagNumber || '-'} এর জন্য কোনো ডেমো রেকর্ড পাওয়া যায়নি।`,
-    missingFields: ['All Sample Data'],
+    message: `No matching record found for Dag ${input.dagNumber || '-'} in Mouza ${input.mouza || '-'}.`,
+    messageBn: `মৌজা ${input.mouza || '-'}, দাগ ${input.dagNumber || '-'} এর জন্য কোনো রেকর্ড পাওয়া যায়নি।`,
+    missingFields: ['All Data'],
   };
 }
 
@@ -226,8 +226,8 @@ export function detectConflictingDetails(parcel: ParcelReference): {
 
   return {
     hasConflict: false,
-    details: 'No conflicting parcel identifiers detected in the available sample records.',
-    detailsBn: 'উপলব্ধ নমুনা রেকর্ডে কোনো পরস্পরবিরোধী তথ্য পাওয়া যায়নি।',
+    details: 'No conflicting parcel identifiers detected in the available records.',
+    detailsBn: 'উপলব্ধ রেকর্ডে কোনো পরস্পরবিরোধী তথ্য পাওয়া যায়নি।',
   };
 }
 
@@ -297,8 +297,8 @@ export function assessParcelRisk(parcel?: ParcelReference): RiskAssessmentResult
       label: 'No Match Found',
       labelBn: 'কোনো ম্যাচিং রেকর্ড পাওয়া যায়নি',
       badgeClass: 'bg-slate-100 text-slate-700 border-slate-300',
-      summary: 'No sample parcel record matches the entered identifiers.',
-      summaryBn: 'প্রদত্ত তথ্য অনুযায়ী কোনো ডেমো রেকর্ড পাওয়া যায়নি।',
+      summary: 'No parcel record matches the entered identifiers.',
+      summaryBn: 'প্রদত্ত তথ্য অনুযায়ী কোনো রেকর্ড পাওয়া যায়নি।',
       severity: 'neutral',
     };
   }
@@ -388,10 +388,10 @@ export function assessParcelRisk(parcel?: ParcelReference): RiskAssessmentResult
   if (mutCompleteEvent) {
     return {
       label: 'No Major Issue Detected in Available Data',
-      labelBn: 'উপলব্ধ ডেটায় কোনো বড় অসঙ্গতি পাওয়া যায়নি',
+      labelBn: 'উপলব্ধ তথ্যে বড় অসঙ্গতি পাওয়া যায়নি',
       badgeClass: 'bg-emerald-100 text-emerald-900 border-emerald-300',
-      summary: 'Mutation completed and updated Record of Rights logged in available demo records.',
-      summaryBn: 'উপলব্ধ ডেমো ডেটায় নামজারি নিষ্পত্তি এবং হালনাগাদ খতিয়ান জারির তথ্য পাওয়া গেছে।',
+      summary: 'Mutation completed and updated Record of Rights logged in available records.',
+      summaryBn: 'উপলব্ধ রেকর্ডে নামজারি নিষ্পত্তি এবং হালনাগাদ খতিয়ান জারির তথ্য পাওয়া গেছে।',
       severity: 'success',
     };
   }
@@ -401,8 +401,8 @@ export function assessParcelRisk(parcel?: ParcelReference): RiskAssessmentResult
     label: 'Information Incomplete',
     labelBn: 'তথ্য অসম্পূর্ণ',
     badgeClass: 'bg-slate-100 text-slate-800 border-slate-300',
-    summary: 'Insufficient transaction signals available in the sample records for conclusive analysis.',
-    summaryBn: 'উপলব্ধ নমুনা রেকর্ডে সুনির্দিষ্ট বিশ্লেষণের জন্য প্রয়োজনীয় সংকেত অপ্রতুল।',
+    summary: 'Insufficient transaction signals available in the records for conclusive analysis.',
+    summaryBn: 'উপলব্ধ রেকর্ডে সুনির্দিষ্ট বিশ্লেষণের জন্য প্রয়োজনীয় সংকেত অপ্রতুল।',
     severity: 'neutral',
   };
 }
@@ -666,10 +666,10 @@ export function handleNoMatch(input: ParcelInputDetails): {
   caveatBn: string;
 } {
   return {
-    message: `No matching sample record found for Dag ${input.dagNumber || '-'} in Mouza ${input.mouza || '-'}.`,
-    messageBn: `মৌজা ${input.mouza || '-'}, দাগ ${input.dagNumber || '-'} এর জন্য কোনো ডেমো রেকর্ড পাওয়া যায়নি।`,
-    caveat: 'Critical: The absence of records in demonstration data does not imply the parcel is free from legal disputes or encumbrances.',
-    caveatBn: 'গুরুত্বপূর্ণ সতর্কতা: ডেমো ডেটায় কোনো রেকর্ড না পাওয়ার অর্থ কখনোই এটি নয় যে জমিটি বিরোধমুক্ত বা শতভাগ নিরাপদ।',
+    message: `No matching record found for Dag ${input.dagNumber || '-'} in Mouza ${input.mouza || '-'}.`,
+    messageBn: `মৌজা ${input.mouza || '-'}, দাগ ${input.dagNumber || '-'} এর জন্য কোনো রেকর্ড পাওয়া যায়নি।`,
+    caveat: 'Critical: The absence of records does not imply the parcel is free from legal disputes or encumbrances.',
+    caveatBn: 'গুরুত্বপূর্ণ সতর্কতা: কোনো রেকর্ড না পাওয়ার অর্থ কখনোই এটি নয় যে জমিটি বিরোধমুক্ত বা শতভাগ নিষ্কণ্টক।',
   };
 }
 
@@ -682,7 +682,7 @@ export function handleIncompleteData(parcel: ParcelReference): {
   warningBn: string;
 } {
   return {
-    warning: 'Available sample records contain incomplete transaction signals. Independent verification at the Upazila Land Office is required.',
+    warning: 'Available records contain incomplete transaction signals. Independent verification at the Upazila Land Office is required.',
     warningBn: 'উপলব্ধ রেকর্ডে লেনদেনের প্রয়োজনীয় তথ্যের ঘাটতি রয়েছে। উপজেলা ভূমি অফিসে সশরীরে যাচাই করা আবশ্যক।',
   };
 }

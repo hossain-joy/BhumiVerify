@@ -135,4 +135,50 @@ assert.strictEqual(formatSafeDate('invalid-date'), 'Date not available');
 assert.strictEqual(formatSafeDate('2024-05-10'), 'May 10, 2024');
 console.log('✔ Test 5: Safe date formatting passed without "Invalid Date".');
 
-console.log('ALL UNIT TESTS PASSED SUCCESSFULLY! (5/5)');
+// Test 6: Monthly 5-Application Quota System (Anti-Scraping / Limit Enforcement)
+const MONTHLY_LIMIT = 5;
+function evaluateQuota(applications, currentYear, currentMonth) {
+  const currentMonthApps = applications.filter(app => {
+    const d = new Date(app.timestamp);
+    return d.getFullYear() === currentYear && d.getMonth() === currentMonth;
+  });
+  const used = currentMonthApps.length;
+  return {
+    limit: MONTHLY_LIMIT,
+    used,
+    remaining: Math.max(0, MONTHLY_LIMIT - used),
+    isExceeded: used >= MONTHLY_LIMIT,
+  };
+}
+
+function applyForVerification(applications, newApp, currentYear, currentMonth) {
+  const current = evaluateQuota(applications, currentYear, currentMonth);
+  if (current.isExceeded) {
+    return { success: false, error: 'Monthly quota reached (5/5). Cannot apply for more.' };
+  }
+  const updated = [...applications, { ...newApp, timestamp: new Date(currentYear, currentMonth, 15).toISOString() }];
+  return { success: true, applications: updated, quota: evaluateQuota(updated, currentYear, currentMonth) };
+}
+
+let testApps = [];
+const tYear = 2026;
+const tMonth = 3; // April
+
+// Apply 5 times successfully
+for (let i = 1; i <= 5; i++) {
+  const res = applyForVerification(testApps, { id: `APP-${i}`, parcelId: `P-${i}`, amount: 1500 }, tYear, tMonth);
+  assert.strictEqual(res.success, true);
+  testApps = res.applications;
+  assert.strictEqual(res.quota.used, i);
+  assert.strictEqual(res.quota.remaining, 5 - i);
+}
+
+// 6th application attempt MUST BE REJECTED!
+const sixthAttempt = applyForVerification(testApps, { id: 'APP-6', parcelId: 'P-6', amount: 1500 }, tYear, tMonth);
+assert.strictEqual(sixthAttempt.success, false);
+assert.ok(sixthAttempt.error.includes('Monthly quota reached (5/5)'));
+assert.strictEqual(testApps.length, 5); // Total count unchanged
+
+console.log('✔ Test 6: Monthly 5-application quota enforcement & 6th attempt block passed.');
+
+console.log('ALL UNIT TESTS PASSED SUCCESSFULLY! (6/6)');

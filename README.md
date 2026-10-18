@@ -1,120 +1,90 @@
-# BhumiSure — Verify Before You Buy.
+# BhumiVerify — Verify Before You Buy.
 
-> **Pre-Registration Land Parcel Diligence MVP • Bangladesh Land Administration Context**  
-> *A clean, focused, trustworthy frontend prototype that helps prospective land buyers identify transaction risks, understand simulated records, and determine what to verify before purchasing.*
+> **Pre-Registration Land Parcel Due Diligence Web Application • Bangladesh Land Administration Context**  
+> *A polished, responsive land-due-diligence platform that helps prospective land buyers organize parcel identifiers, review simulated record events, identify missing/conflicting information, and prepare independent verification steps before purchasing land.*
 
 ---
 
-## 🎯 1. Product Purpose & Principles
+## 🎯 1. Product Purpose & Safety Boundaries
 
-In Bangladesh, prospective land buyers face a dangerous information gap: committing money or executing deed registration before knowing whether a transfer deed has already been registered, an e-mutation petition is pending, or historical survey sheets conflict.
+In Bangladesh, land buyers face significant information asymmetry: committing deposits or registering deeds before verifying whether previous transfer deeds exist, an e-mutation petition is contested, or cadastral surveys conflict.
 
-**BhumiSure solves this by providing one primary, transparent journey:**
-$$\text{Home} \longrightarrow \text{Check Land} \longrightarrow \text{Enter Identifiers} \longrightarrow \text{Composite Match} \longrightarrow \text{Review Available Records \& Next Steps}$$
+**BhumiVerify** provides an organized due-diligence workspace to structure the pre-purchase inquiry:
+$$\text{Enter Identifiers} \longrightarrow \text{Deterministic Composite Match} \longrightarrow \text{Simulated Event Trail} \longrightarrow \text{Actionable Independent Verification Checklist}$$
 
 ### Non-Negotiable Diligence Principles
-- **Original Identity:** BhumiSure is an independent evaluation prototype. It does not copy government seals or claim official endorsement.
-- **Plain English & Bangla:** Clear explanations for every warning; legal jargon is avoided or clearly unpacked.
-- **Separate Facts from Interpretation:** Facts in the sample record are distinguished from assessments and buyer next steps.
-- **Explicit Unknowns:** Missing or unavailable information is explicitly flagged ("Not available in this sample"), never fabricated or treated as evidence of safety.
-- **No Claims of Title Safety:** Never uses *"Safe"*, *"Fraud-free"*, *"Ownership verified"*, *"Title confirmed"*, or numerical fraud probability scores.
-- **Three Distinct Event Types:**
-  1. *Transfer-related / registered deed event* $\neq$ *Mutation application* $\neq$ *Completed mutation*.
-  2. A transfer-related event does not prove that current title is legally valid in revenue records.
-  3. A mutation application does not mean mutation is granted.
-  4. A missing completion event in this sample means *"not present in this sample"*, not *"not completed in reality"*.
-- **Composite Matching:** Matching compares Division, District, Upazila/Thana, Mouza, Khatian, and Dag number. A Dag number alone is never used for matching.
-- **Deterministic Logic:** Transparent, explainable rules. No opaque ML models or fake AI fraud detectors.
+1. **Independent Civic-Tech Prototype:** BhumiVerify is an independent educational tool. It does not connect to live Bangladesh government systems, e-mutation portals, or sub-registry offices.
+2. **Never Guarantees Title or Safety:** Clean or positive matching results never prove ownership, legal title, authenticity, or that land is fraud-free.
+3. **Absence of Records $\neq$ Safety:** A missing event or no-match result is never treated as evidence of safety.
+4. **Three Cautious Status Labels:**
+   - `No Major Issue Detected in Available Data`
+   - `Review Recommended`
+   - `Information Incomplete`
+5. **Strictly Distinct Event Types:**
+   - *Transfer-related / registered deed event* $\neq$ *Mutation application submitted* $\neq$ *Mutation completed decree*.
+   - A registered deed does not update government revenue ownership.
+   - An application submitted does not mean mutation was granted.
+6. **Composite Identifier Matching:** Requires Division + District + Upazila/Thana + Mouza + Khatian + Dag. A Dag number alone is never matched. JL number mismatch is flagged as an explicit conflict.
+7. **No Fabricated AI Claims:** Deterministic rule-based assessment only. No numerical fraud scores or fake AI verification.
 
 ---
 
-## 🌟 2. Information Architecture & Four Screens
+## 🗺️ 2. Full Application Information Architecture & Routes
 
-The user experience is structured into four primary views:
+### Public Pages
+- `/` — Landing page with hero, three-step diligence explainer, sample report cards, and prominent **"Create account"** and **"Log in"** CTAs.
+- `/how-it-works` — Due diligence methodology, composite identifier explanation, 3 distinct event categories, and 8-point buyer checklist.
+- `/about` — Mission, limitations, and external official government resources.
+- `/login` — Sign in with 1-click quick demo login, password toggle, inline validation, and demo mode notices.
+- `/register` — Account registration with password strength guidance, terms acceptance, and validation.
+- `/forgot-password` — Password reset request UI with clear demo-only email disclosure.
+- `/privacy` — Prototype privacy notice disclosing local client storage and zero NID/password collection.
+- `/terms` — Terms of use, statutory disclaimers, and mandatory physical search rules.
+- `/check-land` (and `/check`) — Interactive parcel lookup form with dependent selects, validation, and sample pre-fill.
+- `/results` — Instant assessment report for submitted identifiers or selected demo fixtures.
+- `/demo` — Fictional sample report gallery showcasing all 8 edge-case fixtures.
 
-1. **Shared Application Shell**:
-   - Header with BhumiSure brand, tagline *"Verify Before You Buy."*, and only three navigation links: **Home**, **Check Land**, **About**.
-   - Primary CTA: **Check a land parcel**.
-   - Accessible keyboard-operable responsive mobile menu.
-   - Footer with brand, independent prototype disclosure, external reference links with safe attributes (`target="_blank" rel="noopener noreferrer"`), and statutory disclaimer.
-2. **Home (`/`)**:
-   - Hero: *"Know what to check before you buy land."*
-   - Three-step explainer (Enter identifiers $\rightarrow$ Review simulated event history $\rightarrow$ Understand missing information and next checks).
-   - Three primary fictional scenario cards with 1-click execution:
-     - **Consistent sample information** (`BS-DEMO-001`)
-     - **Review recommended** (`BS-DEMO-002`)
-     - **Information incomplete** (`BS-DEMO-003`)
-   - Visible, concise prototype disclaimer.
-3. **Check Land (`/check`)**:
-   - Grouped fields: Location hierarchy first (Division, District, Upazila, Mouza), then Parcel identifiers (Khatian, Dag, optional JL number).
-   - Optional collapsible Additional Details (Land Area).
-   - Inline validation with immediate focus/scroll to the first invalid field.
-   - Enter-key submission and double-submission prevention.
-   - Local simulated lookup state (loading indicator with restored button).
-   - "Try an example" 1-click pre-fill area.
-   - Clear form action.
-   - Dedicated states for **No-Match**, **JL Conflict**, and **Ambiguous Match**.
-4. **Results — Parcel Review (`/results?id=...`)**:
-   - Single well-organized page:
-     - Fictional record ID and update date.
-     - Assessment summary using only 3 cautious statuses:
-       * *No Major Issue Detected in Available Data*
-       * *Review Recommended*
-       * *Information Incomplete*
-     - Mandatory limitation note on every state.
-     - Parcel summary showing only real mock data (absent fields show *"Not available in this sample"*).
-     - Chronological event timeline (dated events sorted; unknown/invalid dates at the end).
-     - Findings breakdown (What was detected, Why it matters, Evidence in sample, Missing information, Practical next step).
-     - Explicit missing information section.
-     - Recommended actionable next steps.
-     - Actions: **"Check another parcel"** (clears form) and **"Edit parcel details"** (preserves entered values).
-5. **About & Limitations (`/about`)**:
-   - Comprehensive explanation of what the prototype does and what it does NOT do.
-   - Clarification that no-match and missing events are not evidence of safety.
-   - Educational breakdown of Section 89 of the SAT Act, 1950 (LT Notices).
-   - External official resource links clearly marked as external with safe attributes.
+### Authenticated App Pages (Protected via `ProtectedRoute` & `AppLayout`)
+- `/dashboard` — Overview cards, active check count, verification task progress bar, recent checks, and quick actions.
+- `/check-land/new` — New land check form inside the authenticated shell.
+- `/checks` — Saved checks list with search, status filters, division pills, sorting, rename, duplicate, delete modal, and compare integration.
+- `/checks/:id` — Comprehensive parcel due diligence report with simulated event timeline, findings, interactive verification plan task toggles, user notes editor, and print-to-PDF layout.
+- `/compare` — Accessible side-by-side comparison of two saved parcels (identifiers, match outcomes, event counts, tasks, and notes).
+- `/documents` — Buyer's physical document inspection checklist (Baya deeds, CS/SA/RS Porchas, mutation DCR, tax dakhila, mouza map, and nil search).
+- `/verification-plan` — Interactive personal task tracker with status toggles (`not_started`, `in_progress`, `completed`), notes, and target reminder dates.
+- `/notifications` — In-app reminders and milestone notices with mark-read, delete, and storage sync.
+- `/profile` — Personal information display and edit UI with storage parameter disclosures.
+- `/settings` — Session controls, logout, and one-click **"Reset All Demo Data"** wiping localStorage.
+- `/help` — Frequently Asked Questions accordion and simulated contact/feedback form.
+
+### Optional Staff/Admin Prototype
+- `/admin` — System overview, total seed fixture metrics, and links to fixture inspector and audit log.
+- `/admin/demo-records` — Interactive JSON payload inspector for all 8 hardcoded demo parcels.
+- `/admin/audit-log` — Simulated administrative audit logs tracking composite rule evaluations and integrity checks.
 
 ---
 
-## 🏗️ 3. Project Structure
+## 🔐 3. Authentication & Storage Architecture
 
-```
-src/
-├── components/
-│   ├── common/
-│   │   ├── Disclaimer.tsx          # Statutory notices (compact & full)
-│   │   ├── LanguageSwitcher.tsx    # Bilingual toggle (English / Bangla)
-│   │   └── ToastContainer.tsx
-│   ├── layout/
-│   │   ├── AppShell.tsx            # Main shell with skip-to-content
-│   │   ├── Header.tsx              # BhumiSure branding, 3 nav links, CTA
-│   │   └── Footer.tsx              # Prototype disclaimer & external links
-│   └── land/                       # Modular parcel components
-├── data/
-│   └── mockParcels.ts              # Dedicated fictional parcel dataset (BS-DEMO-001 to 008)
-├── pages/
-│   ├── HomePage.tsx                # Page 1: Home
-│   ├── CheckLandPage.tsx           # Page 2: Check Land form
-│   ├── ParcelResultsPage.tsx       # Page 3: Single-screen Parcel Results
-│   ├── AboutPage.tsx               # Page 4: About & Limitations
-│   └── NotFoundPage.tsx            # 404 Route fallback
-├── utils/
-│   ├── normalizeParcel.ts          # String normalization (whitespace, lowercase)
-│   ├── validateParcel.ts           # Form validation & first-invalid field focus
-│   ├── matchParcel.ts              # Composite matching, JL conflict, ambiguity
-│   ├── assessParcel.ts             # Deterministic rules (3 cautious statuses)
-│   ├── sortEvents.ts               # Chronological timeline sorting
-│   └── formatDate.ts               # Safe date formatting without "Invalid Date"
-├── App.tsx                         # Client-side router configuration
-└── main.tsx                        # React application entry point
-```
+### Authentication Mode: Honest Local Demo Adapter
+- **Demo Mode:** Disclosed across login, registration, and user session cards.
+- **Pre-Seeded Demo User:** `demo@bhumisure.org` (Tanvir Hossain) with 1-click instant login.
+- **Passwords:** Never stored in plaintext or sent to an external server.
+- **Architecture:** Separated into `AuthProvider` (`src/context/AuthContext.tsx`) and `StorageAdapter` (`src/lib/storageAdapter.ts`), allowing seamless replacement with Supabase Auth, Auth.js, or Firebase Auth without modifying UI pages.
+
+### Data Persistence: Browser `localStorage`
+- `bhumisure_auth_user_v2` — Current authenticated demo user profile.
+- `bhumisure_saved_checks_v2` — User's saved land checks, custom notes, and task progress (seeded with 4 diverse checks).
+- `bhumisure_notifications_v2` — In-app reminder items.
+- `bhumisure_settings_v2` — User preference toggles.
+- **Data Reset:** Users can reset to default seed fixtures at any time via Settings or Saved Checks.
 
 ---
 
-## 💻 4. Getting Started & Available Commands
+## 💻 4. Getting Started & Commands
 
 ### Prerequisites
-- Node.js (v18 or higher recommended)
+- Node.js (v18+ recommended)
 - npm
 
 ### 1. Installation
@@ -132,21 +102,31 @@ Open [http://localhost:5173/](http://localhost:5173/) in your web browser.
 ```bash
 npm test
 ```
-Executes the pure domain logic test suite (`scripts/verify-mvp.js`) testing:
-- Identifier normalization
-- Required-field validation
-- Composite matching, JL conflicts, and ambiguous detections
-- Event chronological sorting with null/invalid date placement
-- Safe date formatting
+Executes the domain verification test suite (`scripts/verify-mvp.js`):
+- ✅ Identifier normalization (case, whitespace, hyphens)
+- ✅ Form validation and accessible focus on first error
+- ✅ Composite matching, JL conflict detection, ambiguity, and no-match handling
+- ✅ Timeline event sorting (chronological, invalid/null dates at end)
+- ✅ Safe date formatting without "Invalid Date" errors
 
-### 4. Build Production Bundle
+### 4. Run TypeScript Check & Production Build
 ```bash
 npm run build
 ```
-Runs the TypeScript type-checker (`tsc`) and Vite production bundler (`vite build`).
+Executes `tsc` and Vite production bundling with zero errors.
 
 ---
 
-## ⚠️ 5. Statutory Limitations & Disclaimer
+## 🚀 5. Transition to Real-World Production
 
-> **BhumiSure is an independent digital prototype created for educational and evaluation purposes. It does not access real government databases, does not contain real citizen records, and does not provide legal title clearance, ownership certification, or fraud warranties. Formal land transactions require certified physical documents and consultation with an authorized property attorney and local land authorities.**
+To convert this frontend evaluation prototype into a real-world enterprise product:
+1. **Connect Real Auth Provider:** Replace `AuthContext` with Supabase Auth, Auth.js, or Ory Kratos with server-side bcrypt/Argon2 password hashing and MFA.
+2. **Integrate Real Database:** Replace `StorageAdapter` with PostgreSQL (Prisma or Drizzle ORM) for multi-tenant parcel management.
+3. **Official API Licensing:** Formally contract with the Ministry of Land and Directorate of Registration for legal API access to e-Mutation, Land Tax, and Sub-Registry volume indexes.
+4. **Legal Vetting Network:** Connect verified Bangladesh Bar Council advocates for certified document reviews.
+
+---
+
+## ⚖️ 6. Statutory Disclaimer
+
+> **BhumiVerify is an independent digital prototype created for educational and evaluation purposes. It does not access real government databases, does not verify official ownership, and does not provide legal title insurance. Physical Nil Search at the Sub-Registry Office, checking certified mutation records at the AC (Land) office, and consulting an experienced property advocate are legally mandatory before purchasing land.**

@@ -84,9 +84,9 @@ export const ParcelSearchForm: React.FC<ParcelSearchFormProps> = ({
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2 text-xs font-semibold text-slate-700">
             <Sparkles className="w-4 h-4 text-gov-primary" />
-            <span>{language === 'bn' ? 'নমুনা ডেটা দিয়ে দ্রুত ফর্ম পূরণ করুন (১-ক্লিক):' : 'Pre-fill with Sample Scenarios (1-Click):'}</span>
+            <span>{language === 'bn' ? 'দ্রুত তথ্য নির্বাচন করুন (১-ক্লিক):' : 'Quick Presets (1-Click):'}</span>
           </div>
-          <span className="text-[11px] text-slate-400">৮টি ভিন্ন নমুনা</span>
+          <span className="text-[11px] text-slate-400">{language === 'bn' ? '৮টি পরিস্থিতি' : '8 Presets'}</span>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">

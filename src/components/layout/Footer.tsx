@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ExternalLink, ShieldAlert, Info } from 'lucide-react';
+import { ExternalLink, ShieldAlert } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
 export const Footer: React.FC = () => {
   const { language } = useLanguage();
+  const isBn = language === 'bn';
 
   return (
     <footer className="bg-slate-900 text-slate-300 text-xs mt-auto border-t border-slate-800">
@@ -14,122 +15,136 @@ export const Footer: React.FC = () => {
           <div className="md:col-span-1 space-y-3">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-lg bg-gov-primary flex items-center justify-center text-white font-bold text-xs">
-                BS
+                BV
               </div>
               <span className="text-sm font-bold text-white tracking-tight">
-                BhumiSure
+                {isBn ? 'ভূমিভেরিফাই' : 'BhumiVerify'}
               </span>
             </div>
             <p className="text-slate-400 text-xs leading-relaxed">
-              Verify Before You Buy.
+              {isBn ? 'কেনার আগে যাচাই করুন।' : 'Verify Before You Buy.'}
             </p>
-            <p className="text-slate-400 text-[11px] leading-relaxed">
-              {language === 'bn'
-                ? 'বাংলাদেশে জমি ক্রয়ের পূর্বে সম্ভাব্য ঝুঁকি শনাক্ত করতে, সংরক্ষিত রেকর্ড বুঝতে এবং কী যাচাই করতে হবে তা নিরূপণ করতে সহায়তা করে।'
-                : 'Helps prospective land buyers organize identifiers, understand simulated records, and identify what to verify before purchasing.'}
+            <p className="text-slate-400 text-xs leading-relaxed">
+              {isBn
+                ? 'বাংলাদেশে জমি ক্রয়ের পূর্বে সঠিক তথ্য ও খতিয়ান যাচাইকরণের বিশ্বস্ত ডিজিটাল প্ল্যাটফর্ম।'
+                : 'Trusted digital platform for verifying land titles and records before property purchase in Bangladesh.'}
             </p>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-amber-300/90 text-[11px]">
-              <ShieldAlert className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-              <span>Independent prototype · Fictional sample data</span>
-            </div>
           </div>
 
-          {/* Navigation Links */}
+          {/* Core Pages */}
           <div className="space-y-2">
             <h4 className="text-xs font-semibold text-white uppercase tracking-wider">
-              {language === 'bn' ? 'নেভিগেশন' : 'Navigation'}
+              {isBn ? 'প্রধান পাতা' : 'Platform'}
             </h4>
             <ul className="space-y-1.5 text-slate-400 text-xs">
               <li>
                 <Link to="/" className="hover:text-emerald-300 transition-colors">
-                  {language === 'bn' ? 'হোমপেজ' : 'Home'}
+                  {isBn ? 'হোমপেজ' : 'Home'}
                 </Link>
               </li>
               <li>
-                <Link to="/check" className="hover:text-emerald-300 transition-colors">
-                  {language === 'bn' ? 'জমি যাচাই করুন' : 'Check Land'}
+                <Link to="/how-it-works" className="hover:text-emerald-300 transition-colors">
+                  {isBn ? 'কিভাবে কাজ করে' : 'How It Works'}
+                </Link>
+              </li>
+              <li>
+                <Link to="/check-land" className="hover:text-emerald-300 transition-colors">
+                  {isBn ? 'জমি যাচাই' : 'Check Land'}
+                </Link>
+              </li>
+              <li>
+                <Link to="/demo" className="hover:text-emerald-300 transition-colors">
+                  {isBn ? 'যাচাই প্রতিবেদন' : 'Verification Reports'}
                 </Link>
               </li>
               <li>
                 <Link to="/about" className="hover:text-emerald-300 transition-colors">
-                  {language === 'bn' ? 'আমাদের সম্পর্কে ও সীমাবদ্ধতা' : 'About & Limitations'}
+                  {isBn ? 'আমাদের সম্পর্কে' : 'About'}
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* External Official Resources (Clearly marked as non-integrated external links) */}
-          <div className="md:col-span-2 space-y-2">
+          {/* Legal & Governance */}
+          <div className="space-y-2">
             <h4 className="text-xs font-semibold text-white uppercase tracking-wider">
-              {language === 'bn' ? 'অফিশিয়াল রিসোর্স ও পোর্টাল' : 'External Official Portals'}
+              {isBn ? 'আইন ও নীতি' : 'Legal & Trust'}
+            </h4>
+            <ul className="space-y-1.5 text-slate-400 text-xs">
+              <li>
+                <Link to="/terms" className="hover:text-emerald-300 transition-colors">
+                  {isBn ? 'শর্তাবলী' : 'Terms of Service'}
+                </Link>
+              </li>
+              <li>
+                <Link to="/privacy" className="hover:text-emerald-300 transition-colors">
+                  {isBn ? 'গোপনীয়তা নীতি' : 'Privacy Policy'}
+                </Link>
+              </li>
+              <li>
+                <Link to="/help" className="hover:text-emerald-300 transition-colors">
+                  {isBn ? 'প্রশ্নোত্তর ও সাহায্য' : 'FAQ & Support'}
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* External Official Resources */}
+          <div className="space-y-2">
+            <h4 className="text-xs font-semibold text-white uppercase tracking-wider">
+              {isBn ? 'অফিশিয়াল পোর্টালসমূহ' : 'External Official Portals'}
             </h4>
             <p className="text-[11px] text-slate-400 leading-snug">
-              {language === 'bn'
-                ? 'দ্রষ্টব্য: এই বাহ্যিক লিংকগুলো তথ্যগত রেফারেন্সের জন্য প্রদত্ত। ভূমিসিউর কোনো সরকারি পোর্টাল থেকে ডেটা সংগ্রহ বা লাইভ যাচাই করে না।'
-                : 'Note: These external government links are provided for reference only. BhumiSure has NOT retrieved or verified data from these external services.'}
+              {isBn
+                ? 'সশরীরে ও দাফতরিক যাচাইয়ের জন্য বাহ্যিক পোর্টালসমূহ। ভূমিভেরিফাই এসব পোর্টাল থেকে সরাসরি ডেটা সংগ্রহ করে না।'
+                : 'External portals for physical verification. BhumiVerify does not retrieve live data from these portals.'}
             </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 text-[11px]">
+            <div className="space-y-1.5 pt-1 text-[11px]">
               <a
                 href="https://land.gov.bd/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 rounded bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 hover:border-slate-600 transition-colors flex items-center justify-between text-slate-300 group"
+                className="p-1.5 rounded bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 hover:border-slate-600 transition-colors flex items-center justify-between text-slate-300 group"
               >
-                <span>National Land Portal (land.gov.bd)</span>
-                <ExternalLink className="w-3 h-3 text-slate-400 group-hover:text-emerald-400 shrink-0" aria-label="(opens in a new tab)" />
+                <span>{isBn ? 'জাতীয় ভূমি সেবা পোর্টাল (land.gov.bd)' : 'National Land Portal'}</span>
+                <ExternalLink className="w-3 h-3 text-slate-400 group-hover:text-emerald-400 shrink-0" />
               </a>
-
               <a
                 href="https://mutation.land.gov.bd/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 rounded bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 hover:border-slate-600 transition-colors flex items-center justify-between text-slate-300 group"
+                className="p-1.5 rounded bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 hover:border-slate-600 transition-colors flex items-center justify-between text-slate-300 group"
               >
-                <span>e-Mutation Portal (mutation.land.gov.bd)</span>
-                <ExternalLink className="w-3 h-3 text-slate-400 group-hover:text-emerald-400 shrink-0" aria-label="(opens in a new tab)" />
+                <span>{isBn ? 'ই-নামজারি পোর্টাল (mutation.land.gov.bd)' : 'e-Mutation Portal'}</span>
+                <ExternalLink className="w-3 h-3 text-slate-400 group-hover:text-emerald-400 shrink-0" />
               </a>
-
               <a
                 href="https://eregistration.gov.bd/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 rounded bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 hover:border-slate-600 transition-colors flex items-center justify-between text-slate-300 group"
+                className="p-1.5 rounded bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 hover:border-slate-600 transition-colors flex items-center justify-between text-slate-300 group"
               >
-                <span>Registration Portal (eregistration.gov.bd)</span>
-                <ExternalLink className="w-3 h-3 text-slate-400 group-hover:text-emerald-400 shrink-0" aria-label="(opens in a new tab)" />
-              </a>
-
-              <a
-                href="https://minland.gov.bd/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 hover:border-slate-600 transition-colors flex items-center justify-between text-slate-300 group"
-              >
-                <span>Ministry of Land (minland.gov.bd)</span>
-                <ExternalLink className="w-3 h-3 text-slate-400 group-hover:text-emerald-400 shrink-0" aria-label="(opens in a new tab)" />
+                <span>{isBn ? 'সাব-রেজিস্ট্রি পোর্টাল (eregistration.gov.bd)' : 'Sub-Registry Portal'}</span>
+                <ExternalLink className="w-3 h-3 text-slate-400 group-hover:text-emerald-400 shrink-0" />
               </a>
             </div>
           </div>
         </div>
 
-        {/* Mandatory Limitations & Bottom Copyright Bar */}
-        <div className="pt-6 border-t border-slate-800 space-y-3">
-          <p className="text-[11px] text-slate-400 leading-relaxed max-w-4xl">
-            <strong>{language === 'bn' ? 'সংবিধিবদ্ধ আইনি সীমাবদ্ধতা:' : 'Statutory Prototype Disclaimer:'}</strong>{' '}
-            {language === 'bn'
-              ? 'ভূমিসিউর একটি স্বাধীন প্রযুক্তিগত প্রোটোটাইপ। এটি কোনো সরকারি রেকর্ড রুম বা আদালতের বিকল্প নয় এবং কোনো জমিকে সম্পূর্ণ নিরাপদ, প্রতারণামুক্ত বা মালিকানাপ্রাপ্ত বলে প্রত্যয়ন করে না। কোনো রেকর্ড না থাকা বিরোধমুক্ত হওয়ার প্রমাণ নয়। জমি ক্রয়ের পূর্বে সাব-রেজিস্ট্রি এবং উপজেলা ভূমি অফিসে সশরীরে যাচাই ও বায়া দলিল তল্লাশ বাধ্যতামূলক।'
-              : 'BhumiSure is an independent evaluation prototype using fictional sample records. It does not search real government records, confirm legal ownership, or guarantee clear title. The absence of negative signals must never be interpreted as evidence of safety. Physical title searches at the relevant Sub-Registry and AC (Land) office are indispensable.'}
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 pt-2 gap-2">
-            <p>© {new Date().getFullYear()} BhumiSure — Independent prototype · Fictional sample data.</p>
+        {/* Bottom Copyright Bar */}
+        <div className="pt-6 border-t border-slate-800">
+          <div className="flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 gap-2">
+            <p>
+              © {new Date().getFullYear()} {isBn ? 'ভূমিভেরিফাই (BhumiVerify)। সর্বস্বত্ব সংরক্ষিত।' : 'BhumiVerify. All rights reserved.'}
+            </p>
             <div className="flex items-center gap-3">
-              <Link to="/about" className="hover:text-slate-300 underline">
-                {language === 'bn' ? 'আইনগত সীমাবদ্ধতা পড়ুন' : 'Read Limitations'}
+              <Link to="/terms" className="hover:text-slate-300 underline">
+                {isBn ? 'শর্তাবলী' : 'Terms'}
               </Link>
               <span>•</span>
-              <span>Frontend MVP</span>
+              <Link to="/privacy" className="hover:text-slate-300 underline">
+                {isBn ? 'গোপনীয়তা' : 'Privacy'}
+              </Link>
             </div>
           </div>
         </div>
