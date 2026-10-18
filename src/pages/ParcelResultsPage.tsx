@@ -1,192 +1,71 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
-import { INITIAL_PARCELS } from '../lib/mock-data/parcels';
-import { ParcelReference, LandEvent, ParcelInputDetails } from '../types';
-import {
-  matchParcel,
-  assessParcelRisk,
-  detectConflictingDetails,
-  getMissingInformation,
-  getRecommendedChecks,
-  handleNoMatch,
-} from '../utils/landFunctions';
-import { extractCoreStatus } from '../lib/riskEngine';
-import { ParcelSummary } from '../components/land/ParcelSummary';
-import { RiskOverview } from '../components/land/RiskOverview';
-import { TransactionTimeline } from '../components/land/TransactionTimeline';
-import { RiskExplanation } from '../components/land/RiskExplanation';
-import { MissingInformation } from '../components/land/MissingInformation';
+import { MOCK_PARCELS, FictionalParcelRecord } from '../data/mockParcels';
+import { assessParcel } from '../utils/assessParcel';
+import { sortTimelineEvents } from '../utils/sortEvents';
+import { formatSafeDate } from '../utils/formatDate';
 import { Disclaimer } from '../components/common/Disclaimer';
-import { DemoDataTag } from '../components/common/DemoDataTag';
 import {
   ArrowLeft,
   Search,
   RotateCcw,
-  Printer,
-  Users,
-  Receipt,
-  Landmark,
-  Scale,
+  Edit3,
+  Calendar,
+  Clock,
+  Layers,
+  FileText,
   AlertTriangle,
   HelpCircle,
+  CheckCircle2,
+  ExternalLink,
   ShieldAlert,
-  Share2,
-  FileText,
-  Volume2,
-  VolumeX,
+  Building,
+  Scale,
+  FileCheck2,
+  FileSpreadsheet,
 } from 'lucide-react';
 
 export const ParcelResultsPage: React.FC = () => {
   const { language } = useLanguage();
+  const isBn = language === 'bn';
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const [parcel, setParcel] = useState<ParcelReference | null>(null);
-  const [matchType, setMatchType] = useState<'exact' | 'partial' | 'ambiguous' | 'no_match'>('no_match');
-  const [ambiguousCandidates, setAmbiguousCandidates] = useState<ParcelReference[]>([]);
-  const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
+  const [parcel, setParcel] = useState<FictionalParcelRecord | null>(null);
 
   useEffect(() => {
-    const idParam = searchParams.get('id');
-    const dagParam = searchParams.get('dag') || searchParams.get('dagNumber');
-    const mouzaParam = searchParams.get('mouza');
-    const upazilaParam = searchParams.get('upazila');
-    const districtParam = searchParams.get('district');
-    const divisionParam = searchParams.get('division');
-    const khatianParam = searchParams.get('khatian') || searchParams.get('khatianNumber');
-
-    // 1. Direct ID match
-    if (idParam) {
-      const found = INITIAL_PARCELS.find((p) => p.id === idParam);
-      if (found) {
-        setParcel(found);
-        setMatchType('exact');
+    const id = searchParams.get('id');
+    if (id) {
+      const match = MOCK_PARCELS.find((p) => p.id === id);
+      if (match) {
+        setParcel(match);
         return;
       }
     }
 
-    // 2. Query multi-identifier match
-    if (dagParam || mouzaParam) {
-      const input: ParcelInputDetails = {
-        division: divisionParam || '',
-        district: districtParam || '',
-        upazila: upazilaParam || '',
-        mouza: mouzaParam || '',
-        dagNumber: dagParam || '',
-        khatianNumber: khatianParam || undefined,
-      };
-
-      const result = matchParcel(input, INITIAL_PARCELS);
-      setMatchType(result.matchType);
-      if (result.parcel) {
-        setParcel(result.parcel);
-      } else {
-        setParcel(null);
-      }
-      if (result.candidates) {
-        setAmbiguousCandidates(result.candidates);
-      }
-      return;
-    }
-
-    // Default: If no search query, fallback to first demo parcel for immediate review
-    const defaultParcel = INITIAL_PARCELS[0];
-    if (defaultParcel) {
-      setParcel(defaultParcel);
-      setMatchType('exact');
+    // Default fallback to first scenario if opened directly
+    if (MOCK_PARCELS.length > 0) {
+      setParcel(MOCK_PARCELS[0]);
     }
   }, [searchParams]);
 
-  const handlePrint = () => {
-    window.print();
-  };
-
-  const handleVoiceRead = () => {
-    if (!('speechSynthesis' in window) || !parcel) return;
-
-    if (isSpeaking) {
-      window.speechSynthesis.cancel();
-      setIsSpeaking(false);
-      return;
-    }
-
-    const risk = assessParcelRisk(parcel);
-    const textToSpeak = language === 'bn'
-      ? `ভূমিভেরিফাই ফলাফল রিপোর্ট। মৌজা ${parcel.mouza}, দাগ নম্বর ${parcel.dagNumber}। সার্বিক মূল্যায়ন: ${risk.labelBn}। ${risk.summaryBn}`
-      : `BhumiSure verification report. Mouza ${parcel.mouza}, Dag plot ${parcel.dagNumber}. Overall Assessment: ${risk.label}. ${risk.summary}`;
-
-    const utterance = new SpeechSynthesisUtterance(textToSpeak);
-    utterance.lang = language === 'bn' ? 'bn-BD' : 'en-US';
-    utterance.rate = 0.95;
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
-
-    setIsSpeaking(true);
-    window.speechSynthesis.speak(utterance);
-  };
-
-  // No Match State
-  if (matchType === 'no_match' || !parcel) {
-    const noMatchData = handleNoMatch({
-      division: searchParams.get('division') || '',
-      district: searchParams.get('district') || '',
-      upazila: searchParams.get('upazila') || '',
-      mouza: searchParams.get('mouza') || '',
-      dagNumber: searchParams.get('dag') || '',
-    });
-
+  if (!parcel) {
     return (
-      <div className="max-w-4xl mx-auto py-12 px-4 space-y-6">
-        <div className="bg-white rounded-2xl border border-slate-200 p-8 sm:p-12 text-center shadow-xs space-y-6">
-          <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 mx-auto">
-            <HelpCircle className="w-8 h-8 text-slate-600" />
-          </div>
-
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2">
-              <span className="px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-800 border border-slate-300">
-                {language === 'bn' ? 'ম্যাচ পাওয়া যায়নি' : 'No Match Found'}
-              </span>
-              <DemoDataTag type="demo_data" />
-            </div>
-
-            <h1 className="text-2xl font-bold text-slate-900">
-              {language === 'bn' ? 'নমুনা ডেটাসেটে কোনো রেকর্ড মেলেনি' : 'No Matching Record in Demonstration Dataset'}
-            </h1>
-
-            <p className="text-sm text-slate-600 max-w-xl mx-auto leading-relaxed">
-              {language === 'bn' ? noMatchData.messageBn : noMatchData.message}
-            </p>
-          </div>
-
-          {/* Statutory Critical Diligence Notice */}
-          <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-left text-xs text-amber-950 space-y-2 max-w-2xl mx-auto">
-            <div className="font-bold flex items-center gap-2 text-amber-900">
-              <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0" />
-              <span>{language === 'bn' ? 'সংবিধিবদ্ধ সতর্কতা (Statutory Caution):' : 'Statutory Pre-Purchase Caution:'}</span>
-            </div>
-            <p className="leading-relaxed">
-              {language === 'bn'
-                ? 'নমুনা ডেটায় রেকর্ড না পাওয়ার অর্থ কখনোই এটি নয় যে জমিটি আইনি ঝামেলা বা প্রতারণামুক্ত। জমি ক্রয়ের পূর্বে সহকারী কমিশনার (ভূমি) অফিস এবং সাব-রেজিস্ট্রি অফিসে সশরীরে বায়া দলিল ও মূল ভলিউম তল্লাশি করা আবশ্যক।'
-                : 'The absence of mock records must NEVER be treated as evidence that the land has clear title or is fraud-free. Physical verification of deeds and volume books at the Sub-Registry and AC (Land) office is indispensable.'}
-            </p>
-          </div>
-
-          <div className="pt-4 flex flex-wrap items-center justify-center gap-3">
-            <Link
-              to="/check"
-              className="btn-primary text-xs px-6 py-2.5 font-bold cursor-pointer"
-            >
-              <RotateCcw className="w-4 h-4" />
-              <span>{language === 'bn' ? 'পুনরায় অনুসন্ধান করুন' : 'Search Another Parcel'}</span>
-            </Link>
-
-            <Link
-              to="/check?scenario=1"
-              className="btn-secondary text-xs px-5 py-2.5 font-medium cursor-pointer"
-            >
-              <span>{language === 'bn' ? 'নমুনা রেকর্ড ১ দেখুন' : 'Try Demo Scenario 1'}</span>
+      <div className="max-w-4xl mx-auto py-12 px-4 space-y-6 text-center">
+        <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-2xs space-y-4">
+          <HelpCircle className="w-10 h-10 text-slate-400 mx-auto" aria-hidden="true" />
+          <h2 className="text-xl font-bold text-slate-900">
+            {isBn ? 'কোনো রেকর্ড পাওয়া যায়নি' : 'No Parcel Record Selected'}
+          </h2>
+          <p className="text-xs text-slate-600 max-w-md mx-auto">
+            {isBn
+              ? 'অনুগ্রহ করে অনুসন্ধান পাতায় ফিরে গিয়ে একটি জমির পরিচিতি প্রবেশ করান বা নমুনা বাছাই করুন।'
+              : 'Please return to the parcel lookup form to enter identifiers or select a sample scenario.'}
+          </p>
+          <div className="pt-2">
+            <Link to="/check" className="btn-primary text-xs px-5 py-2.5 font-bold">
+              {isBn ? 'জমি অনুসন্ধান পাতায় যান' : 'Go to Parcel Lookup'}
             </Link>
           </div>
         </div>
@@ -194,371 +73,506 @@ export const ParcelResultsPage: React.FC = () => {
     );
   }
 
-  // Ambiguous Match Banner if multiple candidates were returned
-  const hasMultipleAmbiguous = matchType === 'ambiguous' && ambiguousCandidates.length > 1;
+  const assessment = assessParcel(parcel);
+  const sortedEvents = sortTimelineEvents(parcel.events, 'asc');
+
+  const getEventBadge = (type: string) => {
+    switch (type) {
+      case 'transfer_related':
+        return {
+          icon: <FileText className="w-4 h-4 text-purple-700" aria-hidden="true" />,
+          label: isBn ? 'হস্তান্তর / রেজিস্ট্রিকৃত দলিল' : 'Transfer-related / registered deed',
+          className: 'bg-purple-50 text-purple-900 border-purple-200',
+        };
+      case 'mutation_application':
+        return {
+          icon: <FileSpreadsheet className="w-4 h-4 text-blue-700" aria-hidden="true" />,
+          label: isBn ? 'নামজারি আবেদন দাখিলকৃত' : 'Mutation application submitted',
+          className: 'bg-blue-50 text-blue-900 border-blue-200',
+        };
+      case 'mutation_completed':
+        return {
+          icon: <FileCheck2 className="w-4 h-4 text-emerald-700" aria-hidden="true" />,
+          label: isBn ? 'নামজারি সম্পন্ন' : 'Mutation completed',
+          className: 'bg-emerald-50 text-emerald-900 border-emerald-200',
+        };
+      default:
+        return {
+          icon: <Clock className="w-4 h-4 text-slate-600" aria-hidden="true" />,
+          label: isBn ? 'অন্যান্য রেকর্ড' : 'General Record',
+          className: 'bg-slate-50 text-slate-800 border-slate-200',
+        };
+    }
+  };
 
   return (
-    <div className="space-y-6 pb-16 animate-fade-up">
-      {/* Top Action Bar */}
-      <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate('/check')}
-              className="btn-secondary text-xs px-3 py-1.5 cursor-pointer flex items-center gap-1.5"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>{language === 'bn' ? 'অনুসন্ধান ফর্মে ফিরে যান' : 'Back to Search Form'}</span>
-            </button>
-
-            <span className="text-slate-300 hidden sm:inline">|</span>
-
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-500 font-medium">
-                {language === 'bn' ? 'ফলাফল আইডি:' : 'Result ID:'}
-              </span>
-              <span className="font-mono text-xs font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded">
+    <div className="space-y-8 pb-16 animate-fade-up max-w-4xl mx-auto">
+      {/* 1. Result Header */}
+      <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-2xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-3">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="font-mono text-xs font-bold text-gov-primary bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
                 {parcel.id}
               </span>
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                Fictional sample record
+              </span>
             </div>
+            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+              {isBn ? 'উপলব্ধ তথ্য পর্যালোচনা' : 'Review the available information.'}
+            </h1>
+            <p className="text-xs text-slate-500 mt-0.5">
+              {isBn ? 'নমুনা ডেটা হালনাগাদের তারিখ: ' : 'Sample data updated: '}
+              <span className="font-medium text-slate-700">
+                {formatSafeDate(parcel.updatedDate, 'Unknown date')}
+              </span>
+            </p>
           </div>
 
+          {/* Top Actions: Edit parcel details & New search */}
           <div className="flex items-center gap-2 self-start sm:self-auto">
-            {/* Voice Audio Briefing */}
             <button
-              onClick={handleVoiceRead}
-              className={`btn-secondary text-xs px-3 py-1.5 cursor-pointer flex items-center gap-1.5 ${
-                isSpeaking ? 'bg-teal-50 text-teal-800 border-teal-300' : ''
-              }`}
-              title="Listen to findings"
-            >
-              {isSpeaking ? (
-                <>
-                  <VolumeX className="w-3.5 h-3.5 text-rose-600 animate-pulse" />
-                  <span>{language === 'bn' ? 'থামান' : 'Stop Audio'}</span>
-                </>
-              ) : (
-                <>
-                  <Volume2 className="w-3.5 h-3.5 text-gov-primary" />
-                  <span>{language === 'bn' ? 'অডিও শুনুন' : 'Voice Brief'}</span>
-                </>
-              )}
-            </button>
-
-            {/* Print Report */}
-            <button
-              onClick={handlePrint}
-              className="btn-secondary text-xs px-3 py-1.5 cursor-pointer flex items-center gap-1.5"
-              title="Print Summary Report"
-            >
-              <Printer className="w-3.5 h-3.5" />
-              <span>{language === 'bn' ? 'প্রিন্ট রিপোর্ট' : 'Print Report'}</span>
-            </button>
-
-            {/* Search Another Parcel */}
-            <button
+              type="button"
               onClick={() => navigate('/check')}
-              className="btn-primary text-xs px-4 py-1.5 font-bold cursor-pointer flex items-center gap-1.5"
+              className="btn-secondary text-xs px-3.5 py-2 cursor-pointer flex items-center gap-1.5 font-medium"
+              title="Return to form with entered values preserved"
             >
-              <Search className="w-3.5 h-3.5" />
-              <span>{language === 'bn' ? 'অন্য দাগ অনুসন্ধান' : 'Search Another Parcel'}</span>
+              <Edit3 className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>{isBn ? 'তথ্য পরিবর্তন' : 'Edit parcel details'}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => navigate('/check?clear=1')}
+              className="btn-primary text-xs px-4 py-2 font-bold cursor-pointer flex items-center gap-1.5"
+              title="Clear values and start a new lookup"
+            >
+              <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>{isBn ? 'নতুন অনুসন্ধান' : 'New search'}</span>
             </button>
           </div>
         </div>
+
+        <p className="text-xs text-slate-600 leading-relaxed">
+          {isBn
+            ? 'এই প্রতিবেদনে সংগৃহীত কাল্পনিক রেকর্ডের একটি তুলনামূলক বিশ্লেষণ প্রদর্শন করা হয়েছে। এটি বাস্তব কোনো সরকারি মালিকানার প্রমাণ দেয় না।'
+            : 'This summary presents an automated rule-based analysis of simulated sample events and identifiers. It does not establish legal title.'}
+        </p>
       </div>
 
-      {/* Ambiguous Match Candidate Selector */}
-      {hasMultipleAmbiguous && (
-        <div className="bg-amber-50 border border-amber-300 rounded-xl p-4 text-xs text-amber-950 space-y-2">
-          <div className="flex items-center gap-2 font-bold text-amber-900">
-            <AlertTriangle className="w-4 h-4 text-amber-700" />
-            <span>
-              {language === 'bn'
-                ? 'দ্বৈত বা একাধিক সম্ভাব্য ম্যাচ শনাক্ত হয়েছে (Ambiguous Match):'
-                : 'Multiple Matching Candidates Detected in Demo Feed:'}
+      {/* 2. Assessment Summary Card (Only 3 Cautious Statuses, No Fraud Score, Visible Limitation Note) */}
+      <section className="bg-white rounded-xl border border-slate-200 p-6 shadow-2xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+          <div>
+            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
+              {isBn ? 'সার্বিক পর্যালোচনা স্থিতি' : 'Assessment Summary'}
+            </span>
+            <div className="flex items-center gap-2.5">
+              <span className={`px-3 py-1 rounded-full text-xs font-bold border ${assessment.badgeClass}`}>
+                {isBn ? assessment.labelBn : assessment.label}
+              </span>
+            </div>
+          </div>
+
+          <div className="sm:text-right">
+            <span className="text-xs font-semibold text-slate-700 block">
+              {assessment.reviewItemsCount} {isBn ? 'টি পর্যালোচ্য বিষয়' : 'review finding(s)'}
+            </span>
+            <span className="text-[11px] text-slate-400">
+              No numerical fraud score used
             </span>
           </div>
-          <p className="leading-snug">
-            {language === 'bn'
-              ? 'প্রদত্ত দাগ নম্বরে একাধিক মৌজা বা খতিয়ানের রেকর্ড বিদ্যমান। নিচের তালিকা থেকে কাঙ্ক্ষিত প্লটটি নির্বাচন করুন:'
-              : 'The entered Dag number corresponds to more than one demo parcel. Choose the specific record to inspect:'}
-          </p>
-          <div className="flex flex-wrap gap-2 pt-1">
-            {ambiguousCandidates.map((c) => (
-              <button
-                key={c.id}
-                onClick={() => setParcel(c)}
-                className={`px-3 py-1.5 rounded-lg border text-xs font-semibold cursor-pointer transition-all ${
-                  c.id === parcel.id
-                    ? 'bg-amber-600 text-white border-amber-700'
-                    : 'bg-white text-amber-900 border-amber-300 hover:bg-amber-100'
-                }`}
-              >
-                {c.mouza} • Dag {c.dagNumber} (Khatian {c.khatianNumber || 'N/A'})
-              </button>
-            ))}
-          </div>
         </div>
-      )}
 
-      {/* 1. Parcel Summary Component */}
-      <ParcelSummary
-        parcel={parcel}
-        matchType={matchType}
-        onEditSearch={() => navigate(`/check?parcel=${parcel.id}`)}
-      />
+        <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
+          {isBn ? assessment.summaryBn : assessment.summary}
+        </p>
 
-      {/* 2. Risk Overview Component (Transparent Rules & 3 Checkpoint Cards) */}
-      <RiskOverview parcel={parcel} />
-
-      {/* 3. Detailed Ownership, Co-Sharers & Tax Status */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* A. Recorded Owners in RoR */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-2xs space-y-3">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
-              <Users className="w-4 h-4 text-gov-primary" />
-              <span>{language === 'bn' ? 'খতিয়ানভুক্ত রেকর্ডীয় মালিক ও অংশীদার' : 'Recorded Owners in RoR & Shares'}</span>
-            </div>
-            <span className="text-[10px] text-slate-400 font-medium">
-              {parcel.recordedOwners?.length || 0} জন মালিক
-            </span>
-          </div>
-
-          {parcel.recordedOwners && parcel.recordedOwners.length > 0 ? (
-            <ul className="space-y-1.5 text-xs text-slate-700">
-              {parcel.recordedOwners.map((owner, idx) => (
-                <li key={idx} className="p-2.5 rounded-lg bg-slate-50 border border-slate-100 flex items-start gap-2">
-                  <span className="w-4 h-4 rounded-full bg-teal-100 text-teal-800 text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">
-                    {idx + 1}
-                  </span>
-                  <span className="leading-snug">{owner}</span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-xs text-slate-500 italic">
-              {language === 'bn' ? 'মালিকানার বিস্তারিত নাম উপলব্ধ ডেমো রেকর্ডে অন্তর্ভুক্ত নেই।' : 'Detailed claimant names not recorded in available sample feed.'}
-            </p>
-          )}
-
-          <p className="text-[10px] text-slate-400 leading-tight pt-1">
-            {language === 'bn'
-              ? 'সতর্কতা: শরিকদের সম্মতি বা বণ্টননামা ছাড়া জমি ক্রয় করলে ধারা ৯৬ শরিকি অগ্রক্রয় (Pre-emption) মামলার ঝুঁকি তৈরি হয়।'
-              : 'Notice: Purchasing undivided shares without registered partition exposes buyers to Section 96 SAT Act pre-emption.'}
+        {/* Visible Limitation Note (Mandatory on every status) */}
+        <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200 text-[11px] text-slate-700 leading-relaxed flex items-start gap-2.5">
+          <ShieldAlert className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" aria-hidden="true" />
+          <p>
+            <strong>{isBn ? 'সীমাবদ্ধতা নোট:' : 'Limitation Note:'}</strong>{' '}
+            {isBn ? assessment.limitationNoteBn : assessment.limitationNote}
           </p>
         </div>
+      </section>
 
-        {/* B. Land Development Tax & Revenue Clearance */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-2xs space-y-3">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
-              <Receipt className="w-4 h-4 text-gov-primary" />
-              <span>{language === 'bn' ? 'ভূমি উন্নয়ন কর (খাজনা) ও দাখিলা স্থিতি' : 'Land Development Tax & Dakhila Status'}</span>
-            </div>
-            {parcel.taxStatus?.status === 'paid' ? (
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">
-                {language === 'bn' ? 'পরিশোধিত' : 'Paid Up to Date'}
-              </span>
-            ) : parcel.taxStatus?.status === 'arrears' ? (
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-900 border border-rose-300">
-                {language === 'bn' ? 'বকেয়া কর' : 'Tax Arrears'}
-              </span>
-            ) : (
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
-                {language === 'bn' ? 'অনিশ্চিত' : 'Status Unknown'}
-              </span>
-            )}
-          </div>
-
-          <div className="space-y-2 text-xs">
-            <div className="flex justify-between py-1 border-b border-slate-50">
-              <span className="text-slate-500">{language === 'bn' ? 'সর্বশেষ পরিশোধিত বছর:' : 'Last Paid Year:'}</span>
-              <span className="font-semibold text-slate-800">{parcel.taxStatus?.lastPaidYearBS || 'রেকর্ড নেই (N/A)'}</span>
-            </div>
-
-            {parcel.taxStatus?.dakhilaNumber && (
-              <div className="flex justify-between py-1 border-b border-slate-50 font-mono text-[11px]">
-                <span className="text-slate-500">{language === 'bn' ? 'দাখিলা / রসিদ নং:' : 'Dakhila / Receipt #:'}</span>
-                <span className="font-bold text-slate-800">{parcel.taxStatus.dakhilaNumber}</span>
-              </div>
-            )}
-
-            {parcel.taxStatus?.amountBdt && (
-              <div className="flex justify-between py-1 border-b border-slate-50">
-                <span className="text-slate-500">{language === 'bn' ? 'ধার্যকৃত করের পরিমাণ:' : 'Assessed Amount:'}</span>
-                <span className="font-bold text-slate-800">৳{parcel.taxStatus.amountBdt.toLocaleString('en-BD')}</span>
-              </div>
-            )}
-
-            <p className="text-[11px] text-slate-600 pt-1 leading-snug">
-              {parcel.taxStatus?.note}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* 4. Encumbrances, Litigation, Mortgage & 25-Year Baya Chain */}
-      <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-2xs space-y-3.5">
+      {/* 3. Parcel Summary (Shows only data actually present; absent fields show "Not available in this sample") */}
+      <section className="bg-white rounded-xl border border-slate-200 p-6 shadow-2xs space-y-4">
         <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-          <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
-            <Landmark className="w-4 h-4 text-gov-primary" />
-            <span>{language === 'bn' ? 'প্রাতিষ্ঠানিক দায়, নিষেধাজ্ঞা ও বায়া দলিলের ধারাবাহিকতা' : 'Encumbrance, Court Orders & Baya Deed Chain Signals'}</span>
-          </div>
-          <span className="text-[10px] text-slate-400">
-            {language === 'bn' ? 'ব্যাংক, আদালত ও সাব-রেজিস্ট্রি সংকেত' : 'Bank, Court, and Registry Signals'}
+          <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+            <Layers className="w-4 h-4 text-gov-primary" aria-hidden="true" />
+            <span>{isBn ? 'জমির পরিচিতি সারসংক্ষেপ' : 'Parcel Summary'}</span>
+          </h2>
+          <span className="text-[11px] text-slate-400">
+            {isBn ? 'নমুনা রেকর্ড বিশদ' : 'Sample Record Details'}
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-          {/* Mortgage */}
-          <div className={`p-3 rounded-lg border ${
-            parcel.encumbranceSignals?.hasMortgage
-              ? 'bg-rose-50/80 border-rose-300 text-rose-950'
-              : 'bg-slate-50 border-slate-200 text-slate-800'
-          }`}>
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] uppercase font-bold text-slate-500">
-                {language === 'bn' ? 'ব্যাংক মর্টগেজ / দায়' : 'Bank Mortgage / Lien'}
-              </span>
-              {parcel.encumbranceSignals?.hasMortgage ? (
-                <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-rose-200 text-rose-900">মর্টগেজ বিদ্যমান</span>
-              ) : (
-                <span className="px-1.5 py-0.2 rounded text-[9px] font-medium bg-emerald-100 text-emerald-800">দায়মুক্ত</span>
-              )}
-            </div>
-            <p className="text-[11px] leading-snug">
-              {parcel.encumbranceSignals?.hasMortgage
-                ? `${parcel.encumbranceSignals.bankOrLender} — ${parcel.encumbranceSignals.mortgageNote}`
-                : language === 'bn'
-                ? 'সিমুলেটেড লেজারে কোনো রেজিস্ট্রিকৃত ব্যাংক চার্জ নেই।'
-                : 'No active registered bank mortgage on demo record.'}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
+            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
+              Division
+            </span>
+            <span className="font-semibold text-slate-900">{parcel.division || 'Not available in this sample'}</span>
+          </div>
+
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
+            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
+              District
+            </span>
+            <span className="font-semibold text-slate-900">{parcel.district || 'Not available in this sample'}</span>
+          </div>
+
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
+            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
+              Upazila / Thana
+            </span>
+            <span className="font-semibold text-slate-900">{parcel.upazila || 'Not available in this sample'}</span>
+          </div>
+
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
+            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
+              Mouza
+            </span>
+            <span className="font-semibold text-slate-900">{parcel.mouza || 'Not available in this sample'}</span>
+          </div>
+
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
+            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
+              JL Number
+            </span>
+            <span className="font-semibold text-slate-900 font-mono">
+              {parcel.jlNumber ?? 'Not available in this sample'}
+            </span>
+          </div>
+
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
+            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
+              Khatian Number
+            </span>
+            <span className="font-semibold text-slate-900 font-mono">
+              {parcel.khatianNumber || 'Not available in this sample'}
+            </span>
+          </div>
+
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
+            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
+              Dag / Plot Number
+            </span>
+            <span className="font-semibold text-slate-900 font-mono">
+              {parcel.dagNumber || 'Not available in this sample'}
+            </span>
+          </div>
+
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100">
+            <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
+              Land Area
+            </span>
+            <span className="font-semibold text-slate-900">
+              {parcel.area ? `${parcel.area} ${parcel.areaUnit}` : 'Not available in this sample'}
+            </span>
+          </div>
+        </div>
+
+        {parcel.landClassification && (
+          <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100 text-xs text-slate-700">
+            <strong>Land Classification:</strong> {parcel.landClassification}
+          </div>
+        )}
+      </section>
+
+      {/* 4. Chronological Event Timeline (3 Distinct Event Types, Never Conflated) */}
+      <section className="bg-white rounded-xl border border-slate-200 p-6 shadow-2xs space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div>
+            <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <Clock className="w-4 h-4 text-gov-primary" aria-hidden="true" />
+              <span>{isBn ? 'কালানুক্রমিক ঘটনার বিবরণ' : 'Chronological Event Timeline'}</span>
+            </h2>
+            <p className="text-[11px] text-slate-500 mt-0.5">
+              {isBn
+                ? 'হস্তান্তর দলিল, নামজারি আবেদন এবং চূড়ান্ত নামজারি আদেশ—তিনটি পৃথক ঘটনা।'
+                : 'Transfer deeds, mutation petitions, and completed orders are distinct event types.'}
             </p>
           </div>
 
-          {/* Stay Order */}
-          <div className={`p-3 rounded-lg border ${
-            parcel.encumbranceSignals?.hasStayOrder
-              ? 'bg-rose-50/80 border-rose-300 text-rose-950'
-              : 'bg-slate-50 border-slate-200 text-slate-800'
-          }`}>
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] uppercase font-bold text-slate-500">
-                {language === 'bn' ? 'আদালতের নিষেধাজ্ঞা' : 'Civil Court Injunction'}
-              </span>
-              {parcel.encumbranceSignals?.hasStayOrder ? (
-                <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-rose-200 text-rose-900">নিষেধাজ্ঞা জারি</span>
-              ) : (
-                <span className="px-1.5 py-0.2 rounded text-[9px] font-medium bg-emerald-100 text-emerald-800">অর্ডার নেই</span>
-              )}
-            </div>
-            <p className="text-[11px] leading-snug">
-              {parcel.encumbranceSignals?.hasStayOrder
-                ? `${parcel.encumbranceSignals.courtName} (${parcel.encumbranceSignals.caseRef}) — ${parcel.encumbranceSignals.litigationNote}`
-                : language === 'bn'
-                ? 'উপলব্ধ রেকর্ডে কোনো আদালতের স্থগিতাদেশ নেই।'
-                : 'No pending civil court injunction reported in demo data.'}
+          <span className="text-[11px] text-slate-400">
+            {sortedEvents.length} {isBn ? 'টি ঘটনা' : 'event(s)'}
+          </span>
+        </div>
+
+        {sortedEvents.length === 0 ? (
+          <div className="p-6 text-center bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-500 space-y-1.5">
+            <HelpCircle className="w-6 h-6 text-slate-400 mx-auto" aria-hidden="true" />
+            <p className="font-semibold text-slate-700">
+              {isBn ? 'এই নমুনায় কোনো ঘটনা অন্তর্ভুক্ত নেই।' : 'No events are included in this sample.'}
+            </p>
+            <p className="text-[11px] text-slate-500 max-w-md mx-auto">
+              {isBn
+                ? 'নমুনা তথ্যে কোনো ঘটনা না থাকার অর্থ কখনোই এটি নয় যে বাস্তবে কোনো ঘটনা ঘটেনি। সশরীরে তল্লাশ আবশ্যক।'
+                : 'This does not establish that no events exist in reality. Always verify official registers directly.'}
             </p>
           </div>
+        ) : (
+          <div className="relative pl-6 space-y-5 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
+            {sortedEvents.map((evt) => {
+              const badge = getEventBadge(evt.type);
 
-          {/* Khas / Vested */}
-          <div className={`p-3 rounded-lg border ${
-            parcel.encumbranceSignals?.isKhasOrVested
-              ? 'bg-rose-50/80 border-rose-300 text-rose-950'
-              : 'bg-slate-50 border-slate-200 text-slate-800'
-          }`}>
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] uppercase font-bold text-slate-500">
-                {language === 'bn' ? 'খাস / অর্পিত সম্পত্তি' : 'Khas / Vested Property'}
-              </span>
-              {parcel.encumbranceSignals?.isKhasOrVested ? (
-                <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-rose-200 text-rose-900">তালিকাভুক্ত</span>
-              ) : (
-                <span className="px-1.5 py-0.2 rounded text-[9px] font-medium bg-emerald-100 text-emerald-800">মুক্ত</span>
-              )}
-            </div>
-            <p className="text-[11px] leading-snug">
-              {parcel.encumbranceSignals?.isKhasOrVested
-                ? parcel.encumbranceSignals.vestedNote
-                : language === 'bn'
-                ? 'সরকারি খাস বা অর্পিত সম্পত্তি তালিকায় অন্তর্ভুক্ত নয়।'
-                : 'Not listed in government khas or vested property schedule.'}
-            </p>
+              return (
+                <div key={evt.id} className="relative group">
+                  {/* Timeline marker */}
+                  <div className="absolute -left-6 top-1.5 w-5 h-5 rounded-full bg-white border-2 border-gov-primary flex items-center justify-center shadow-2xs">
+                    <div className="w-2 h-2 rounded-full bg-gov-primary" />
+                  </div>
+
+                  {/* Event content card */}
+                  <div className="bg-slate-50 rounded-lg p-4 border border-slate-200/90 space-y-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold border flex items-center gap-1 ${badge.className}`}>
+                          {badge.icon}
+                          <span>{badge.label}</span>
+                        </span>
+                        <h3 className="text-xs font-bold text-slate-900">{evt.title}</h3>
+                      </div>
+
+                      <div className="flex items-center gap-2 text-[11px] text-slate-500">
+                        <Calendar className="w-3.5 h-3.5 text-slate-400" aria-hidden="true" />
+                        <span>{formatSafeDate(evt.date, 'Date not available')}</span>
+                        {evt.reference ? (
+                          <>
+                            <span className="text-slate-300">•</span>
+                            <span className="font-mono text-[10px] bg-white border border-slate-200 px-1.5 py-0.2 rounded text-slate-700">
+                              Ref: {evt.reference}
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="text-slate-300">•</span>
+                            <span className="text-[10px] text-slate-400 italic">
+                              Reference not available
+                            </span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-slate-700 leading-relaxed">
+                      {evt.explanation}
+                    </p>
+
+                    <div className="text-[10px] text-slate-400 pt-1 border-t border-slate-200/60">
+                      Fictional sample record • Does not establish legal ownership
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
+        )}
+      </section>
 
-          {/* Baya Deed Chain (25 Years) */}
-          <div className={`p-3 rounded-lg border ${
-            parcel.bayaChain?.chainIntact
-              ? 'bg-slate-50 border-slate-200 text-slate-800'
-              : 'bg-amber-50/80 border-amber-300 text-amber-950'
-          }`}>
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] uppercase font-bold text-slate-500">
-                {language === 'bn' ? '২৫ বছরের বায়া দলিল' : '25-Year Baya Chain'}
-              </span>
-              {parcel.bayaChain?.chainIntact ? (
-                <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-emerald-100 text-emerald-800">অবিচ্ছিন্ন</span>
-              ) : (
-                <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-200 text-amber-900">ধারাবাহিকতায় ফাঁক</span>
-              )}
-            </div>
-            <p className="text-[11px] leading-snug">
-              {parcel.bayaChain?.note || (language === 'bn' ? 'বায়া দলিলের রেকর্ড পরীক্ষিত।' : 'Baya deeds verified in record.')}
+      {/* 5. Findings and Review Items (What was detected, Why it matters, Evidence, Missing, Next steps) */}
+      <section className="bg-white rounded-xl border border-slate-200 p-6 shadow-2xs space-y-4">
+        <div className="pb-3 border-b border-slate-100 flex items-center justify-between">
+          <div>
+            <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <FileText className="w-4 h-4 text-gov-primary" aria-hidden="true" />
+              <span>{isBn ? 'পর্যালোচ্য পর্যবেক্ষণ ও অনুসন্ধানের কারণ' : 'Findings & Review Items'}</span>
+            </h2>
+            <p className="text-[11px] text-slate-500 mt-0.5">
+              {isBn
+                ? 'স্বচ্ছ ও যুক্তিভিত্তিক পর্যালোচনা; কোনো অনুমান বা অভিযোগ নয়।'
+                : 'Transparent plain-English breakdown of why each finding matters.'}
             </p>
           </div>
         </div>
 
-        {parcel.encumbranceSignals?.hasPowerOfAttorney && (
-          <div className="p-3 rounded-lg bg-blue-50 border border-blue-200 text-xs text-blue-900 flex items-start gap-2">
-            <FileText className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-            <div>
-              <strong>{language === 'bn' ? 'আমমোক্তারনামা (Power of Attorney) সতর্কতা:' : 'Power of Attorney Notice:'}</strong>{' '}
-              {parcel.encumbranceSignals.poaDetails}
-            </div>
+        {parcel.findings.length === 0 ? (
+          <p className="text-xs text-slate-500 italic">
+            No specific review item flagged in this sample.
+          </p>
+        ) : (
+          <div className="space-y-4">
+            {parcel.findings.map((finding, idx) => (
+              <div
+                key={idx}
+                className="p-4 rounded-xl border border-slate-200 bg-slate-50/80 space-y-3"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-teal-100 text-teal-800 text-xs font-bold flex items-center justify-center shrink-0">
+                    {idx + 1}
+                  </span>
+                  <h3 className="text-xs font-bold text-slate-900">{finding.title}</h3>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                  {/* Why it may matter */}
+                  <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-200/70 space-y-1">
+                    <span className="font-bold text-amber-950 flex items-center gap-1.5">
+                      <AlertTriangle className="w-3.5 h-3.5 text-amber-700" aria-hidden="true" />
+                      <span>Why it may matter:</span>
+                    </span>
+                    <p className="text-amber-900 leading-relaxed text-[11px]">
+                      {finding.whyItMatters}
+                    </p>
+                  </div>
+
+                  {/* Sample evidence */}
+                  <div className="p-3 rounded-lg bg-blue-50/60 border border-blue-200/70 space-y-1">
+                    <span className="font-bold text-blue-950 flex items-center gap-1.5">
+                      <FileText className="w-3.5 h-3.5 text-blue-700" aria-hidden="true" />
+                      <span>Evidence in sample:</span>
+                    </span>
+                    <p className="text-blue-900 leading-relaxed text-[11px]">
+                      {finding.sampleEvidence}
+                    </p>
+                  </div>
+
+                  {/* Information still missing */}
+                  <div className="p-3 rounded-lg bg-slate-100/70 border border-slate-200 space-y-1">
+                    <span className="font-bold text-slate-800 flex items-center gap-1.5">
+                      <HelpCircle className="w-3.5 h-3.5 text-slate-600" aria-hidden="true" />
+                      <span>Information still missing:</span>
+                    </span>
+                    <p className="text-slate-700 leading-relaxed text-[11px]">
+                      {finding.missingInfo}
+                    </p>
+                  </div>
+
+                  {/* Practical next verification step */}
+                  <div className="p-3 rounded-lg bg-emerald-50/60 border border-emerald-200/70 space-y-1">
+                    <span className="font-bold text-emerald-950 flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" aria-hidden="true" />
+                      <span>Practical next step:</span>
+                    </span>
+                    <p className="text-emerald-900 leading-relaxed text-[11px]">
+                      {finding.nextStep}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         )}
-      </div>
+      </section>
 
-      {/* 5. Missing Information & Conflicts Component */}
-      <MissingInformation parcel={parcel} />
+      {/* 6. Missing Information (Explicit list distinguishing "not included" vs "confirmed not to exist") */}
+      <section className="bg-white rounded-xl border border-slate-200 p-6 shadow-2xs space-y-3">
+        <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+          <HelpCircle className="w-4 h-4 text-gov-primary" aria-hidden="true" />
+          <span>{isBn ? 'অনুপস্থিত বা অপর্যাপ্ত তথ্য' : 'Missing Information'}</span>
+        </h2>
+        <p className="text-xs text-slate-500">
+          {isBn
+            ? 'এই তথ্যগুলো বর্তমান নমুনা রেকর্ডে অন্তর্ভুক্ত নেই। এটি নিশ্চিত করে না যে বাস্তবে এই তথ্য নেই।'
+            : 'The following items are not included in this fictional sample. This distinguishes "not present in this sample" from "confirmed not to exist in reality."'}
+        </p>
 
-      {/* 6. Plain-Language Risk Explanation & Next Steps Component */}
-      <RiskExplanation parcel={parcel} />
+        <ul className="space-y-2 pt-1 text-xs text-slate-700">
+          {parcel.missingInformation.map((item, idx) => (
+            <li key={idx} className="flex items-start gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0" />
+              <span className="leading-snug">{item}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
 
-      {/* 7. Chronological Transaction Timeline Component */}
-      <TransactionTimeline events={parcel.events || []} />
+      {/* 7. Recommended Next Steps (Actionable Institutional Diligence Guidance) */}
+      <section className="bg-white rounded-xl border border-slate-200 p-6 shadow-2xs space-y-3">
+        <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-gov-primary" aria-hidden="true" />
+          <span>{isBn ? 'সুপারিশকৃত পরবর্তী স্বাধীন পদক্ষেপসমূহ' : 'Recommended Next Steps'}</span>
+        </h2>
+        <p className="text-xs text-slate-500">
+          {isBn
+            ? 'অর্থ লেনদেনের পূর্বে স্বাধীনভাবে যে পদক্ষেপগুলো গ্রহণ করা আবশ্যক:'
+            : 'Sensible due diligence steps every prospective land buyer should take:'}
+        </p>
 
-      {/* 8. Statutory Disclaimer Component */}
-      <Disclaimer compact={false} />
+        <ul className="space-y-2 pt-1 text-xs text-slate-700">
+          {parcel.recommendedNextSteps.map((step, idx) => (
+            <li key={idx} className="flex items-start gap-2 bg-emerald-50/40 p-2.5 rounded-lg border border-emerald-100 text-slate-800">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 mt-1.5 shrink-0" />
+              <span className="leading-snug">{step}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
 
-      {/* Bottom Sticky Action Bar */}
+      {/* 8. Results Actions */}
       <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200">
         <Link
           to="/about"
           className="text-xs text-gov-primary hover:underline font-semibold flex items-center gap-1"
         >
-          <Scale className="w-3.5 h-3.5" />
-          <span>{language === 'bn' ? 'আইনগত ভিত্তি ও ধারা ৮৯ বিস্তারিত জানুন' : 'Legal Diligence Guide & Section 89 SAT Act'}</span>
+          <Scale className="w-3.5 h-3.5" aria-hidden="true" />
+          <span>{isBn ? 'আইনগত প্রেক্ষাপট ও ধারা ৮৯ জানুন' : 'Legal Context & Diligence Rules'}</span>
         </Link>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <button
-            onClick={handlePrint}
-            className="btn-secondary text-xs px-4 py-2 cursor-pointer"
+            type="button"
+            onClick={() => navigate('/check')}
+            className="btn-secondary text-xs px-4 py-2 font-medium cursor-pointer flex items-center gap-1.5"
           >
-            <Printer className="w-3.5 h-3.5" />
-            <span>{language === 'bn' ? 'রিপোর্ট সংরক্ষণ / প্রিন্ট' : 'Save / Print Report'}</span>
+            <Edit3 className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>{isBn ? 'তথ্য পরিবর্তন' : 'Edit parcel details'}</span>
           </button>
 
           <button
-            onClick={() => navigate('/check')}
-            className="btn-primary text-xs px-5 py-2 font-bold cursor-pointer"
+            type="button"
+            onClick={() => navigate('/check?clear=1')}
+            className="btn-primary text-xs px-5 py-2 font-bold cursor-pointer flex items-center gap-1.5"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span>{language === 'bn' ? 'অন্য একটি জমি অনুসন্ধান করুন' : 'Search Another Parcel'}</span>
+            <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>{isBn ? 'অন্য জমি যাচাই' : 'Check another parcel'}</span>
           </button>
         </div>
       </div>
+
+      {/* 9. External Official Resource Links Notice */}
+      <div className="bg-slate-50 rounded-xl border border-slate-200 p-4 text-xs text-slate-600 space-y-2">
+        <div className="flex items-center justify-between">
+          <span className="font-bold text-slate-800">
+            {isBn ? 'অফিশিয়াল পোর্টাল রেফারেন্স:' : 'Official Verification Portals:'}
+          </span>
+          <span className="text-[10px] text-slate-400">
+            Opens in new tab • No live data integration
+          </span>
+        </div>
+        <p className="text-[11px] text-slate-500 leading-snug">
+          BhumiSure has NOT retrieved or verified data from these government services. For authentic live records, consult:
+        </p>
+        <div className="flex flex-wrap gap-3 pt-1 text-xs">
+          <a
+            href="https://mutation.land.gov.bd/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gov-primary font-semibold hover:underline inline-flex items-center gap-1"
+          >
+            <span>e-Mutation Portal (mutation.land.gov.bd)</span>
+            <ExternalLink className="w-3 h-3" aria-label="(opens in a new tab)" />
+          </a>
+          <span className="text-slate-300">•</span>
+          <a
+            href="https://land.gov.bd/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gov-primary font-semibold hover:underline inline-flex items-center gap-1"
+          >
+            <span>National Land Portal (land.gov.bd)</span>
+            <ExternalLink className="w-3 h-3" aria-label="(opens in a new tab)" />
+          </a>
+        </div>
+      </div>
+
+      {/* 10. Statutory Disclaimer */}
+      <Disclaimer compact={false} />
     </div>
   );
 };
