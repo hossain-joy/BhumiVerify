@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { HelpCircle, ChevronDown, ChevronUp, Mail, MessageSquare, BookOpen, AlertTriangle, Send } from 'lucide-react';
-import { Disclaimer } from '../../components/common/Disclaimer';
 
 interface FaqItem {
   q: string;

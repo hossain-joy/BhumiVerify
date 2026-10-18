@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useSavedChecks } from '../../context/SavedChecksContext';
 import { MOCK_PARCELS } from '../../data/mockParcels';
-import { Disclaimer } from '../../components/common/Disclaimer';
 import { Modal } from '../../components/common/Modal';
 import { useLanguage } from '../../context/LanguageContext';
 import { formatStatusLabel, toBengaliNumerals } from '../../utils/formatStatus';

@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Activity, ShieldCheck, Filter, Search, Clock, Lock } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { toBengaliNumerals } from '../../utils/formatStatus';
-import { Disclaimer } from '../../components/common/Disclaimer';
 
 interface AuditLogEntry {
   id: string;
@@ -189,8 +188,6 @@ export const AdminAuditLogPage: React.FC = () => {
           </table>
         </div>
       </div>
-
-      <Disclaimer compact={false} />
     </div>
   );
 };

@@ -15,7 +15,6 @@ import {
   MapPin,
 } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
-import { Disclaimer } from '../../components/common/Disclaimer';
 
 export const HowItWorksPage: React.FC = () => {
   const { language } = useLanguage();

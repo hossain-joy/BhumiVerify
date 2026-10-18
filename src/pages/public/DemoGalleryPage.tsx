@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MOCK_PARCELS } from '../../data/mockParcels';
-import { Disclaimer } from '../../components/common/Disclaimer';
 import { useLanguage } from '../../context/LanguageContext';
 import { formatStatusLabel, toBengaliNumerals } from '../../utils/formatStatus';
 import {

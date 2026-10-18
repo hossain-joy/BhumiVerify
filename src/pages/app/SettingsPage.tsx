@@ -17,7 +17,6 @@ import {
   Info,
   CheckCircle2,
 } from 'lucide-react';
-import { Disclaimer } from '../../components/common/Disclaimer';
 
 export const SettingsPage: React.FC = () => {
   const { logout, resetDemoUser } = useAuth();

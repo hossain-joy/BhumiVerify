@@ -5,7 +5,6 @@ import { BANGLADESH_GEO_DATA } from '../lib/mock-data/bangladeshGeo';
 import { MOCK_PARCELS, FictionalParcelRecord } from '../data/mockParcels';
 import { validateParcelForm, ParcelFormFields, ParcelValidationErrors } from '../utils/validateParcel';
 import { matchParcelRecord, MatchOutcome } from '../utils/matchParcel';
-import { Disclaimer } from '../components/common/Disclaimer';
 import { DigitalBankingModal } from '../components/land/DigitalBankingModal';
 import { isParcelPaid, markParcelPaid } from '../utils/paymentStorage';
 import { useAuth } from '../context/AuthContext';

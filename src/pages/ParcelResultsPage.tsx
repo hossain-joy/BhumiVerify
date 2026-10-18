@@ -6,7 +6,6 @@ import { MOCK_PARCELS, FictionalParcelRecord } from '../data/mockParcels';
 import { assessParcel } from '../utils/assessParcel';
 import { sortTimelineEvents } from '../utils/sortEvents';
 import { formatSafeDate } from '../utils/formatDate';
-import { Disclaimer } from '../components/common/Disclaimer';
 import { DigitalBankingModal } from '../components/land/DigitalBankingModal';
 import { isParcelPaid, markParcelPaid, getParcelTxnId } from '../utils/paymentStorage';
 import { useAuth } from '../context/AuthContext';

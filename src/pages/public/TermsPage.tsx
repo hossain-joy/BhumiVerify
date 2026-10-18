@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Scale, AlertOctagon, FileCheck, ShieldAlert, BookOpen } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
-import { Disclaimer } from '../../components/common/Disclaimer';
 
 export const TermsPage: React.FC = () => {
   const { language } = useLanguage();

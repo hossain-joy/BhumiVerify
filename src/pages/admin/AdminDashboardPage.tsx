@@ -11,7 +11,6 @@ import {
   Activity,
   Layers,
 } from 'lucide-react';
-import { Disclaimer } from '../../components/common/Disclaimer';
 
 export const AdminDashboardPage: React.FC = () => {
   const { savedChecks } = useSavedChecks();
@@ -113,8 +112,6 @@ export const AdminDashboardPage: React.FC = () => {
           </p>
         </Link>
       </div>
-
-      <Disclaimer compact={false} />
     </div>
   );
 };

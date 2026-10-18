@@ -5,10 +5,8 @@ import { AuthProvider } from './context/AuthContext';
 import { SavedChecksProvider } from './context/SavedChecksContext';
 import { NotificationsProvider } from './context/NotificationsContext';
 import { ToastProvider } from './context/ToastContext';
-import { UIProvider } from './context/UIContext';
 
 // Layouts & Guards
-import { AppShell } from './components/layout/AppShell';
 import { AppLayout } from './components/layout/AppLayout';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
@@ -53,105 +51,104 @@ export function App() {
           <SavedChecksProvider>
             <NotificationsProvider>
               <ToastProvider>
-                <UIProvider>
-                  <Routes>
+                <Routes>
                     {/* =========================================
-                        PUBLIC ROUTES (Wrapped in AppShell)
+                        PUBLIC ROUTES (Wrapped in AppLayout)
                     ========================================== */}
                     <Route
                       path="/"
                       element={
-                        <AppShell>
+                        <AppLayout>
                           <HomePage />
-                        </AppShell>
+                        </AppLayout>
                       }
                     />
                     <Route
                       path="/how-it-works"
                       element={
-                        <AppShell>
+                        <AppLayout>
                           <HowItWorksPage />
-                        </AppShell>
+                        </AppLayout>
                       }
                     />
                     <Route
                       path="/demo"
                       element={
-                        <AppShell>
+                        <AppLayout>
                           <DemoGalleryPage />
-                        </AppShell>
+                        </AppLayout>
                       }
                     />
                     <Route
                       path="/about"
                       element={
-                        <AppShell>
+                        <AppLayout>
                           <AboutPage />
-                        </AppShell>
+                        </AppLayout>
                       }
                     />
                     <Route
                       path="/privacy"
                       element={
-                        <AppShell>
+                        <AppLayout>
                           <PrivacyPage />
-                        </AppShell>
+                        </AppLayout>
                       }
                     />
                     <Route
                       path="/terms"
                       element={
-                        <AppShell>
+                        <AppLayout>
                           <TermsPage />
-                        </AppShell>
+                        </AppLayout>
                       }
                     />
                     <Route
                       path="/login"
                       element={
-                        <AppShell>
+                        <AppLayout>
                           <LoginPage />
-                        </AppShell>
+                        </AppLayout>
                       }
                     />
                     <Route
                       path="/register"
                       element={
-                        <AppShell>
+                        <AppLayout>
                           <RegisterPage />
-                        </AppShell>
+                        </AppLayout>
                       }
                     />
                     <Route
                       path="/forgot-password"
                       element={
-                        <AppShell>
+                        <AppLayout>
                           <ForgotPasswordPage />
-                        </AppShell>
+                        </AppLayout>
                       }
                     />
                     <Route
                       path="/check-land"
                       element={
-                        <AppShell>
+                        <AppLayout>
                           <CheckLandPage />
-                        </AppShell>
+                        </AppLayout>
                       }
                     />
                     <Route
                       path="/check"
                       element={
-                        <AppShell>
+                        <AppLayout>
                           <CheckLandPage />
-                        </AppShell>
+                        </AppLayout>
                       }
                     />
                     <Route
                       path="/results"
                       element={
-                        <AppShell>
+                        <AppLayout>
                           <ParcelResultsPage />
-                        </AppShell>
+                        </AppLayout>
                       }
                     />
 
@@ -311,14 +308,13 @@ export function App() {
                     <Route
                       path="*"
                       element={
-                        <AppShell>
+                        <AppLayout>
                           <NotFoundPage />
-                        </AppShell>
+                        </AppLayout>
                       }
                     />
                   </Routes>
-                </UIProvider>
-              </ToastProvider>
+                </ToastProvider>
             </NotificationsProvider>
           </SavedChecksProvider>
         </AuthProvider>

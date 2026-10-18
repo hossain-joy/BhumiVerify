@@ -13,7 +13,6 @@ import {
   ArrowRight,
   ShieldAlert,
 } from 'lucide-react';
-import { Disclaimer } from '../../components/common/Disclaimer';
 
 export const NotificationsPage: React.FC = () => {
   const { language } = useLanguage();

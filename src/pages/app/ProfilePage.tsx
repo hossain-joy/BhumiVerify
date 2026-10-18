@@ -17,7 +17,6 @@ import {
   Calendar,
   Layers,
 } from 'lucide-react';
-import { Disclaimer } from '../../components/common/Disclaimer';
 import { MonthlyQuotaCard } from '../../components/land/MonthlyQuotaCard';
 import { getMonthlyQuota, QuotaStatus } from '../../utils/quotaService';
 import { toBengaliNumerals } from '../../utils/formatStatus';

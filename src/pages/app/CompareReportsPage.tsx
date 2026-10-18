@@ -4,7 +4,6 @@ import { useSavedChecks } from '../../context/SavedChecksContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { formatStatusLabel, toBengaliNumerals } from '../../utils/formatStatus';
 import { GitCompare, AlertTriangle, ArrowRight, CheckCircle, Scale, Clock, MapPin, Layers } from 'lucide-react';
-import { Disclaimer } from '../../components/common/Disclaimer';
 import { DiligenceSubNav } from '../../components/layout/DiligenceSubNav';
 
 export const CompareReportsPage: React.FC = () => {
@@ -292,8 +291,6 @@ export const CompareReportsPage: React.FC = () => {
           {isBn ? 'তুলনা করার জন্য দুটি সংরক্ষিত জমি নির্বাচন করুন।' : 'Please select two valid saved checks to compare.'}
         </div>
       )}
-
-      <Disclaimer compact={false} />
     </div>
   );
 };

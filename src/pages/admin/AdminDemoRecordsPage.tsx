@@ -4,7 +4,6 @@ import { MOCK_PARCELS, FictionalParcelRecord } from '../../data/mockParcels';
 import { ArrowLeft, Layers, Code, CheckCircle, Search, Info } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { toBengaliNumerals } from '../../utils/formatStatus';
-import { Disclaimer } from '../../components/common/Disclaimer';
 
 export const AdminDemoRecordsPage: React.FC = () => {
   const { language } = useLanguage();
@@ -132,8 +131,6 @@ export const AdminDemoRecordsPage: React.FC = () => {
           </div>
         </div>
       </div>
-
-      <Disclaimer compact={false} />
     </div>
   );
 };
