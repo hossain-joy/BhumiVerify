@@ -14,12 +14,13 @@ import {
   Database,
   MapPin,
   Sparkles,
+  Clock,
 } from 'lucide-react';
 
 export const ReviewDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { requests, parcels } = useApp();
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
   const { openCadastralMap, openCertificate } = useUI();
   const [decisionModalOpen, setDecisionModalOpen] = useState(false);
 
@@ -51,7 +52,7 @@ export const ReviewDetailPage: React.FC = () => {
   const sla = getTimeRemaining(req.targetDeadline);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="w-full space-y-6">
       {/* Top Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
@@ -112,6 +113,11 @@ export const ReviewDetailPage: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Main 2-Column Responsive Body */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Left Column (8 cols): Applicant Dossier & Correlation */}
+        <div className="lg:col-span-8 space-y-6">
 
       {/* Citizen Identity & Purpose Dossier */}
       <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-2xs space-y-4">
@@ -325,6 +331,121 @@ export const ReviewDetailPage: React.FC = () => {
           </p>
         </div>
       )}
+    </div>
+    {/* End Left Column */}
+
+        {/* Right Column (4 cols): Reviewer Actions, SLA Countdown & Compliance Guidelines */}
+        <div className="lg:col-span-4 space-y-6">
+          {/* Adjudication Action Panel */}
+          <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-2xs space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <span className="font-bold text-slate-900 text-xs flex items-center gap-1.5 uppercase tracking-wider">
+                <ShieldCheck className="w-4 h-4 text-gov-primary" />
+                {language === 'bn' ? 'নিষ্পত্তি নিয়ন্ত্রণ প্যানেল' : 'Adjudication Control'}
+              </span>
+              <RequestStatusBadge status={req.status} />
+            </div>
+
+            {(req.status === 'submitted' || req.status === 'under_review') ? (
+              <div className="space-y-3">
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  {language === 'bn'
+                    ? 'আবেদনকারীর উদ্দেশ্য ও মৌজা তথ্যের সত্যতা যাচাই করে দ্রুত নিষ্পত্তি সম্পন্ন করুন।'
+                    : 'Vet applicant identity and cadastral identifiers, then record official adjudication.'}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setDecisionModalOpen(true)}
+                  className="w-full py-3 px-4 bg-gov-primary hover:bg-gov-primaryHover text-white text-xs font-bold rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02]"
+                >
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>{language === 'bn' ? 'আবেদন নিষ্পত্তি করুন' : 'Adjudicate Request Now'}</span>
+                </button>
+              </div>
+            ) : (
+              <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs space-y-1">
+                <span className="text-slate-500 font-semibold block">
+                  {language === 'bn' ? 'বর্তমান স্ট্যাটাস:' : 'Current Status:'}
+                </span>
+                <p className="font-bold text-slate-800 uppercase text-xs">
+                  {t.status[req.status] || req.status}
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* SLA Countdown Timer */}
+          <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-2xs space-y-3.5 text-xs">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <span className="font-bold text-slate-900 flex items-center gap-1.5">
+                <Clock className="w-4 h-4 text-gov-primary" />
+                {language === 'bn' ? 'এসএলএ অবশিষ্ট সময়' : 'SLA Target Countdown'}
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-teal-50 text-teal-800 font-semibold border border-teal-200">
+                {sla.text}
+              </span>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500">{language === 'bn' ? 'দাখিলের তারিখ:' : 'Submitted At:'}</span>
+                <span className="font-medium text-slate-800">{formatDateTime(req.submittedAt)}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500">{language === 'bn' ? 'লক্ষ্যমাত্রা ডেডলাইন:' : 'Target Deadline:'}</span>
+                <span className="font-semibold text-slate-900">{formatDateTime(req.targetDeadline)}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Reviewer Cadastral Inspector */}
+          <div className="bg-gradient-to-br from-teal-50/70 via-white to-slate-50 border border-teal-200/80 rounded-xl p-5 space-y-3 shadow-2xs">
+            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+              <MapPin className="w-4 h-4 text-gov-primary" />
+              {language === 'bn' ? 'মৌজা নকশা নিরীক্ষা' : 'Cadastral Inspection'}
+            </h4>
+            <p className="text-[11px] text-slate-600 leading-relaxed">
+              {language === 'bn'
+                ? `মৌজা: ${req.parcelDetails.mouza}, দাগ নং ${req.parcelDetails.dagNumber}-এর অবস্থান ও সীমানা ম্যাপে সরাসরি দেখুন।`
+                : `Inspect Mouza ${req.parcelDetails.mouza}, Dag #${req.parcelDetails.dagNumber} directly on the interactive survey sheet.`}
+            </p>
+            <button
+              type="button"
+              onClick={() => openCadastralMap(req.parcelDetails.dagNumber)}
+              className="w-full py-2.5 px-3 rounded-lg bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02]"
+            >
+              <MapPin className="w-3.5 h-3.5 text-teal-200" />
+              <span>{language === 'bn' ? 'নকশায় দাগ পরীক্ষা করুন' : 'Launch Survey Map Inspector'}</span>
+            </button>
+          </div>
+
+          {/* Official Compliance Guidance Card */}
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2 text-xs text-slate-600">
+            <span className="font-bold text-slate-800 flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-gov-primary" />
+              {language === 'bn' ? 'কর্মকর্তার সংবিধিবদ্ধ নির্দেশিকা' : 'Adjudication Standards (SAT Act §89)'}
+            </span>
+            <ul className="list-disc pl-4 space-y-1.5 text-[11px] leading-relaxed text-slate-600">
+              <li>
+                {language === 'bn'
+                  ? 'সাব-রেজিস্ট্রি থেকে প্রেরিত এলটি নোটিশ ও রেজিস্ট্রি দলিলের রেফারেন্স মিলিয়ে দেখুন।'
+                  : 'Correlate Sub-Registry LT notice against AC (Land) e-Mutation docket.'}
+              </li>
+              <li>
+                {language === 'bn'
+                  ? 'দাগ নম্বর পুনরাবৃত্তির ক্ষেত্রে মৌজা ও খতিয়ান নম্বরকে অগ্রাধিকার দিন।'
+                  : 'In recurring dag numbers, prioritize Mouza and Khatian correlation.'}
+              </li>
+              <li>
+                {language === 'bn'
+                  ? 'যথাযথ কারণ ও নোট ছাড়া কোনো আবেদন নামঞ্জুর করবেন না।'
+                  : 'Mandatory reason note is required for rejections or category redactions.'}
+              </li>
+            </ul>
+          </div>
+        </div>
+        {/* End Right Column */}
+      </div>
 
       {/* Adjudication Modal */}
       <DecisionModal

@@ -48,7 +48,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
       <main
         id="main-content"
         tabIndex={-1}
-        className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 animate-fade-up"
+        className="flex-1 w-full max-w-[1920px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 py-6 sm:py-8 animate-fade-up"
       >
         {children}
       </main>

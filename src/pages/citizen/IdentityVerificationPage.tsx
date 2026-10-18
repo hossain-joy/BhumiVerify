@@ -62,7 +62,7 @@ export const IdentityVerificationPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="w-full max-w-5xl mx-auto space-y-6">
       {/* Title & Guidance */}
       <div>
         <div className="flex items-center gap-2 mb-1">

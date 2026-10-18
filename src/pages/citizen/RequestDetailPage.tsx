@@ -33,7 +33,7 @@ export const RequestDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { requests, submitCitizenUpdate } = useApp();
   const { t, language } = useLanguage();
-  const { openCadastralMap, openCertificate } = useUI();
+  const { openCadastralMap, openCertificate, openCalculator, openChecklist, openUnitConverter } = useUI();
   const { showToast } = useToast();
 
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
@@ -119,7 +119,7 @@ export const RequestDetailPage: React.FC = () => {
   const accessExpiry = request.accessExpiresAt ? getTimeRemaining(request.accessExpiresAt) : null;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="w-full space-y-6">
       {/* Back button & Title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
@@ -222,6 +222,11 @@ export const RequestDetailPage: React.FC = () => {
       <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-2xs">
         <Stepper steps={steps} currentStepIndex={getStepperIndex()} />
       </div>
+
+      {/* Main 2-Column Responsive Body */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Left Column (8 cols): Primary Dossier & Adjudication */}
+        <div className="lg:col-span-8 space-y-6">
 
       {/* Reviewer Decision Card (if adjudicated) */}
       {request.reviewerDecision && (
@@ -500,6 +505,152 @@ export const RequestDetailPage: React.FC = () => {
             );
           })}
         </div>
+      </div>
+    </div>
+    {/* End Left Column */}
+
+        {/* Right Column (4 cols): SLA, Fast Diligence Tools & Statutory Advice */}
+        <div className="lg:col-span-4 space-y-6">
+          {/* Target SLA & Review Timer */}
+          <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-2xs space-y-3.5 text-xs">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <span className="font-bold text-slate-900 flex items-center gap-1.5">
+                <Clock className="w-4 h-4 text-gov-primary" />
+                {language === 'bn' ? 'এসএলএ ও সময়সীমা ট্র্যাকিং' : 'SLA & Deadline Tracking'}
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-teal-50 text-teal-800 font-semibold border border-teal-200">
+                {targetSla.text}
+              </span>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500">{language === 'bn' ? 'আবেদন দাখিলের সময়:' : 'Submitted At:'}</span>
+                <span className="font-medium text-slate-800">{formatDateTime(request.submittedAt)}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500">{language === 'bn' ? 'লক্ষ্যমাত্রা ডেডলাইন:' : 'Target Deadline:'}</span>
+                <span className="font-semibold text-slate-900">{formatDateTime(request.targetDeadline)}</span>
+              </div>
+              {accessExpiry && (
+                <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-emerald-800">
+                  <span className="font-medium">{language === 'bn' ? 'প্রবেশাধিকার মেয়াদ:' : 'Access Active Until:'}</span>
+                  <span className="font-bold">{accessExpiry.text}</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Payment CTA Card if payment is pending */}
+          {request.status === 'payment_pending' && (
+            <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-300 rounded-xl p-5 space-y-3 shadow-xs">
+              <div className="flex items-center gap-2 text-amber-900 font-bold text-sm">
+                <CreditCard className="w-5 h-5 text-amber-700" />
+                <span>{language === 'bn' ? 'ফি পরিশোধের নির্দেশনা' : 'Simulated Fee Required'}</span>
+              </div>
+              <p className="text-xs text-amber-950 leading-relaxed">
+                {language === 'bn'
+                  ? 'আপনার আবেদনটি প্রাথমিক অনুমোদন লাভ করেছে। সংকেত অবমুক্ত করতে ডেমো ফি পরিশোধ সম্পন্ন করুন।'
+                  : 'Your request has received preliminary approval. Complete simulated fee payment to activate disclosure.'}
+              </p>
+              <button
+                type="button"
+                onClick={() => setPaymentModalOpen(true)}
+                className="w-full py-2.5 px-4 bg-gov-primary hover:bg-gov-primaryHover text-white text-xs font-bold rounded-lg shadow-xs flex items-center justify-center gap-2 cursor-pointer transition-all hover:scale-[1.02]"
+              >
+                <CreditCard className="w-4 h-4" />
+                <span>{language === 'bn' ? 'এখনই ডেমো ফি পরিশোধ করুন' : 'Pay Demo Fee Now'}</span>
+              </button>
+            </div>
+          )}
+
+          {/* Quick Diligence Toolkit for this Plot */}
+          <div className="bg-gradient-to-br from-teal-50/70 via-white to-slate-50 border border-teal-200/80 rounded-xl p-5 space-y-3.5 shadow-2xs">
+            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-gov-primary" />
+              {language === 'bn' ? 'এই প্লটের ডিলিজেন্স টুলস' : 'Plot Diligence Utilities'}
+            </h4>
+
+            <div className="space-y-2">
+              <button
+                type="button"
+                onClick={() => openCadastralMap(request.parcelDetails.dagNumber)}
+                className="w-full text-left p-2.5 rounded-lg bg-white hover:bg-teal-50/80 border border-slate-200 hover:border-teal-300 text-xs flex items-center justify-between transition-all cursor-pointer group"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-md bg-teal-100 text-teal-800 flex items-center justify-center shrink-0">
+                    <MapPin className="w-4 h-4" />
+                  </div>
+                  <span className="font-semibold text-slate-800 group-hover:text-gov-primary">
+                    {language === 'bn' ? 'ডিজিটাল মৌজা নকশা' : 'Cadastral Map Sheet'}
+                  </span>
+                </div>
+                <span className="text-[10px] text-teal-700 font-bold bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
+                  {language === 'bn' ? `দাগ ${request.parcelDetails.dagNumber}` : `Dag ${request.parcelDetails.dagNumber}`}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={openCalculator}
+                className="w-full text-left p-2.5 rounded-lg bg-white hover:bg-blue-50/80 border border-slate-200 hover:border-blue-300 text-xs flex items-center justify-between transition-all cursor-pointer group"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-md bg-blue-100 text-blue-800 flex items-center justify-center shrink-0">
+                    <CreditCard className="w-4 h-4" />
+                  </div>
+                  <span className="font-semibold text-slate-800 group-hover:text-blue-700">
+                    {language === 'bn' ? 'রেজিস্ট্রেশন ফি হিসাব' : 'Registration & Tax Calculator'}
+                  </span>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={openChecklist}
+                className="w-full text-left p-2.5 rounded-lg bg-white hover:bg-amber-50/80 border border-slate-200 hover:border-amber-300 text-xs flex items-center justify-between transition-all cursor-pointer group"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-md bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
+                    <CheckCircle2 className="w-4 h-4" />
+                  </div>
+                  <span className="font-semibold text-slate-800 group-hover:text-amber-800">
+                    {language === 'bn' ? '১০-দফা ক্রেতা চেকলিস্ট' : '10-Point Diligence Checklist'}
+                  </span>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={openUnitConverter}
+                className="w-full text-left p-2.5 rounded-lg bg-white hover:bg-emerald-50/80 border border-slate-200 hover:border-emerald-300 text-xs flex items-center justify-between transition-all cursor-pointer group"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-md bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                    <Layers className="w-4 h-4" />
+                  </div>
+                  <span className="font-semibold text-slate-800 group-hover:text-emerald-800">
+                    {language === 'bn' ? 'ভূমি পরিমাপ কনভার্টার' : 'Land Unit Converter'}
+                  </span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {/* Statutory Diligence Caveat Card */}
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2 text-xs text-slate-600">
+            <span className="font-bold text-slate-800 flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-gov-primary" />
+              {language === 'bn' ? 'সংবিধিবদ্ধ অনুসন্ধান বিজ্ঞপ্তি' : 'Statutory Inquiry Notice'}
+            </span>
+            <p className="leading-relaxed text-[11px]">
+              {language === 'bn'
+                ? 'ভূমিভেরিফাই সংকেতসমূহ শুধুমাত্র দলিলের প্রাথমিক সত্যতা ও নামজারি আবেদনের রেকর্ড যাচাই করতে সাহায্য করে। এটি চূড়ান্ত স্বত্ব বা মালিকানার সনদ নয়।'
+                : 'BhumiVerify signals correlate registered events and e-Mutation petitions. This dossier does not replace formal certified searches at the Sub-Registry or AC (Land) office.'}
+            </p>
+          </div>
+        </div>
+        {/* End Right Column */}
       </div>
 
       {/* Simulated Payment Modal */}

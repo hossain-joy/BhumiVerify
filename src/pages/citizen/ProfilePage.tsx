@@ -18,7 +18,7 @@ export const ProfilePage: React.FC = () => {
   const userRequests = requests.filter((r) => r.userId === currentUser.id);
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="w-full max-w-5xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2 mb-1">

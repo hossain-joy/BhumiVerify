@@ -20,12 +20,14 @@ import {
   MapPin,
   Compass,
   Calculator,
+  CheckCircle2,
+  Layers,
 } from 'lucide-react';
 
 export const NewRequestPage: React.FC = () => {
   const { currentUser, createRequest, settings } = useApp();
   const { t, language } = useLanguage();
-  const { openCadastralMap, openCalculator } = useUI();
+  const { openCadastralMap, openCalculator, openChecklist, openUnitConverter } = useUI();
   const { showToast } = useToast();
   const navigate = useNavigate();
 
@@ -279,7 +281,7 @@ export const NewRequestPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="w-full space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
@@ -409,8 +411,11 @@ export const NewRequestPage: React.FC = () => {
         </div>
       )}
 
-      {/* Main Form */}
-      <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Main 2-Column Responsive Form & Preview Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Left Column (8 cols): Step Form */}
+        <div className="lg:col-span-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
         {/* Section 1: Cadastral Hierarchy with Cascading Selection */}
         <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-card space-y-4">
           <div className="pb-3 border-b border-slate-100 flex flex-wrap items-center justify-between gap-2">
@@ -859,7 +864,145 @@ export const NewRequestPage: React.FC = () => {
             </button>
           </div>
         </div>
-      </form>
+          </form>
+        </div>
+        {/* End Left Column */}
+
+        {/* Right Column (4 cols): Live Cadastral Hierarchy Preview & Guidance */}
+        <div className="lg:col-span-4 space-y-6">
+          {/* Live Cadastral Hierarchy Preview Card */}
+          <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-card space-y-4 text-xs">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <span className="font-bold text-slate-900 flex items-center gap-1.5 uppercase tracking-wider text-xs">
+                <MapPin className="w-4 h-4 text-gov-primary" />
+                {language === 'bn' ? 'লাইভ পার্সেল প্রিভিউ' : 'Live Cadastral Hierarchy'}
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-teal-50 text-teal-800 font-semibold border border-teal-200">
+                {language === 'bn' ? 'সরাসরি আপডেট' : 'Dynamic'}
+              </span>
+            </div>
+
+            {/* Hierarchy Tree */}
+            <div className="space-y-2 bg-slate-50 p-3 rounded-lg border border-slate-200/80">
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500">{language === 'bn' ? 'বিভাগ ও জেলা:' : 'Division & District:'}</span>
+                <span className="font-semibold text-slate-900">{selectedDivision}, {selectedDistrict}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500">{language === 'bn' ? 'উপজেলা / সার্কেল:' : 'Upazila / Circle:'}</span>
+                <span className="font-semibold text-slate-900">{selectedUpazila}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500">{language === 'bn' ? 'মৌজা ও জে.এল.:' : 'Mouza & J.L.:'}</span>
+                <span className="font-bold text-teal-800">{selectedMouza} {jlNumber ? `(J.L. ${jlNumber})` : ''}</span>
+              </div>
+              <div className="flex items-center justify-between pt-1 border-t border-slate-200">
+                <span className="text-slate-500">{language === 'bn' ? 'দাগ নম্বর:' : 'Dag Number:'}</span>
+                <span className="font-mono font-bold text-slate-900 text-sm">
+                  {dagNumber ? (language === 'bn' ? `দাগ ${dagNumber}` : `Plot ${dagNumber}`) : (language === 'bn' ? 'অনুল্লিখিত' : 'Pending')}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500">{language === 'bn' ? 'খতিয়ান ও জরিপ:' : 'Khatian & Survey:'}</span>
+                <span className="font-semibold text-slate-800">
+                  {khatianNumber ? `${khatianNumber} (${khatianType})` : (language === 'bn' ? 'প্রযোজ্য নয়' : 'N/A')}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500">{language === 'bn' ? 'জমির পরিমাণ:' : 'Declared Area:'}</span>
+                <span className="font-semibold text-slate-800">
+                  {area ? `${area} ${areaUnit}` : (language === 'bn' ? 'অনুল্লিখিত' : 'Pending')}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500">{language === 'bn' ? 'ক্যাটাগরি সংখ্যা:' : 'Categories:'}</span>
+                <span className="font-semibold text-slate-900">{requestedCategories.length} {language === 'bn' ? 'টি নির্বাচিত' : 'Selected'}</span>
+              </div>
+            </div>
+
+            {/* Quick Map trigger */}
+            {dagNumber && (
+              <button
+                type="button"
+                onClick={() => openCadastralMap(dagNumber)}
+                className="w-full py-2.5 px-3 rounded-lg bg-teal-50 hover:bg-teal-100 text-gov-primary border border-teal-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <MapPin className="w-3.5 h-3.5 text-teal-600" />
+                <span>{language === 'bn' ? `মৌজা নকশায় দাগ ${dagNumber} দেখুন` : `Inspect Dag #${dagNumber} on Map`}</span>
+              </button>
+            )}
+          </div>
+
+          {/* Quick Diligence Utilities */}
+          <div className="bg-gradient-to-br from-teal-50/70 via-white to-slate-50 border border-teal-200/80 rounded-xl p-5 space-y-3 shadow-2xs">
+            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-gov-primary" />
+              {language === 'bn' ? 'সহায়ক ডিলিজেন্স টুলস' : 'Helpful Diligence Tools'}
+            </h4>
+
+            <div className="space-y-2">
+              <button
+                type="button"
+                onClick={openChecklist}
+                className="w-full text-left p-2.5 rounded-lg bg-white hover:bg-amber-50/80 border border-slate-200 hover:border-amber-300 text-xs flex items-center justify-between transition-all cursor-pointer group"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-md bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
+                    <CheckCircle2 className="w-4 h-4" />
+                  </div>
+                  <span className="font-semibold text-slate-800 group-hover:text-amber-800">
+                    {language === 'bn' ? '১০-দফা ক্রেতা চেকলিস্ট' : '10-Point Diligence Checklist'}
+                  </span>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={openCalculator}
+                className="w-full text-left p-2.5 rounded-lg bg-white hover:bg-blue-50/80 border border-slate-200 hover:border-blue-300 text-xs flex items-center justify-between transition-all cursor-pointer group"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-md bg-blue-100 text-blue-800 flex items-center justify-center shrink-0">
+                    <Calculator className="w-4 h-4" />
+                  </div>
+                  <span className="font-semibold text-slate-800 group-hover:text-blue-700">
+                    {language === 'bn' ? 'রেজিস্ট্রেশন ফি ও ট্যাক্স' : 'Fee & Tax Estimator'}
+                  </span>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={openUnitConverter}
+                className="w-full text-left p-2.5 rounded-lg bg-white hover:bg-emerald-50/80 border border-slate-200 hover:border-emerald-300 text-xs flex items-center justify-between transition-all cursor-pointer group"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-md bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                    <Layers className="w-4 h-4" />
+                  </div>
+                  <span className="font-semibold text-slate-800 group-hover:text-emerald-800">
+                    {language === 'bn' ? 'একক রূপান্তরকারী' : 'Unit Converter'}
+                  </span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {/* Statutory Advice Card */}
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2 text-xs text-slate-600">
+            <span className="font-bold text-slate-800 flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-gov-primary" />
+              {language === 'bn' ? 'সংবিধিবদ্ধ নির্দেশনা' : 'Statutory Inquiry Rule'}
+            </span>
+            <p className="leading-relaxed text-[11px]">
+              {language === 'bn'
+                ? 'শুধুমাত্র দাগ নম্বর দিয়ে কোনো জমি নির্ভুলভাবে যাচাই করা সম্ভব নয়। মৌজা, জে.এল. নম্বর এবং খতিয়ান নম্বর প্রদান করলে নির্ভুল রেকর্ড মিলিয়ে দেখা সহজ হয়।'
+                : 'Inquiries relying solely on a Dag number cannot guarantee accurate match. Submitting Mouza, J.L., and Khatian ensures reliable cross-referencing.'}
+            </p>
+          </div>
+        </div>
+        {/* End Right Column */}
+      </div>
     </div>
   );
 };

@@ -59,77 +59,139 @@ export const LandingPage: React.FC = () => {
       {/* ── Hero ── */}
       <section className="relative overflow-hidden rounded-3xl gradient-hero text-white p-8 sm:p-12 shadow-float border border-white/10">
         {/* Decorative circles */}
-        <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-white/5 -translate-y-1/2 translate-x-1/4 pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full bg-white/5 translate-y-1/2 -translate-x-1/4 pointer-events-none" />
-        <div className="absolute top-1/2 right-1/4 w-32 h-32 rounded-full bg-teal-400/10 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-white/5 -translate-y-1/2 translate-x-1/4 pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-white/5 translate-y-1/2 -translate-x-1/4 pointer-events-none" />
+        <div className="absolute top-1/2 right-1/3 w-40 h-40 rounded-full bg-teal-400/10 pointer-events-none" />
 
-        <div className="relative max-w-3xl space-y-5">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs font-semibold text-teal-200 backdrop-blur-xs">
-            <ShieldCheck className="w-4 h-4 text-teal-300" />
-            {t.landing.heroTag}
+        <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+          {/* Left Column: Headlines & Actions */}
+          <div className="lg:col-span-7 xl:col-span-7 space-y-5">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs font-semibold text-teal-200 backdrop-blur-xs">
+              <ShieldCheck className="w-4 h-4 text-teal-300" />
+              {t.landing.heroTag}
+            </div>
+
+            <h1 className="text-3xl sm:text-5xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+              {t.landing.headline}
+            </h1>
+
+            <p className="text-sm sm:text-base text-teal-100/90 leading-relaxed max-w-2xl font-normal">
+              {t.landing.description}
+            </p>
+
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <button
+                onClick={() => handleStartDemo('citizen')}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gov-primary hover:bg-teal-50 font-bold text-sm rounded-xl shadow-float transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+              >
+                {t.landing.exploreCitizen}
+                <ArrowRight className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => handleStartDemo('reviewer')}
+                className="inline-flex items-center gap-2 px-5 py-3 bg-white/10 hover:bg-white/20 text-white font-semibold text-sm rounded-xl border border-white/20 transition-all duration-200 backdrop-blur-xs cursor-pointer"
+              >
+                {t.landing.exploreReviewer}
+              </button>
+              <button
+                onClick={() => openCadastralMap()}
+                className="inline-flex items-center gap-1.5 px-4 py-3 bg-teal-500/20 hover:bg-teal-500/30 text-teal-100 border border-teal-400/30 rounded-xl text-sm font-semibold transition-all hover:scale-[1.02] cursor-pointer"
+              >
+                <MapPin className="w-4 h-4 text-teal-300" />
+                <span>{language === 'bn' ? 'মৌজা নকশা দেখুন' : 'View Cadastral Map'}</span>
+              </button>
+              <button
+                onClick={openCalculator}
+                className="inline-flex items-center gap-1.5 px-4 py-3 bg-blue-500/20 hover:bg-blue-500/30 text-blue-100 border border-blue-400/30 rounded-xl text-sm font-semibold transition-all hover:scale-[1.02] cursor-pointer"
+              >
+                <Calculator className="w-4 h-4 text-blue-300" />
+                <span>{language === 'bn' ? 'ফি হিসাব করুন' : 'Fee Estimator'}</span>
+              </button>
+              <button
+                onClick={openTour}
+                className="inline-flex items-center gap-1.5 px-3 py-3 text-teal-200 hover:text-white text-sm font-medium transition-colors cursor-pointer"
+              >
+                <Compass className="w-4 h-4" />
+                <span>{language === 'bn' ? 'গাইড ট্যুর' : 'Platform Tour'}</span>
+              </button>
+            </div>
+
+            <div className="pt-1 flex items-center gap-2 text-xs text-teal-300/80">
+              <DemoDataTag type="demo_data" />
+              <span>{t.landing.noBackendNotice}</span>
+            </div>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
-            {t.landing.headline}
-          </h1>
+          {/* Right Column: Live Diligence Spotlight Telemetry (Fills wide screen) */}
+          <div className="hidden lg:block lg:col-span-5 xl:col-span-5">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-5 space-y-4 shadow-float text-white">
+              <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400" />
+                  </span>
+                  <span className="text-xs font-bold tracking-wide uppercase text-teal-200">
+                    {language === 'bn' ? 'লাইভ ডিলিজেন্স মনিটর' : 'Live Cadastral Telemetry'}
+                  </span>
+                </div>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 font-semibold">
+                  {language === 'bn' ? 'সিস্টেম সক্রিয়' : 'System Active'}
+                </span>
+              </div>
 
-          <p className="text-sm sm:text-base text-teal-100/90 leading-relaxed max-w-2xl font-normal">
-            {t.landing.description}
-          </p>
+              <div className="space-y-2.5 text-xs">
+                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/10">
+                  <span className="text-teal-200/80">{language === 'bn' ? 'নমুনা মৌজা ও দাগ:' : 'Sample Parcel:'}</span>
+                  <span className="font-semibold text-white">
+                    {language === 'bn' ? 'বাউনিয়া • দাগ ১০৪২ (তেজগাঁও)' : 'Baunia • Dag 1042 (Tejgaon)'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/10">
+                  <span className="text-teal-200/80">{language === 'bn' ? 'ই-নামজারি রেকর্ড:' : 'e-Mutation Record:'}</span>
+                  <span className="font-semibold text-emerald-300 flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    {language === 'bn' ? 'মঞ্জুরীকৃত (খতিয়ান ৫১২)' : 'Sanctioned (Khatian 512)'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/10">
+                  <span className="text-teal-200/80">{language === 'bn' ? 'ক্রেতা প্রস্তুতি স্কোর:' : 'Diligence Score:'}</span>
+                  <span className="font-bold text-amber-300">10 / 10 (100%)</span>
+                </div>
+              </div>
 
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <button
-              onClick={() => handleStartDemo('citizen')}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gov-primary hover:bg-teal-50 font-bold text-sm rounded-xl shadow-float transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-            >
-              {t.landing.exploreCitizen}
-              <ArrowRight className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => handleStartDemo('reviewer')}
-              className="inline-flex items-center gap-2 px-5 py-3 bg-white/10 hover:bg-white/20 text-white font-semibold text-sm rounded-xl border border-white/20 transition-all duration-200 backdrop-blur-xs"
-            >
-              {t.landing.exploreReviewer}
-            </button>
-            <button
-              onClick={() => openCadastralMap()}
-              className="inline-flex items-center gap-1.5 px-4 py-3 bg-teal-500/20 hover:bg-teal-500/30 text-teal-100 border border-teal-400/30 rounded-xl text-sm font-semibold transition-all hover:scale-[1.02]"
-            >
-              <MapPin className="w-4 h-4 text-teal-300" />
-              <span>{language === 'bn' ? 'মৌজা নকশা দেখুন' : 'View Cadastral Map'}</span>
-            </button>
-            <button
-              onClick={openCalculator}
-              className="inline-flex items-center gap-1.5 px-4 py-3 bg-blue-500/20 hover:bg-blue-500/30 text-blue-100 border border-blue-400/30 rounded-xl text-sm font-semibold transition-all hover:scale-[1.02]"
-            >
-              <Calculator className="w-4 h-4 text-blue-300" />
-              <span>{language === 'bn' ? 'ফি হিসাব করুন' : 'Fee Estimator'}</span>
-            </button>
-            <button
-              onClick={openTour}
-              className="inline-flex items-center gap-1.5 px-3 py-3 text-teal-200 hover:text-white text-sm font-medium transition-colors"
-            >
-              <Compass className="w-4 h-4" />
-              <span>{language === 'bn' ? 'গাইড ট্যুর' : 'Platform Tour'}</span>
-            </button>
-          </div>
-
-          <div className="pt-1 flex items-center gap-2 text-xs text-teal-300/80">
-            <DemoDataTag type="demo_data" />
-            <span>{t.landing.noBackendNotice}</span>
+              <div className="pt-1 grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => openCadastralMap('1042')}
+                  className="w-full py-2 px-3 rounded-lg bg-white/15 hover:bg-white/25 text-white text-[11px] font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <MapPin className="w-3.5 h-3.5 text-teal-300" />
+                  <span>{language === 'bn' ? 'নকশায় দাগ ১০৪২' : 'Survey Plot 1042'}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={openComparator}
+                  className="w-full py-2 px-3 rounded-lg bg-teal-500/25 hover:bg-teal-500/35 text-teal-100 text-[11px] font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <ArrowRight className="w-3.5 h-3.5 rotate-45 text-teal-300" />
+                  <span>{language === 'bn' ? 'পার্সেল তুলনা' : 'Compare Plots'}</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Stats Row */}
-        <div className="relative mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {/* Stats Row - Spans full width */}
+        <div className="relative mt-8 grid grid-cols-2 md:grid-cols-4 gap-3.5">
           {stats.map((s, i) => (
-            <div key={i} className="bg-white/10 backdrop-blur-xs rounded-xl p-3.5 border border-white/15 flex items-center gap-3">
-              <div className={`w-9 h-9 rounded-lg ${s.color} flex items-center justify-center shrink-0`}>
+            <div key={i} className="bg-white/10 backdrop-blur-xs rounded-xl p-4 border border-white/15 flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-lg ${s.color} flex items-center justify-center shrink-0`}>
                 {s.icon}
               </div>
               <div>
-                <div className="text-xl font-bold text-white">{s.value}</div>
-                <div className="text-[11px] text-teal-200/80">{s.label}</div>
+                <div className="text-2xl font-extrabold text-white">{s.value}</div>
+                <div className="text-[11px] text-teal-200/90 font-medium">{s.label}</div>
               </div>
             </div>
           ))}
@@ -156,7 +218,7 @@ export const LandingPage: React.FC = () => {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-6 gap-4">
           {/* 1. Cadastral Map */}
           <button
             onClick={() => openCadastralMap()}
