@@ -5,7 +5,7 @@ export const INITIAL_REQUESTS: AccessRequest[] = [
     id: 'REQ-2026-001',
     userId: 'USER-CITIZEN-01',
     userName: 'Tanvir Hossain',
-    userMaskedNid: 'DEMO-NID-0001 (Verified Demo)',
+    userMaskedNid: '1988********7419 (যাচাইকৃত নাগরিক)',
     identityStatusAtSubmission: 'verified_demo',
     parcelId: 'DEMO-PARCEL-001',
     parcelDetails: {
@@ -39,7 +39,7 @@ export const INITIAL_REQUESTS: AccessRequest[] = [
     id: 'REQ-2026-002',
     userId: 'USER-CITIZEN-01',
     userName: 'Tanvir Hossain',
-    userMaskedNid: 'DEMO-NID-0001 (Verified Demo)',
+    userMaskedNid: '1988********7419 (যাচাইকৃত নাগরিক)',
     identityStatusAtSubmission: 'verified_demo',
     parcelId: 'DEMO-PARCEL-002',
     parcelDetails: {
@@ -92,7 +92,7 @@ export const INITIAL_REQUESTS: AccessRequest[] = [
     id: 'REQ-2026-003',
     userId: 'USER-CITIZEN-01',
     userName: 'Tanvir Hossain',
-    userMaskedNid: 'DEMO-NID-0001 (Verified Demo)',
+    userMaskedNid: '1988********7419 (যাচাইকৃত নাগরিক)',
     identityStatusAtSubmission: 'verified_demo',
     parcelId: 'DEMO-PARCEL-003',
     parcelDetails: {
@@ -159,7 +159,7 @@ export const INITIAL_REQUESTS: AccessRequest[] = [
     id: 'REQ-2026-004',
     userId: 'USER-CITIZEN-01',
     userName: 'Tanvir Hossain',
-    userMaskedNid: 'DEMO-NID-0001 (Verified Demo)',
+    userMaskedNid: '1988********7419 (যাচাইকৃত নাগরিক)',
     identityStatusAtSubmission: 'verified_demo',
     parcelId: 'DEMO-PARCEL-004',
     parcelDetails: {
@@ -197,7 +197,7 @@ export const INITIAL_REQUESTS: AccessRequest[] = [
     id: 'REQ-2026-005',
     userId: 'USER-CITIZEN-01',
     userName: 'Tanvir Hossain',
-    userMaskedNid: 'DEMO-NID-0001 (Verified Demo)',
+    userMaskedNid: '1988********7419 (যাচাইকৃত নাগরিক)',
     identityStatusAtSubmission: 'verified_demo',
     parcelId: 'DEMO-PARCEL-001',
     parcelDetails: {
@@ -233,7 +233,7 @@ export const INITIAL_REQUESTS: AccessRequest[] = [
     id: 'REQ-2026-006',
     userId: 'USER-CITIZEN-01',
     userName: 'Tanvir Hossain',
-    userMaskedNid: 'DEMO-NID-0001 (Verified Demo)',
+    userMaskedNid: '1988********7419 (যাচাইকৃত নাগরিক)',
     identityStatusAtSubmission: 'verified_demo',
     parcelId: 'DEMO-PARCEL-002',
     parcelDetails: {
@@ -280,7 +280,7 @@ export const INITIAL_REQUESTS: AccessRequest[] = [
     id: 'REQ-2026-007',
     userId: 'USER-CITIZEN-01',
     userName: 'Tanvir Hossain',
-    userMaskedNid: 'DEMO-NID-0001 (Verified Demo)',
+    userMaskedNid: '1988********7419 (যাচাইকৃত নাগরিক)',
     identityStatusAtSubmission: 'verified_demo',
     parcelDetails: {
       division: 'Dhaka',

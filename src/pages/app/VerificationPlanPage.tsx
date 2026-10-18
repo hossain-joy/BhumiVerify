@@ -72,7 +72,11 @@ export const VerificationPlanPage: React.FC = () => {
     }
   }, [queryCheckId, savedChecks, selectedCheckId]);
 
-  const [filterStatus, setFilterStatus] = useState<'all' | 'pending' | 'completed'>('all');
+  const queryFilter = searchParams.get('filter') as 'all' | 'pending' | 'completed' | null;
+  const [filterStatus, setFilterStatus] = useState<'all' | 'pending' | 'completed'>(() => {
+    if (queryFilter === 'completed' || queryFilter === 'pending') return queryFilter;
+    return 'all';
+  });
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newDesc, setNewDesc] = useState('');

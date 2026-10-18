@@ -28,9 +28,9 @@ export const INITIAL_USER: UserProfile = {
   id: 'USER-CITIZEN-01',
   name: 'Tanvir Hossain',
   role: 'citizen',
-  maskedNid: 'DEMO-NID-0001 (Verified Demo)',
+  maskedNid: '1988********7419 (যাচাইকৃত নাগরিক)',
   phoneMasked: '+880 17**-***892',
-  identityStatus: 'verified_demo',
+  identityStatus: 'verified',
   verifiedAt: '2026-10-15T07:45:00Z',
   privacyAck: true,
 };

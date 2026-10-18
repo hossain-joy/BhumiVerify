@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { StorageAdapter, STORAGE_KEYS } from '../lib/storageAdapter';
 import { SEED_SAVED_CHECKS, SavedLandCheck, SavedVerificationTask } from '../data/seedSavedChecks';
+export type { SavedLandCheck, SavedVerificationTask };
 
 interface SavedChecksContextType {
   savedChecks: SavedLandCheck[];

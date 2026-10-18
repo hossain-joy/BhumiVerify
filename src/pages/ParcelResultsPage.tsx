@@ -211,8 +211,8 @@ export const ParcelResultsPage: React.FC = () => {
 
           <p className="text-[11px] text-slate-400 text-center">
             {isBn
-              ? 'বিকাশ, নগদ, রকেট বা কার্ডে ১-ক্লিকে টেস্ট পেমেন্ট সুবিধা সংযুক্ত।'
-              : 'Instant approval with 1-click quick demo payment support.'}
+              ? 'বিকাশ, নগদ, রকেট বা কার্ডের মাধ্যমে ডিজিটাল ব্যাংকিং ফি পরিশোধ করা যাবে।'
+              : 'Supports digital payment via bKash, Nagad, Rocket, or Debit/Credit Cards.'}
           </p>
         </div>
 

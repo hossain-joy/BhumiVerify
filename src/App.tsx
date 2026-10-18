@@ -275,7 +275,7 @@ export function App() {
                     <Route
                       path="/admin"
                       element={
-                        <ProtectedRoute>
+                        <ProtectedRoute requireAdmin={true}>
                           <AppLayout>
                             <AdminDashboardPage />
                           </AppLayout>
@@ -285,7 +285,7 @@ export function App() {
                     <Route
                       path="/admin/demo-records"
                       element={
-                        <ProtectedRoute>
+                        <ProtectedRoute requireAdmin={true}>
                           <AppLayout>
                             <AdminDemoRecordsPage />
                           </AppLayout>
@@ -295,7 +295,7 @@ export function App() {
                     <Route
                       path="/admin/audit-log"
                       element={
-                        <ProtectedRoute>
+                        <ProtectedRoute requireAdmin={true}>
                           <AppLayout>
                             <AdminAuditLogPage />
                           </AppLayout>

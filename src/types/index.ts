@@ -1,6 +1,6 @@
 export type UserRole = 'citizen' | 'reviewer' | 'auditor' | 'admin';
 
-export type IdentityStatus = 'unverified' | 'pending' | 'verified_demo';
+export type IdentityStatus = 'unverified' | 'pending' | 'verified_demo' | 'verified';
 
 export interface UserProfile {
   id: string;

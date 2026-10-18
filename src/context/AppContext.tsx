@@ -105,12 +105,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return () => clearInterval(timer);
   }, []);
 
-  const verifyCitizenIdentity = (name = 'Tanvir Hossain', fakeNid = 'DEMO-NID-0001') => {
+  const verifyCitizenIdentity = (name = 'Tanvir Hossain', fakeNid = '1988********7419') => {
     const updated: UserProfile = {
       ...currentUser,
       name,
-      maskedNid: `${fakeNid} (Verified Demo)`,
-      identityStatus: 'verified_demo',
+      maskedNid: `${fakeNid} (যাচাইকৃত নাগরিক)`,
+      identityStatus: 'verified',
       verifiedAt: new Date().toISOString(),
       privacyAck: true,
     };

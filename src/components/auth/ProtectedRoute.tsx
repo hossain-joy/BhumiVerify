@@ -19,7 +19,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-3 border-gov-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-slate-500 font-medium">Verifying demo session...</p>
+          <p className="text-sm text-slate-500 font-medium">Verifying session...</p>
         </div>
       </div>
     );
@@ -30,8 +30,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   if (requireAdmin && currentUser?.role !== 'admin') {
-    // In demo mode, still allow navigation or show admin notice
-    return <Navigate to="/admin" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return children;
