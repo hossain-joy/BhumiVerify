@@ -87,8 +87,8 @@ export const PrivacyPage: React.FC = () => {
           <ul className="list-disc pl-5 space-y-1 text-slate-600">
             <li>
               {isBn
-                ? 'আমরা কখনোই জাতীয় পরিচয়পত্র (NID) নম্বর বা স্মার্ট কার্ডের তথ্য চাই না বা সংরক্ষণ করি না।'
-                : 'We never ask for or store National Identity (NID) numbers or smart card credentials.'}
+                ? 'আমরা জাতীয় পরিচয়পত্র (NID) নম্বর শুধুমাত্র নাগরিক পরিচিতি নিশ্চিতকরণ ও জালিয়াতি রোধে যাচাই করি; কোনো বায়োমেট্রিক বা পিন সংরক্ষণ করি না।'
+                : 'We verify National Identity (NID) numbers solely for citizen authentication and anti-fraud checks; biometric data and PINs are never stored.'}
             </li>
             <li>
               {isBn

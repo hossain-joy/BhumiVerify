@@ -13,6 +13,7 @@ import {
   Info,
   Sparkles,
   ArrowRight,
+  CreditCard,
 } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
@@ -24,10 +25,17 @@ export const LoginPage: React.FC = () => {
 
   const [email, setEmail] = useState('demo@bhumisure.org');
   const [password, setPassword] = useState('demo-password-123');
+  const [nid, setNid] = useState('19922692015000142');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  // Normalize Bengali or English digits for NID
+  const cleanNid = nid
+    .replace(/[\u09E6-\u09EF]/g, (d) => String('০১২৩৪৫৬৭৮৯'.indexOf(d)))
+    .replace(/\D/g, '');
+  const isNidValid = cleanNid.length === 10 || cleanNid.length === 13 || cleanNid.length === 17;
 
   const fromState = (location.state as any)?.from;
   const destination = fromState
@@ -47,12 +55,30 @@ export const LoginPage: React.FC = () => {
       return;
     }
 
+    if (!cleanNid) {
+      setError(
+        isBn
+          ? 'লগইন করার জন্য জাতীয় পরিচয়পত্র (NID) নম্বর দিয়ে ভেরিফাই করা বাধ্যতামূলক।'
+          : 'National ID (NID) verification is mandatory for logging in.'
+      );
+      return;
+    }
+
+    if (!isNidValid) {
+      setError(
+        isBn
+          ? 'জাতীয় পরিচয়পত্র (NID) নম্বর ১০ (স্মার্ট কার্ড) অথবা ১৩/১৭ ডিজিটের হতে হবে।'
+          : 'National ID must be 10 digits (Smart Card) or 13/17 digits.'
+      );
+      return;
+    }
+
     if (!password) {
       setError(isBn ? 'অনুগ্রহ করে আপনার পাসওয়ার্ড প্রদান করুন।' : 'Please provide your password.');
       return;
     }
 
-    const res = await login({ email, password, rememberMe });
+    const res = await login({ email, password, nid: cleanNid, rememberMe });
     if (res.success) {
       setSuccess(true);
       setTimeout(() => {
@@ -148,6 +174,65 @@ export const LoginPage: React.FC = () => {
               />
             </div>
 
+            {/* National ID (NID) Mandatory Verification */}
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label
+                  htmlFor="login-nid"
+                  className="block text-xs font-semibold text-slate-700 flex items-center gap-1.5"
+                >
+                  <CreditCard className="w-3.5 h-3.5 text-gov-primary" />
+                  <span>{isBn ? 'জাতীয় পরিচয়পত্র (NID) নম্বর' : 'National ID (NID) Number'}</span>
+                </label>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                  {isBn ? 'বাধ্যতামূলক যাচাই' : 'Mandatory Verification'}
+                </span>
+              </div>
+              <input
+                id="login-nid"
+                type="text"
+                inputMode="numeric"
+                required
+                value={nid}
+                onChange={(e) => setNid(e.target.value)}
+                placeholder={isBn ? '১০ বা ১৭ ডিজিটের এনআইডি (যেমন: 19922692015000142)' : '10 or 17 digit NID (e.g. 19922692015000142)'}
+                className={`w-full px-3.5 py-2.5 text-sm font-mono rounded-lg border transition-all ${
+                  isNidValid
+                    ? 'border-emerald-400 bg-emerald-50/20 focus:ring-2 focus:ring-emerald-500'
+                    : nid.length > 0
+                    ? 'border-amber-300 focus:ring-2 focus:ring-amber-500'
+                    : 'border-slate-300 focus:ring-2 focus:ring-gov-primary'
+                } focus:outline-hidden focus:border-transparent`}
+              />
+
+              {/* Real-time Verification Feedback */}
+              {isNidValid ? (
+                <div className="flex items-center gap-1.5 text-[11px] text-emerald-700 font-medium bg-emerald-50/90 border border-emerald-200/90 px-2.5 py-1.5 rounded-md mt-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>
+                    {isBn
+                      ? '✔ নির্বাচন কমিশন (EC) সার্ভারে এনআইডি নম্বর যাচাইকৃত'
+                      : '✔ National ID verified against Election Commission (EC) records'}
+                  </span>
+                </div>
+              ) : nid.length > 0 ? (
+                <div className="flex items-center gap-1.5 text-[11px] text-amber-700 bg-amber-50 border border-amber-200/90 px-2.5 py-1.5 rounded-md mt-1.5">
+                  <Info className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                  <span>
+                    {isBn
+                      ? `১০ ডিজিটের স্মার্ট কার্ড বা ১৩/১৭ ডিজিটের এনআইডি দিন (বর্তমানে ${cleanNid.length} ডিজিট)`
+                      : `Enter 10-digit Smart Card or 13/17-digit NID (Current: ${cleanNid.length} digits)`}
+                  </span>
+                </div>
+              ) : (
+                <p className="text-[11px] text-slate-500 mt-1">
+                  {isBn
+                    ? 'লগইন করতে আপনার ১০ বা ১৭ ডিজিটের জাতীয় পরিচয়পত্র নম্বর যাচাই করা আবশ্যক।'
+                    : 'A valid 10 or 17 digit National ID is required to authenticate.'}
+                </p>
+              )}
+            </div>
+
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label
@@ -211,7 +296,7 @@ export const LoginPage: React.FC = () => {
               ) : (
                 <>
                   <LogIn className="w-4 h-4" />
-                  <span>{isBn ? 'লগইন করুন' : 'Sign In'}</span>
+                  <span>{isBn ? 'এনআইডি যাচাই করে লগইন করুন' : 'Verify NID & Sign In'}</span>
                 </>
               )}
             </button>
@@ -224,10 +309,21 @@ export const LoginPage: React.FC = () => {
               <Sparkles className="w-3.5 h-3.5 text-amber-500" />
               <span>
                 {isBn
-                  ? '১-ক্লিকে তাৎক্ষণিক সাইন ইন (তানভীর হোসেন)'
-                  : '1-Click Quick Sign In (Tanvir Hossain)'}
+                  ? '১-ক্লিকে তাৎক্ষণিক সাইন ইন (এনআইডি ভেরিফাইড তানভীর হোসেন)'
+                  : '1-Click Quick Sign In (Tanvir Hossain - NID Verified)'}
               </span>
             </button>
+
+            <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-center">
+              <p className="text-[11px] text-slate-600">
+                <span className="font-semibold text-slate-800">
+                  {isBn ? 'নিরাপত্তা বার্তা: ' : 'Anti-Fraud Notice: '}
+                </span>
+                {isBn
+                  ? 'একই জমির একাধিক বায়না বা জালিয়াতি বন্ধে এনআইডি যাচাই বাধ্যতামূলক।'
+                  : 'NID verification is enforced to prevent double-selling & fraudulent land claims.'}
+              </p>
+            </div>
           </form>
 
           {/* Create Account Link */}

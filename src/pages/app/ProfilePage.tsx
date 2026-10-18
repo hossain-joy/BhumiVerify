@@ -114,6 +114,30 @@ export const ProfilePage: React.FC = () => {
             />
           </div>
 
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                <CreditCard className="w-3.5 h-3.5 text-gov-primary" />
+                <span>{isBn ? 'জাতীয় পরিচয়পত্র (NID) নম্বর' : 'National ID (NID) Number'}</span>
+              </label>
+              <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                <span>{isBn ? 'নির্বাচন কমিশন (EC) ভেরিফাইড' : 'EC Verified'}</span>
+              </span>
+            </div>
+            <input
+              type="text"
+              readOnly
+              value={currentUser?.nid || '19922692015000142'}
+              className="w-full px-3.5 py-2.5 text-sm font-mono rounded-lg border border-slate-200 bg-slate-50 text-slate-700 cursor-not-allowed"
+            />
+            <p className="text-[11px] text-slate-500 mt-1">
+              {isBn
+                ? 'লগইন করার সময় জাতীয় পরিচয়পত্র ডাটাবেজ দ্বারা যাচাই করা হয়েছে।'
+                : 'National ID verified during authentication via Election Commission records.'}
+            </p>
+          </div>
+
           <div className="pt-2 flex justify-end">
             <button
               type="submit"

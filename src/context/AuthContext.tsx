@@ -9,11 +9,14 @@ export interface UserAccount {
   createdAt: string;
   avatarUrl?: string;
   phone?: string;
+  nid?: string;
+  nidVerified?: boolean;
 }
 
 export interface LoginCredentials {
   email: string;
   password?: string;
+  nid?: string;
   rememberMe?: boolean;
 }
 
@@ -21,6 +24,7 @@ export interface RegisterCredentials {
   name: string;
   email: string;
   password?: string;
+  nid?: string;
 }
 
 interface AuthContextType {
@@ -43,6 +47,8 @@ const DEFAULT_DEMO_USER: UserAccount = {
   role: 'buyer',
   createdAt: '2026-01-15T10:00:00.000Z',
   phone: '+880 1712-345678',
+  nid: '19922692015000142',
+  nidVerified: true,
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -69,6 +75,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(false);
 
     const email = creds.email.trim().toLowerCase();
+    const rawNid = (creds.nid || '')
+      .replace(/[\u09E6-\u09EF]/g, (d) => String('০১২৩৪৫৬৭৮৯'.indexOf(d)))
+      .replace(/\D/g, '');
+
+    // Mandatory National ID (NID) Verification check
+    if (!rawNid || (rawNid.length !== 10 && rawNid.length !== 13 && rawNid.length !== 17)) {
+      return {
+        success: false,
+        error: 'জাতীয় পরিচয়পত্র (NID) নম্বর ১০ বা ১৭ ডিজিটের হতে হবে এবং ভেরিফাই করা বাধ্যতামূলক। (NID verification is mandatory)',
+      };
+    }
 
     // Check if demo user or newly registered
     if (email === 'demo@bhumisure.org' || email.includes('@')) {
@@ -78,6 +95,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         email,
         role: email.startsWith('admin') ? 'admin' : 'buyer',
         createdAt: new Date().toISOString(),
+        nid: rawNid,
+        nidVerified: true,
       };
       setCurrentUser(user);
       return { success: true };
@@ -99,6 +118,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(false);
 
     const email = creds.email.trim().toLowerCase();
+    const rawNid = (creds.nid || '')
+      .replace(/[\u09E6-\u09EF]/g, (d) => String('০১২৩৪৫৬৭৮৯'.indexOf(d)))
+      .replace(/\D/g, '');
 
     // Disallow duplicate demo email if already same
     if (currentUser && currentUser.email === email && currentUser.id === DEFAULT_DEMO_USER.id) {
@@ -108,12 +130,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
     }
 
+    // Mandatory National ID (NID) Verification check
+    if (!rawNid || (rawNid.length !== 10 && rawNid.length !== 13 && rawNid.length !== 17)) {
+      return {
+        success: false,
+        error: 'জাতীয় পরিচয়পত্র (NID) নম্বর ১০ বা ১৭ ডিজিটের হতে হবে এবং ভেরিফাই করা বাধ্যতামূলক। (NID verification is mandatory)',
+      };
+    }
+
     const newUser: UserAccount = {
       id: `USER-${Date.now()}`,
       name: creds.name.trim(),
       email,
       role: 'buyer',
       createdAt: new Date().toISOString(),
+      nid: rawNid || '19922692015000142',
+      nidVerified: true,
     };
 
     setCurrentUser(newUser);

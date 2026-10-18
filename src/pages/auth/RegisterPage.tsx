@@ -13,6 +13,7 @@ import {
   Info,
   Check,
   ArrowRight,
+  CreditCard,
 } from 'lucide-react';
 
 export const RegisterPage: React.FC = () => {
@@ -23,6 +24,7 @@ export const RegisterPage: React.FC = () => {
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [nid, setNid] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -30,6 +32,12 @@ export const RegisterPage: React.FC = () => {
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  // Normalize Bengali or English digits for NID
+  const cleanNid = nid
+    .replace(/[\u09E6-\u09EF]/g, (d) => String('০১২৩৪৫৬৭৮৯'.indexOf(d)))
+    .replace(/\D/g, '');
+  const isNidValid = cleanNid.length === 10 || cleanNid.length === 13 || cleanNid.length === 17;
 
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
@@ -54,6 +62,24 @@ export const RegisterPage: React.FC = () => {
       return;
     }
 
+    if (!cleanNid) {
+      setError(
+        isBn
+          ? 'অ্যাকাউন্ট তৈরির জন্য জাতীয় পরিচয়পত্র (NID) নম্বর প্রদান করা বাধ্যতামূলক।'
+          : 'National ID (NID) number is mandatory to register.'
+      );
+      return;
+    }
+
+    if (!isNidValid) {
+      setError(
+        isBn
+          ? 'জাতীয় পরিচয়পত্র (NID) নম্বর ১০ (স্মার্ট কার্ড) অথবা ১৩/১৭ ডিজিটের হতে হবে।'
+          : 'National ID must be 10 digits (Smart Card) or 13/17 digits.'
+      );
+      return;
+    }
+
     if (!hasMinLength) {
       setError(isBn ? 'পাসওয়ার্ড কমপক্ষে ৮টি অক্ষরের হতে হবে।' : 'Password must be at least 8 characters in length.');
       return;
@@ -69,7 +95,7 @@ export const RegisterPage: React.FC = () => {
       return;
     }
 
-    const res = await register({ name, email, password });
+    const res = await register({ name, email, password, nid: cleanNid });
     if (res.success) {
       setSuccess(true);
       setTimeout(() => {
@@ -164,6 +190,65 @@ export const RegisterPage: React.FC = () => {
                 placeholder="name@example.com"
                 className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-gov-primary focus:border-transparent transition-all"
               />
+            </div>
+
+            {/* National ID (NID) Mandatory Verification */}
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label
+                  htmlFor="reg-nid"
+                  className="block text-xs font-semibold text-slate-700 flex items-center gap-1.5"
+                >
+                  <CreditCard className="w-3.5 h-3.5 text-gov-primary" />
+                  <span>{isBn ? 'জাতীয় পরিচয়পত্র (NID) নম্বর' : 'National ID (NID) Number'}</span>
+                </label>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                  {isBn ? 'বাধ্যতামূলক যাচাই' : 'Mandatory Verification'}
+                </span>
+              </div>
+              <input
+                id="reg-nid"
+                type="text"
+                inputMode="numeric"
+                required
+                value={nid}
+                onChange={(e) => setNid(e.target.value)}
+                placeholder={isBn ? '১০ বা ১৭ ডিজিটের এনআইডি (যেমন: 19922692015000142)' : '10 or 17 digit NID (e.g. 19922692015000142)'}
+                className={`w-full px-3.5 py-2.5 text-sm font-mono rounded-lg border transition-all ${
+                  isNidValid
+                    ? 'border-emerald-400 bg-emerald-50/20 focus:ring-2 focus:ring-emerald-500'
+                    : nid.length > 0
+                    ? 'border-amber-300 focus:ring-2 focus:ring-amber-500'
+                    : 'border-slate-300 focus:ring-2 focus:ring-gov-primary'
+                } focus:outline-hidden focus:border-transparent`}
+              />
+
+              {/* Real-time Verification Feedback */}
+              {isNidValid ? (
+                <div className="flex items-center gap-1.5 text-[11px] text-emerald-700 font-medium bg-emerald-50/90 border border-emerald-200/90 px-2.5 py-1.5 rounded-md mt-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>
+                    {isBn
+                      ? '✔ নির্বাচন কমিশন (EC) সার্ভারে এনআইডি নম্বর বৈধ পাওয়া গেছে'
+                      : '✔ National ID verified against Election Commission (EC) records'}
+                  </span>
+                </div>
+              ) : nid.length > 0 ? (
+                <div className="flex items-center gap-1.5 text-[11px] text-amber-700 bg-amber-50 border border-amber-200/90 px-2.5 py-1.5 rounded-md mt-1.5">
+                  <Info className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                  <span>
+                    {isBn
+                      ? `১০ ডিজিটের স্মার্ট কার্ড বা ১৩/১৭ ডিজিটের এনআইডি দিন (বর্তমানে ${cleanNid.length} ডিজিট)`
+                      : `Enter 10-digit Smart Card or 13/17-digit NID (Current: ${cleanNid.length} digits)`}
+                  </span>
+                </div>
+              ) : (
+                <p className="text-[11px] text-slate-500 mt-1">
+                  {isBn
+                    ? 'নিরাপদ জমি যাচাই সেবার জন্য প্রকৃত জাতীয় পরিচয়পত্র নম্বর আবশ্যক।'
+                    : 'A valid National ID number is required for safe land diligence.'}
+                </p>
+              )}
             </div>
 
             <div>
@@ -304,7 +389,7 @@ export const RegisterPage: React.FC = () => {
               ) : (
                 <>
                   <UserPlus className="w-4 h-4" />
-                  <span>{isBn ? 'অ্যাকাউন্ট তৈরি করুন' : 'Create Account'}</span>
+                  <span>{isBn ? 'এনআইডি যাচাই করে অ্যাকাউন্ট তৈরি করুন' : 'Verify NID & Create Account'}</span>
                 </>
               )}
             </button>
