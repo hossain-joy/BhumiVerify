@@ -93,14 +93,6 @@ export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({
       descEn: 'Step-by-step introduction to platform features',
     },
     {
-      keys: ['S'],
-      icon: <Volume2 className="w-4 h-4 text-pink-600" />,
-      titleBn: 'সাউন্ড ইফেক্ট অন / অফ',
-      titleEn: 'Toggle Sound Effects',
-      descBn: 'অডিও ক্লিক ও কনফার্মেশন সংকেত চালু বা বন্ধ করুন',
-      descEn: 'Enable or disable Web Audio synthesizers',
-    },
-    {
       keys: ['?'],
       icon: <Keyboard className="w-4 h-4 text-slate-600" />,
       titleBn: 'কীবোর্ড শর্টকাট সহায়িকা',

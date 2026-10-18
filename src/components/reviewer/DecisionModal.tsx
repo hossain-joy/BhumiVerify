@@ -4,7 +4,6 @@ import { Modal } from '../common/Modal';
 import { useApp } from '../../context/AppContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useToast } from '../../context/ToastContext';
-import { triggerConfetti } from '../../lib/confetti';
 import {
   CheckCircle2,
   AlertTriangle,
@@ -88,9 +87,6 @@ export const DecisionModal: React.FC<DecisionModalProps> = ({
       setSubmitting(false);
 
       if (result.success) {
-        if (decision === 'approved' || decision === 'limited_approved') {
-          triggerConfetti();
-        }
         showToast({
           type: decision === 'rejected' ? 'warning' : 'success',
           title: language === 'bn' ? 'সিদ্ধান্ত লিপিবদ্ধ হয়েছে!' : 'Decision Recorded!',

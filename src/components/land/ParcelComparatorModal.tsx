@@ -4,7 +4,6 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useUI } from '../../context/UIContext';
 import { INITIAL_PARCELS } from '../../lib/mock-data/parcels';
 import { ParcelReference } from '../../types';
-import { VoicePlayButton } from '../common/VoicePlayButton';
 import {
   ArrowLeftRight,
   ShieldCheck,
@@ -268,7 +267,6 @@ export const ParcelComparatorModal: React.FC<ParcelComparatorModalProps> = ({ is
           </div>
 
           <div className="flex items-center gap-2">
-            <VoicePlayButton text={voiceSummaryText} lang={language as 'bn' | 'en'} label={language === 'bn' ? 'তুলনা শুনুন' : 'Listen'} />
             <button
               onClick={() => window.print()}
               className="p-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs font-medium flex items-center gap-1 cursor-pointer"

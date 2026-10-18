@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { soundEffects } from '../lib/soundEffects';
 import { AccessRequest } from '../types';
 
 interface UIContextType {
@@ -45,9 +44,6 @@ interface UIContextType {
   isShortcutsOpen: boolean;
   openShortcuts: () => void;
   closeShortcuts: () => void;
-
-  soundEnabled: boolean;
-  toggleSound: () => boolean;
 }
 
 const UIContext = createContext<UIContextType | undefined>(undefined);
@@ -65,10 +61,8 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   const [activeCertificateRequest, setActiveCertificateRequest] = useState<AccessRequest | undefined>(undefined);
   const [isComparatorOpen, setIsComparatorOpen] = useState(false);
   const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
-  const [soundEnabled, setSoundEnabled] = useState(() => soundEffects.isEnabled());
 
   const openCommandPalette = useCallback(() => {
-    soundEffects.playClick();
     setIsCommandPaletteOpen(true);
   }, []);
 
@@ -77,7 +71,6 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   }, []);
 
   const openCadastralMap = useCallback((targetDag?: string) => {
-    soundEffects.playClick();
     setActiveMapDag(targetDag);
     setIsCadastralMapOpen(true);
   }, []);
@@ -87,7 +80,6 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   }, []);
 
   const openCalculator = useCallback(() => {
-    soundEffects.playClick();
     setIsCalculatorOpen(true);
   }, []);
 
@@ -96,7 +88,6 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   }, []);
 
   const openTour = useCallback(() => {
-    soundEffects.playClick();
     setIsTourOpen(true);
   }, []);
 
@@ -105,7 +96,6 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   }, []);
 
   const openChecklist = useCallback(() => {
-    soundEffects.playClick();
     setIsChecklistOpen(true);
   }, []);
 
@@ -114,7 +104,6 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   }, []);
 
   const openUnitConverter = useCallback(() => {
-    soundEffects.playClick();
     setIsUnitConverterOpen(true);
   }, []);
 
@@ -123,7 +112,6 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   }, []);
 
   const openAssistant = useCallback(() => {
-    soundEffects.playClick();
     setIsAssistantOpen(true);
   }, []);
 
@@ -132,12 +120,10 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   }, []);
 
   const toggleAssistant = useCallback(() => {
-    soundEffects.playClick();
     setIsAssistantOpen((prev) => !prev);
   }, []);
 
   const openCertificate = useCallback((req?: AccessRequest) => {
-    soundEffects.playClick();
     setActiveCertificateRequest(req);
     setIsCertificateOpen(true);
   }, []);
@@ -147,7 +133,6 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   }, []);
 
   const openComparator = useCallback(() => {
-    soundEffects.playClick();
     setIsComparatorOpen(true);
   }, []);
 
@@ -156,18 +141,11 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   }, []);
 
   const openShortcuts = useCallback(() => {
-    soundEffects.playClick();
     setIsShortcutsOpen(true);
   }, []);
 
   const closeShortcuts = useCallback(() => {
     setIsShortcutsOpen(false);
-  }, []);
-
-  const toggleSound = useCallback(() => {
-    const newState = soundEffects.toggle();
-    setSoundEnabled(newState);
-    return newState;
   }, []);
 
   // Global keyboard shortcuts: Ctrl+K, Escape, and single-key accelerators
@@ -230,9 +208,6 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
       } else if (e.key.toLowerCase() === 't' && !e.ctrlKey && !e.metaKey) {
         e.preventDefault();
         setIsTourOpen((prev) => !prev);
-      } else if (e.key.toLowerCase() === 's' && !e.ctrlKey && !e.metaKey) {
-        e.preventDefault();
-        setSoundEnabled(soundEffects.toggle());
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -275,8 +250,6 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
         isShortcutsOpen,
         openShortcuts,
         closeShortcuts,
-        soundEnabled,
-        toggleSound,
       }}
     >
       {children}

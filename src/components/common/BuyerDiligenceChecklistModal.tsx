@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useUI } from '../../context/UIContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useToast } from '../../context/ToastContext';
-import { fireConfetti } from '../../lib/confetti';
 import {
   X,
   ClipboardCheck,
@@ -161,7 +160,6 @@ export const BuyerDiligenceChecklistModal: React.FC = () => {
       // Check if all are complete
       const totalChecked = Object.values({ ...checkedIds, [id]: true }).filter(Boolean).length;
       if (totalChecked === CHECKLIST_ITEMS.length) {
-        fireConfetti();
         showToast({
           type: 'success',
           title: isBn ? 'অভিনন্দন! শতভাগ যাচাই সম্পন্ন' : '100% Diligence Complete!',

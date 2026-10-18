@@ -49,7 +49,7 @@ export const ToastContainer: React.FC = () => {
           <div
             key={toast.id}
             role="alert"
-            className={`pointer-events-auto relative overflow-hidden rounded-xl border ${style.border} ${style.bg} p-4 shadow-float animate-slide-down transition-all duration-200`}
+            className={`pointer-events-auto relative overflow-hidden rounded-xl border ${style.border} ${style.bg} p-4 shadow-lg animate-slide-down transition-all duration-200`}
           >
             <div className="flex items-start gap-3">
               {style.icon}

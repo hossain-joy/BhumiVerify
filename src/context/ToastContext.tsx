@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { soundEffects } from '../lib/soundEffects';
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info';
 
@@ -29,10 +28,6 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const showToast = useCallback(
     ({ type, title, message, duration = 4000 }: Omit<ToastItem, 'id'>) => {
       const id = 'toast_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
-
-      if (type === 'success') soundEffects.playSuccess();
-      else if (type === 'warning' || type === 'error') soundEffects.playWarning();
-      else soundEffects.playNotification();
 
       setToasts((prev) => [...prev.slice(-3), { id, type, title, message, duration }]);
 

@@ -28,7 +28,7 @@ const roleColors: Record<string, string> = {
 export const Header: React.FC = () => {
   const { currentRole, currentUser, unreadCount } = useApp();
   const { language, t } = useLanguage();
-  const { openCommandPalette, openCadastralMap, openCalculator, openTour, soundEnabled, toggleSound } = useUI();
+  const { openCommandPalette, openCadastralMap, openCalculator, openTour } = useUI();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -181,16 +181,6 @@ export const Header: React.FC = () => {
             >
               <Compass className="w-3.5 h-3.5 text-violet-600" />
               <span className="hidden xl:inline">{language === 'bn' ? 'গাইড' : 'Tour'}</span>
-            </button>
-
-            {/* Sound FX Toggle */}
-            <button
-              onClick={toggleSound}
-              className="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-all"
-              title={soundEnabled ? (language === 'bn' ? 'সাউন্ড নিঃশব্দ করুন' : 'Mute Sound') : (language === 'bn' ? 'সাউন্ড সক্রিয় করুন' : 'Enable Sound')}
-              aria-label="Toggle Sound"
-            >
-              {soundEnabled ? <Volume2 className="w-4 h-4 text-teal-600" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
             </button>
 
             <LanguageSwitcher />

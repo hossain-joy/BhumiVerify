@@ -12,8 +12,6 @@ import {
   Scale, ClipboardCheck, Bot,
 } from 'lucide-react';
 
-import { VoicePlayButton } from '../components/common/VoicePlayButton';
-
 export const LandingPage: React.FC = () => {
   const { setRole, requests } = useApp();
   const { t, language } = useLanguage();
@@ -251,27 +249,27 @@ export const LandingPage: React.FC = () => {
             <ArrowRight className="w-4 h-4 text-amber-600 group-hover:translate-x-1 transition-transform shrink-0 mt-1" />
           </button>
 
-          {/* 5. AI Diligence Bot */}
+          {/* 5. Parcel Comparator Matrix */}
           <button
-            onClick={openAssistant}
-            className="p-5 rounded-2xl bg-gradient-to-br from-indigo-50/70 via-white to-blue-50/40 border border-indigo-200/80 hover:border-indigo-400 text-left flex items-start justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
+            onClick={openComparator}
+            className="p-5 rounded-2xl bg-gradient-to-br from-purple-50/70 via-white to-pink-50/40 border border-purple-200/80 hover:border-purple-400 text-left flex items-start justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
           >
             <div className="flex items-start gap-3.5">
-              <div className="w-11 h-11 rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
-                <Bot className="w-5 h-5" />
+              <div className="w-11 h-11 rounded-xl bg-purple-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                <ArrowRight className="w-5 h-5 rotate-45" />
               </div>
               <div>
-                <p className="text-sm font-bold text-slate-900 group-hover:text-indigo-700 transition-colors">
-                  {language === 'bn' ? 'এআই ভূমি সহকারী বট' : 'AI Diligence Advisor'}
+                <p className="text-sm font-bold text-slate-900 group-hover:text-purple-700 transition-colors">
+                  {language === 'bn' ? 'পার্সেল দ্বৈত তুলনা' : 'Parcel Comparator'}
                 </p>
                 <p className="text-xs text-slate-500 mt-1 leading-relaxed">
                   {language === 'bn'
-                    ? 'নামজারি, এলটি নোটিশ ও রেজিস্ট্রি সংক্রান্ত যেকোনো প্রশ্নের তাৎক্ষণিক উত্তর'
-                    : 'Contextual answers for e-Mutation, Sub-Registry deeds & legal rules'}
+                    ? 'দুটি ভিন্ন প্লটের খতিয়ান, দাগ, আয়তন ও ঝুঁকি সরাসরি পাশাপাশি তুলনা করুন'
+                    : 'Compare two parcels side-by-side: Khatian, survey types & recorded signals'}
                 </p>
               </div>
             </div>
-            <ArrowRight className="w-4 h-4 text-indigo-600 group-hover:translate-x-1 transition-transform shrink-0 mt-1" />
+            <ArrowRight className="w-4 h-4 text-purple-600 group-hover:translate-x-1 transition-transform shrink-0 mt-1" />
           </button>
 
           {/* 6. Official Certificate Demo */}
@@ -298,29 +296,6 @@ export const LandingPage: React.FC = () => {
               </div>
             </div>
             <ArrowRight className="w-4 h-4 text-violet-600 group-hover:translate-x-1 transition-transform shrink-0 mt-1" />
-          </button>
-
-          {/* 7. Parcel Comparator Matrix */}
-          <button
-            onClick={openComparator}
-            className="p-5 rounded-2xl bg-gradient-to-br from-purple-50/70 via-white to-pink-50/40 border border-purple-200/80 hover:border-purple-400 text-left flex items-start justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5 cursor-pointer sm:col-span-2 lg:col-span-3"
-          >
-            <div className="flex items-start gap-3.5">
-              <div className="w-11 h-11 rounded-xl bg-purple-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
-                <ArrowRight className="w-5 h-5 rotate-45" />
-              </div>
-              <div>
-                <p className="text-sm font-bold text-slate-900 group-hover:text-purple-700 transition-colors">
-                  {language === 'bn' ? 'পার্সেল দ্বৈত তুলনা ম্যাট্রিক্স (Side-by-Side)' : 'Side-by-Side Parcel Comparator'}
-                </p>
-                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                  {language === 'bn'
-                    ? 'যেকোনো দুটি প্লটের খতিয়ান, দাগ, ঘোষিত আয়তন, নামজারি স্ট্যাটাস ও মনোযোগ স্কোর সরাসরি পাশাপাশি তুলনা করুন'
-                    : 'Compare two parcels side-by-side: Khatian, survey types, recorded area, and risk signals'}
-                </p>
-              </div>
-            </div>
-            <ArrowRight className="w-4 h-4 text-purple-600 group-hover:translate-x-1 transition-transform shrink-0 mt-1" />
           </button>
         </div>
       </section>
@@ -425,23 +400,11 @@ export const LandingPage: React.FC = () => {
 
       {/* ── Diligence Rules ── */}
       <section className="rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 p-6 sm:p-8 space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-amber-100 border border-amber-200 flex items-center justify-center">
-              <AlertTriangle className="w-4 h-4 text-amber-700" />
-            </div>
-            <h2 className="text-base font-bold text-amber-900 uppercase tracking-wide text-xs">{t.landing.diligenceRulesTitle}</h2>
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-amber-100 border border-amber-200 flex items-center justify-center">
+            <AlertTriangle className="w-4 h-4 text-amber-700" />
           </div>
-
-          <VoicePlayButton
-            text={
-              language === 'bn'
-                ? 'ভূমি ক্রয়ের ৩টি সুবর্ণ আইনি নিয়ম: এক, দলিল সম্পাদিত হলেই রাজস্ব রেকর্ডে মালিকানা বদলে যায় না, সহকারী কমিশনার ভূমি অফিসে নামজারি মঞ্জুর হওয়া আবশ্যক। দুই, ই-নামজারি আবেদন করা কোনো মালিকানা নিশ্চিত করে না। তিন, সিস্টেমে তথ্য না পাওয়ার অর্থ এই নয় যে জমিটি আইনি ঝামেলামুক্ত।'
-                : '3 Golden Rules of Land Diligence: 1. Deed does not equal mutation. Execution at Sub-Registry does not transfer revenue record. 2. Application does not equal approval. 3. No match does not guarantee absence of dispute.'
-            }
-            lang={language as 'bn' | 'en'}
-            label={language === 'bn' ? '৩টি সুবর্ণ নিয়ম বাংলায় শুনুন' : 'Listen to Golden Rules'}
-          />
+          <h2 className="text-base font-bold text-amber-900 uppercase tracking-wide text-xs">{t.landing.diligenceRulesTitle}</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
