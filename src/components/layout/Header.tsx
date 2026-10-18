@@ -139,9 +139,6 @@ export const Header: React.FC = () => {
               {isBn ? 'গণপ্রজাতন্ত্রী বাংলাদেশ সরকার • ভূমি মন্ত্রণালয়' : "Government of the People's Republic of Bangladesh • Ministry of Land"}
             </span>
           </div>
-          <div className="hidden sm:flex items-center gap-2 text-slate-400 text-[10px]">
-            <span>{isBn ? 'জনবান্ধব ডিজিটালাইজড ভূমিসেবায় স্বাগতম' : 'People-friendly Digital Land Services'}</span>
-          </div>
         </div>
       </div>
 
@@ -151,7 +148,7 @@ export const Header: React.FC = () => {
           <Link
             to={isAuthenticated ? '/dashboard' : '/'}
             className="flex items-center gap-2.5 sm:gap-3 group shrink-0"
-            aria-label="BhumiVerify Home - Verify Before You Buy"
+            aria-label="BhumiVerify Home"
           >
             <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center p-0.5 transition-transform duration-200 group-hover:scale-105 shrink-0 overflow-hidden">
               <img
@@ -169,9 +166,6 @@ export const Header: React.FC = () => {
                   {isBn ? 'ভূমি মন্ত্রণালয়' : 'Ministry of Land'}
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 font-medium leading-none mt-0.5 hidden sm:block">
-                {isBn ? 'কেনার আগে যাচাই করুন।' : 'Verify Before You Buy.'}
-              </p>
             </div>
           </Link>
 
@@ -239,19 +233,14 @@ export const Header: React.FC = () => {
                 </button>
 
                 {recordsDropdownOpen && (
-                  <div className="absolute top-full left-0 mt-1.5 w-60 bg-white rounded-xl shadow-lg border border-slate-200 py-1.5 z-50 animate-scale-up">
+                  <div className="absolute top-full left-0 mt-1.5 w-52 bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 z-50 animate-scale-up">
                     <Link
                       to="/checks"
-                      className="flex items-center justify-between px-3.5 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-gov-primary transition-colors"
+                      className="flex items-center justify-between px-3.5 py-2 text-xs font-bold text-slate-800 hover:bg-slate-50 hover:text-gov-primary transition-colors"
                     >
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex items-center gap-2">
                         <FileText className="w-4 h-4 text-gov-primary" />
-                        <div>
-                          <span className="block font-bold">{isBn ? 'সংরক্ষিত জমি' : 'Saved Checks'}</span>
-                          <span className="text-[10px] text-slate-400 block font-normal">
-                            {isBn ? 'সকল যাচাইকৃত জমির তালিকা' : 'View all recorded parcels'}
-                          </span>
-                        </div>
+                        <span>{isBn ? 'সংরক্ষিত জমি' : 'Saved Checks'}</span>
                       </div>
                       {totalChecks > 0 && (
                         <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
@@ -262,15 +251,10 @@ export const Header: React.FC = () => {
 
                     <Link
                       to="/compare"
-                      className="flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-gov-primary transition-colors"
+                      className="flex items-center gap-2 px-3.5 py-2 text-xs font-bold text-slate-800 hover:bg-slate-50 hover:text-gov-primary transition-colors"
                     >
                       <GitCompare className="w-4 h-4 text-gov-primary" />
-                      <div>
-                        <span className="block font-bold">{isBn ? 'প্রতিবেদন তুলনা' : 'Compare Reports'}</span>
-                        <span className="text-[10px] text-slate-400 block font-normal">
-                          {isBn ? 'পাশাপাশি দুটি জমির বিশ্লেষণ' : 'Side-by-side assessment'}
-                        </span>
-                      </div>
+                      <span>{isBn ? 'প্রতিবেদন তুলনা' : 'Compare Reports'}</span>
                     </Link>
                   </div>
                 )}
@@ -304,19 +288,14 @@ export const Header: React.FC = () => {
               </button>
 
               {diligenceDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1.5 w-64 bg-white rounded-xl shadow-lg border border-slate-200 py-1.5 z-50 animate-scale-up">
+                <div className="absolute top-full left-0 mt-1.5 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 z-50 animate-scale-up">
                   <Link
                     to="/verification-plan"
-                    className="flex items-center justify-between px-3.5 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-gov-primary transition-colors"
+                    className="flex items-center justify-between px-3.5 py-2 text-xs font-bold text-slate-800 hover:bg-slate-50 hover:text-gov-primary transition-colors"
                   >
-                    <div className="flex items-center gap-2.5">
+                    <div className="flex items-center gap-2">
                       <CheckSquare className="w-4 h-4 text-gov-primary" />
-                      <div>
-                        <span className="block font-bold">{isBn ? 'যাচাই পরিকল্পনা ট্র্যাকার' : 'Verification Plan Tracker'}</span>
-                        <span className="text-[10px] text-slate-400 block font-normal">
-                          {isBn ? 'সরকারি ও মাঠপর্যায়ের কাজ' : 'Independent diligence tasks'}
-                        </span>
-                      </div>
+                      <span>{isBn ? 'যাচাই পরিকল্পনা' : 'Verification Plan'}</span>
                     </div>
                     {pendingTasks > 0 && (
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
@@ -327,15 +306,10 @@ export const Header: React.FC = () => {
 
                   <Link
                     to="/documents"
-                    className="flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-gov-primary transition-colors"
+                    className="flex items-center gap-2 px-3.5 py-2 text-xs font-bold text-slate-800 hover:bg-slate-50 hover:text-gov-primary transition-colors"
                   >
                     <FolderOpen className="w-4 h-4 text-gov-primary" />
-                    <div>
-                      <span className="block font-bold">{isBn ? 'আবশ্যকীয় দলিল চেকলিস্ট' : 'Document Checklist & Guide'}</span>
-                      <span className="text-[10px] text-slate-400 block font-normal">
-                        {isBn ? 'বায়া দলিল, খতিয়ান ও পরচা গাইড' : 'Porcha, deed & mutation criteria'}
-                      </span>
-                    </div>
+                    <span>{isBn ? 'দলিল চেকলিস্ট' : 'Document Checklist'}</span>
                   </Link>
                 </div>
               )}

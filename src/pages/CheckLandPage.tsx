@@ -413,16 +413,9 @@ export const CheckLandPage: React.FC = () => {
       {/* Main Parcel Identifier Form */}
       <div className="bg-white rounded-xl border border-slate-200 p-6 sm:p-8 shadow-2xs space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-2">
-          <div>
-            <h2 className="text-base font-bold text-slate-900">
-              {isBn ? 'জমির প্রশাসনিক ও খতিয়ান পরিচিতি' : 'Parcel Identifiers'}
-            </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
-              {isBn
-                ? 'লাল তারকা চিহ্নিত ক্ষেত্রগুলো পূরণ করা বাধ্যতামূলক।'
-                : 'Fields marked with * are required for composite matching.'}
-            </p>
-          </div>
+          <h2 className="text-base font-bold text-slate-900">
+            {isBn ? 'জমির প্রশাসনিক ও খতিয়ান তথ্য' : 'Parcel Identifiers'}
+          </h2>
 
           <button
             type="button"
@@ -654,9 +647,6 @@ export const CheckLandPage: React.FC = () => {
                   placeholder={isBn ? 'যেমন: ২৪, ১৪, ০৮' : 'e.g. 24, 14, 08'}
                   className="w-full text-xs rounded-lg border border-slate-300 p-2.5"
                 />
-                <p className="text-[10px] text-slate-400 mt-1">
-                  {isBn ? 'মৌজা জে.এল. অমিল শনাক্তে ব্যবহৃত' : 'Used for JL conflict verification'}
-                </p>
               </div>
             </div>
           </div>
@@ -668,7 +658,7 @@ export const CheckLandPage: React.FC = () => {
               onClick={() => setShowAdditional(!showAdditional)}
               className="text-xs font-semibold text-gov-primary hover:underline flex items-center gap-1.5 cursor-pointer"
             >
-              <span>{showAdditional ? (isBn ? 'অতিরিক্ত তথ্য লুকান' : 'Hide Additional Details') : (isBn ? '+ অতিরিক্ত তথ্য যুক্ত করুন (ঐচ্ছিক)' : '+ Add Optional Details (Area)')}</span>
+              <span>{showAdditional ? (isBn ? 'অতিরিক্ত তথ্য লুকান' : 'Hide Additional Details') : (isBn ? '+ অতিরিক্ত তথ্য যুক্ত করুন' : '+ Add Optional Details')}</span>
               {showAdditional ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
             </button>
 
@@ -716,7 +706,7 @@ export const CheckLandPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isSearching}
-                className={`text-xs px-6 py-2.5 font-bold cursor-pointer flex items-center gap-2 transition-all rounded-lg shadow-2xs ${
+                className={`text-sm px-8 py-3 font-extrabold cursor-pointer flex items-center gap-2 transition-all rounded-xl shadow-sm hover:shadow-md ${
                   quota.isExceeded
                     ? 'bg-rose-600 hover:bg-rose-700 text-white'
                     : 'btn-primary'

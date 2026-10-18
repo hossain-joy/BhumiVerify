@@ -149,23 +149,20 @@ export const DashboardPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveFilter(activeFilter === 'completed' ? 'all' : 'completed')}
-            className={`p-3.5 rounded-xl border text-center transition-all cursor-pointer ${
+            className={`p-4 rounded-2xl border text-center transition-all cursor-pointer ${
               activeFilter === 'completed'
-                ? 'bg-emerald-100/90 border-emerald-400 ring-2 ring-emerald-300 shadow-xs'
-                : 'bg-emerald-50/60 border-emerald-200 hover:bg-emerald-100/60 hover:border-emerald-300'
+                ? 'bg-emerald-100 border-emerald-500 ring-2 ring-emerald-300 shadow-xs'
+                : 'bg-emerald-50/70 border-emerald-200/80 hover:bg-emerald-100/70'
             }`}
           >
             <div className="flex items-center justify-center gap-1.5 mb-1">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              <span className="text-xl font-extrabold text-emerald-950 block">
+              <span className="text-2xl font-black text-emerald-950 block font-mono">
                 {isBn ? toBengaliNumerals(completedTasks) : completedTasks}
               </span>
             </div>
-            <span className="text-xs font-bold text-emerald-800 block">
+            <span className="text-xs font-bold text-emerald-900 block">
               {isBn ? 'সম্পন্ন' : 'Completed'}
-            </span>
-            <span className="text-[10px] text-emerald-600 font-medium">
-              {activeFilter === 'completed' ? (isBn ? '✓ ফিল্টার সক্রিয়' : 'Active filter') : (isBn ? 'ফিল্টার করতে ক্লিক করুন' : 'Click to filter')}
             </span>
           </button>
 
@@ -173,23 +170,20 @@ export const DashboardPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveFilter(activeFilter === 'in_progress' ? 'all' : 'in_progress')}
-            className={`p-3.5 rounded-xl border text-center transition-all cursor-pointer ${
+            className={`p-4 rounded-2xl border text-center transition-all cursor-pointer ${
               activeFilter === 'in_progress'
-                ? 'bg-amber-100/90 border-amber-400 ring-2 ring-amber-300 shadow-xs'
-                : 'bg-amber-50/60 border-amber-200 hover:bg-amber-100/60 hover:border-amber-300'
+                ? 'bg-amber-100 border-amber-500 ring-2 ring-amber-300 shadow-xs'
+                : 'bg-amber-50/70 border-amber-200/80 hover:bg-amber-100/70'
             }`}
           >
             <div className="flex items-center justify-center gap-1.5 mb-1">
               <Clock className="w-4 h-4 text-amber-600" />
-              <span className="text-xl font-extrabold text-amber-950 block">
+              <span className="text-2xl font-black text-amber-950 block font-mono">
                 {isBn ? toBengaliNumerals(inProgressTasks) : inProgressTasks}
               </span>
             </div>
-            <span className="text-xs font-bold text-amber-800 block">
+            <span className="text-xs font-bold text-amber-900 block">
               {isBn ? 'চলমান' : 'In Progress'}
-            </span>
-            <span className="text-[10px] text-amber-600 font-medium">
-              {activeFilter === 'in_progress' ? (isBn ? '✓ ফিল্টার সক্রিয়' : 'Active filter') : (isBn ? 'ফিল্টার করতে ক্লিক করুন' : 'Click to filter')}
             </span>
           </button>
 
@@ -197,23 +191,20 @@ export const DashboardPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveFilter(activeFilter === 'not_started' ? 'all' : 'not_started')}
-            className={`p-3.5 rounded-xl border text-center transition-all cursor-pointer ${
+            className={`p-4 rounded-2xl border text-center transition-all cursor-pointer ${
               activeFilter === 'not_started'
-                ? 'bg-slate-200 border-slate-400 ring-2 ring-slate-300 shadow-xs'
-                : 'bg-slate-50 border-slate-200 hover:bg-slate-100 hover:border-slate-300'
+                ? 'bg-slate-200 border-slate-500 ring-2 ring-slate-300 shadow-xs'
+                : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
             }`}
           >
             <div className="flex items-center justify-center gap-1.5 mb-1">
               <Circle className="w-4 h-4 text-slate-500" />
-              <span className="text-xl font-extrabold text-slate-900 block">
+              <span className="text-2xl font-black text-slate-900 block font-mono">
                 {isBn ? toBengaliNumerals(pendingTasks) : pendingTasks}
               </span>
             </div>
-            <span className="text-xs font-bold text-slate-700 block">
+            <span className="text-xs font-bold text-slate-800 block">
               {isBn ? 'বাকি' : 'Pending'}
-            </span>
-            <span className="text-[10px] text-slate-500 font-medium">
-              {activeFilter === 'not_started' ? (isBn ? '✓ ফিল্টার সক্রিয়' : 'Active filter') : (isBn ? 'ফিল্টার করতে ক্লিক করুন' : 'Click to filter')}
             </span>
           </button>
         </div>
@@ -225,21 +216,17 @@ export const DashboardPage: React.FC = () => {
               <Filter className="w-3.5 h-3.5" />
               <span>
                 {activeFilter === 'all'
-                  ? isBn ? 'সকল যাচাইকরণ কাজ' : 'All Verification Tasks'
+                  ? isBn ? 'সকল কাজ' : 'All Tasks'
                   : activeFilter === 'completed'
-                  ? isBn ? 'সম্পন্ন যাচাইকরণ কাজ' : 'Completed Tasks'
+                  ? isBn ? 'সম্পন্ন কাজ' : 'Completed'
                   : activeFilter === 'in_progress'
-                  ? isBn ? 'চলমান যাচাইকরণ কাজ' : 'In-Progress Tasks'
-                  : isBn ? 'বাকি যাচাইকরণ কাজ' : 'Pending Tasks'}
+                  ? isBn ? 'চলমান কাজ' : 'In Progress'
+                  : isBn ? 'বাকি কাজ' : 'Pending'}
               </span>
-              <span className="text-[11px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full font-mono">
+              <span className="text-[11px] font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-full font-mono">
                 {isBn ? toBengaliNumerals(filteredTasks.length) : filteredTasks.length}
               </span>
             </h3>
-
-            <p className="text-[11px] text-slate-400 hidden sm:block">
-              {isBn ? 'স্ট্যাটাস পরিবর্তন করতে চেক করুন' : 'Click icon to cycle task status'}
-            </p>
           </div>
 
           {filteredTasks.length === 0 ? (

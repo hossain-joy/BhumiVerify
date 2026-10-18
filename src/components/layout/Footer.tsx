@@ -31,12 +31,9 @@ export const Footer: React.FC = () => {
               </div>
             </div>
             <p className="text-slate-400 text-xs leading-relaxed">
-              {isBn ? 'জনবান্ধব ডিজিটালাইজড ভূমিসেবায় স্বাগতম।' : 'Verify Before You Buy — Welcome to digital land services.'}
-            </p>
-            <p className="text-slate-400 text-xs leading-relaxed">
               {isBn
-                ? 'বাংলাদেশে জমি ক্রয়ের পূর্বে সঠিক তথ্য ও খতিয়ান যাচাইকরণের বিশ্বস্ত ডিজিটাল প্ল্যাটফর্ম।'
-                : 'Trusted digital platform for verifying land titles and records before property purchase in Bangladesh.'}
+                ? 'জমি ক্রয়ের পূর্বে সঠিক তথ্য ও খতিয়ান যাচাইকরণের ডিজিটাল সেবা।'
+                : 'Digital platform for verifying land titles and records before purchase.'}
             </p>
           </div>
 
@@ -101,13 +98,8 @@ export const Footer: React.FC = () => {
           {/* External Official Resources */}
           <div className="space-y-2">
             <h4 className="text-xs font-semibold text-white uppercase tracking-wider">
-              {isBn ? 'অফিশিয়াল পোর্টালসমূহ' : 'External Official Portals'}
+              {isBn ? 'অফিশিয়াল পোর্টালসমূহ' : 'External Portals'}
             </h4>
-            <p className="text-[11px] text-slate-400 leading-snug">
-              {isBn
-                ? 'সশরীরে ও দাফতরিক যাচাইয়ের জন্য বাহ্যিক পোর্টালসমূহ। ভূমিভেরিফাই এসব পোর্টাল থেকে সরাসরি ডেটা সংগ্রহ করে না।'
-                : 'External portals for physical verification. BhumiVerify does not retrieve live data from these portals.'}
-            </p>
             <div className="space-y-1.5 pt-1 text-[11px]">
               <a
                 href="https://land.gov.bd/"

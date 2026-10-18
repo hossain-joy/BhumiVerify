@@ -672,20 +672,13 @@ export const ParcelResultsPage: React.FC = () => {
         )}
       </section>
 
-      {/* 5. Findings and Review Items (What was detected, Why it matters, Evidence, Missing, Next steps) */}
-      <section className="bg-white rounded-xl border border-slate-200 p-6 shadow-2xs space-y-4">
+      {/* 5. Findings and Review Items */}
+      <section className="bg-white rounded-2xl border border-slate-200 p-6 shadow-2xs space-y-4">
         <div className="pb-3 border-b border-slate-100 flex items-center justify-between">
-          <div>
-            <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-              <FileText className="w-4 h-4 text-gov-primary" aria-hidden="true" />
-              <span>{isBn ? 'পর্যালোচ্য পর্যবেক্ষণ ও অনুসন্ধানের কারণ' : 'Findings & Review Items'}</span>
-            </h2>
-            <p className="text-[11px] text-slate-500 mt-0.5">
-              {isBn
-                ? 'স্বচ্ছ ও যুক্তিভিত্তিক পর্যালোচনা; কোনো অনুমান বা অভিযোগ নয়।'
-                : 'Transparent plain-English breakdown of why each finding matters.'}
-            </p>
-          </div>
+          <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+            <FileText className="w-4 h-4 text-gov-primary" aria-hidden="true" />
+            <span>{isBn ? 'পর্যালোচ্য পর্যবেক্ষণ' : 'Findings & Review Items'}</span>
+          </h2>
         </div>
 
         {parcel.findings.length === 0 ? (
@@ -695,14 +688,14 @@ export const ParcelResultsPage: React.FC = () => {
               : 'No specific review items flagged for this parcel.'}
           </p>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {parcel.findings.map((finding, idx) => (
               <div
                 key={idx}
-                className="p-4 rounded-xl border border-slate-200 bg-slate-50/80 space-y-3"
+                className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 space-y-3"
               >
                 <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-teal-100 text-teal-800 text-xs font-bold flex items-center justify-center shrink-0">
+                  <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center justify-center shrink-0">
                     {idx + 1}
                   </span>
                   <h3 className="text-xs font-bold text-slate-900">
@@ -710,47 +703,47 @@ export const ParcelResultsPage: React.FC = () => {
                   </h3>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
                   {/* Why it may matter */}
-                  <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-200/70 space-y-1">
-                    <span className="font-bold text-amber-950 flex items-center gap-1.5">
+                  <div className="p-2.5 rounded-lg bg-amber-50/70 border border-amber-200/80 space-y-0.5">
+                    <span className="font-bold text-amber-950 flex items-center gap-1.5 text-[11px]">
                       <AlertTriangle className="w-3.5 h-3.5 text-amber-700" aria-hidden="true" />
-                      <span>{isBn ? 'পর্যালোচনার কারণ:' : 'Why it may matter:'}</span>
+                      <span>{isBn ? 'পর্যালোচনার কারণ' : 'Why it matters'}</span>
                     </span>
-                    <p className="text-amber-900 leading-relaxed text-[11px]">
+                    <p className="text-amber-900 text-[11px] leading-snug">
                       {isBn && finding.whyItMattersBn ? finding.whyItMattersBn : finding.whyItMatters}
                     </p>
                   </div>
 
                   {/* Recorded evidence */}
-                  <div className="p-3 rounded-lg bg-blue-50/60 border border-blue-200/70 space-y-1">
-                    <span className="font-bold text-blue-950 flex items-center gap-1.5">
+                  <div className="p-2.5 rounded-lg bg-blue-50/70 border border-blue-200/80 space-y-0.5">
+                    <span className="font-bold text-blue-950 flex items-center gap-1.5 text-[11px]">
                       <FileText className="w-3.5 h-3.5 text-blue-700" aria-hidden="true" />
-                      <span>{isBn ? 'রেকর্ডে প্রাপ্ত প্রমাণ:' : 'Recorded evidence:'}</span>
+                      <span>{isBn ? 'প্রাপ্ত প্রমাণ' : 'Recorded evidence'}</span>
                     </span>
-                    <p className="text-blue-900 leading-relaxed text-[11px]">
+                    <p className="text-blue-900 text-[11px] leading-snug">
                       {isBn && finding.sampleEvidenceBn ? finding.sampleEvidenceBn : finding.sampleEvidence}
                     </p>
                   </div>
 
                   {/* Information still missing */}
-                  <div className="p-3 rounded-lg bg-slate-100/70 border border-slate-200 space-y-1">
-                    <span className="font-bold text-slate-800 flex items-center gap-1.5">
+                  <div className="p-2.5 rounded-lg bg-white border border-slate-200 space-y-0.5">
+                    <span className="font-bold text-slate-800 flex items-center gap-1.5 text-[11px]">
                       <HelpCircle className="w-3.5 h-3.5 text-slate-600" aria-hidden="true" />
-                      <span>{isBn ? 'অনুপস্থিত গুরুত্বপূর্ণ তথ্য:' : 'Information still missing:'}</span>
+                      <span>{isBn ? 'অনুপস্থিত তথ্য' : 'Missing info'}</span>
                     </span>
-                    <p className="text-slate-700 leading-relaxed text-[11px]">
+                    <p className="text-slate-700 text-[11px] leading-snug">
                       {isBn && finding.missingInfoBn ? finding.missingInfoBn : finding.missingInfo}
                     </p>
                   </div>
 
                   {/* Practical next verification step */}
-                  <div className="p-3 rounded-lg bg-emerald-50/60 border border-emerald-200/70 space-y-1">
-                    <span className="font-bold text-emerald-950 flex items-center gap-1.5">
+                  <div className="p-2.5 rounded-lg bg-emerald-50/70 border border-emerald-200/80 space-y-0.5">
+                    <span className="font-bold text-emerald-950 flex items-center gap-1.5 text-[11px]">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" aria-hidden="true" />
-                      <span>{isBn ? 'পরবর্তী বাস্তব পদক্ষেপ:' : 'Practical next step:'}</span>
+                      <span>{isBn ? 'পরবর্তী পদক্ষেপ' : 'Next step'}</span>
                     </span>
-                    <p className="text-emerald-900 leading-relaxed text-[11px]">
+                    <p className="text-emerald-900 text-[11px] leading-snug">
                       {isBn && finding.nextStepBn ? finding.nextStepBn : finding.nextStep}
                     </p>
                   </div>
@@ -761,21 +754,16 @@ export const ParcelResultsPage: React.FC = () => {
         )}
       </section>
 
-      {/* 6. Missing Information (Explicit list distinguishing "not included" vs "confirmed not to exist") */}
-      <section className="bg-white rounded-xl border border-slate-200 p-6 shadow-2xs space-y-3">
+      {/* 6. Missing Information */}
+      <section className="bg-white rounded-2xl border border-slate-200 p-6 shadow-2xs space-y-3">
         <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
           <HelpCircle className="w-4 h-4 text-gov-primary" aria-hidden="true" />
-          <span>{isBn ? 'অনুপস্থিত বা অপর্যাপ্ত তথ্য' : 'Missing Information'}</span>
+          <span>{isBn ? 'অনুপস্থিত তথ্য' : 'Missing Information'}</span>
         </h2>
-        <p className="text-xs text-slate-500">
-          {isBn
-            ? 'পরবর্তী অনুসন্ধানের সুবিধার্থে চিহ্নিত অনুপস্থিত তথ্যাদি:'
-            : 'Items identified for further in-person verification:'}
-        </p>
 
         <ul className="space-y-2 pt-1 text-xs text-slate-700">
           {(isBn && parcel.missingInformationBn ? parcel.missingInformationBn : parcel.missingInformation).map((item, idx) => (
-            <li key={idx} className="flex items-start gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+            <li key={idx} className="flex items-start gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0" />
               <span className="leading-snug">{item}</span>
             </li>
@@ -783,21 +771,16 @@ export const ParcelResultsPage: React.FC = () => {
         </ul>
       </section>
 
-      {/* 7. Recommended Next Steps (Actionable Institutional Diligence Guidance) */}
-      <section className="bg-white rounded-xl border border-slate-200 p-6 shadow-2xs space-y-3">
+      {/* 7. Recommended Next Steps */}
+      <section className="bg-white rounded-2xl border border-slate-200 p-6 shadow-2xs space-y-3">
         <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 text-gov-primary" aria-hidden="true" />
-          <span>{isBn ? 'সুপারিশকৃত পরবর্তী স্বাধীন পদক্ষেপসমূহ' : 'Recommended Next Steps'}</span>
+          <span>{isBn ? 'পরবর্তী পদক্ষেপসমূহ' : 'Recommended Next Steps'}</span>
         </h2>
-        <p className="text-xs text-slate-500">
-          {isBn
-            ? 'অর্থ লেনদেনের পূর্বে স্বাধীনভাবে যে পদক্ষেপগুলো গ্রহণ করা আবশ্যক:'
-            : 'Sensible due diligence steps every prospective land buyer should take:'}
-        </p>
 
         <ul className="space-y-2 pt-1 text-xs text-slate-700">
           {(isBn && parcel.recommendedNextStepsBn ? parcel.recommendedNextStepsBn : parcel.recommendedNextSteps).map((step, idx) => (
-            <li key={idx} className="flex items-start gap-2 bg-emerald-50/40 p-2.5 rounded-lg border border-emerald-100 text-slate-800">
+            <li key={idx} className="flex items-start gap-2 bg-emerald-50/40 p-2.5 rounded-xl border border-emerald-100 text-slate-800">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 mt-1.5 shrink-0" />
               <span className="leading-snug">{step}</span>
             </li>
@@ -812,7 +795,7 @@ export const ParcelResultsPage: React.FC = () => {
           className="text-xs text-gov-primary hover:underline font-semibold flex items-center gap-1"
         >
           <Scale className="w-3.5 h-3.5" aria-hidden="true" />
-          <span>{isBn ? 'আইনগত প্রেক্ষাপট ও ধারা ৮৯ জানুন' : 'Legal Context & Diligence Rules'}</span>
+          <span>{isBn ? 'আইনগত প্রেক্ষাপট ও ধারা ৮৯' : 'Legal Diligence Rules'}</span>
         </Link>
 
         <div className="flex items-center gap-2.5">
@@ -822,7 +805,7 @@ export const ParcelResultsPage: React.FC = () => {
             className="btn-secondary text-xs px-4 py-2 font-medium cursor-pointer flex items-center gap-1.5"
           >
             <Edit3 className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>{isBn ? 'তথ্য পরিবর্তন' : 'Edit parcel details'}</span>
+            <span>{isBn ? 'তথ্য পরিবর্তন' : 'Edit details'}</span>
           </button>
 
           <button
@@ -831,34 +814,24 @@ export const ParcelResultsPage: React.FC = () => {
             className="btn-primary text-xs px-5 py-2 font-bold cursor-pointer flex items-center gap-1.5"
           >
             <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>{isBn ? 'অন্য জমি যাচাই' : 'Check another parcel'}</span>
+            <span>{isBn ? 'অন্য জমি যাচাই' : 'Check another'}</span>
           </button>
         </div>
       </div>
 
       {/* 9. External Official Resource Links Notice */}
-      <div className="bg-slate-50 rounded-xl border border-slate-200 p-4 text-xs text-slate-600 space-y-2">
-        <div className="flex items-center justify-between">
-          <span className="font-bold text-slate-800">
-            {isBn ? 'অফিশিয়াল পোর্টাল রেফারেন্স:' : 'Official Verification Portals:'}
-          </span>
-          <span className="text-[10px] text-slate-400">
-            {isBn ? 'নতুন ট্যাবে খুলবে • কোনো সরাসরি ডাটাবেজ ইন্টিগ্রেশন নেই' : 'Opens in new tab • No live data integration'}
-          </span>
-        </div>
-        <p className="text-[11px] text-slate-500 leading-snug">
-          {isBn
-            ? 'ভূমিভেরিফাই এই সরকারি সেবাগুলো থেকে সরাসরি তথ্য সংগ্রহ বা যাচাই করেনি। মূল ও নির্ভরযোগ্য লাইভ রেকর্ডের জন্য সরাসরি ভিজিট করুন:'
-            : 'BhumiVerify has NOT retrieved or verified data from these government services. For authentic live records, consult:'}
-        </p>
-        <div className="flex flex-wrap gap-3 pt-1 text-xs">
+      <div className="bg-slate-50 rounded-2xl border border-slate-200 p-4 text-xs text-slate-600 flex flex-wrap items-center justify-between gap-3">
+        <span className="font-bold text-slate-800">
+          {isBn ? 'অফিশিয়াল পোর্টাল:' : 'Official Portals:'}
+        </span>
+        <div className="flex flex-wrap items-center gap-3 text-xs">
           <a
             href="https://mutation.land.gov.bd/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gov-primary font-semibold hover:underline inline-flex items-center gap-1"
           >
-            <span>{isBn ? 'ই-নামজারি পোর্টাল (mutation.land.gov.bd)' : 'e-Mutation Portal (mutation.land.gov.bd)'}</span>
+            <span>{isBn ? 'ই-নামজারি (mutation.land.gov.bd)' : 'e-Mutation Portal'}</span>
             <ExternalLink className="w-3 h-3" aria-label="(opens in a new tab)" />
           </a>
           <span className="text-slate-300">•</span>
@@ -868,7 +841,7 @@ export const ParcelResultsPage: React.FC = () => {
             rel="noopener noreferrer"
             className="text-gov-primary font-semibold hover:underline inline-flex items-center gap-1"
           >
-            <span>{isBn ? 'জাতীয় ভূমি সেবা পোর্টাল (land.gov.bd)' : 'National Land Portal (land.gov.bd)'}</span>
+            <span>{isBn ? 'জাতীয় ভূমি সেবা (land.gov.bd)' : 'National Land Portal'}</span>
             <ExternalLink className="w-3 h-3" aria-label="(opens in a new tab)" />
           </a>
         </div>
