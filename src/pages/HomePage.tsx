@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { DemoDataTag } from '../components/common/DemoDataTag';
+import { Disclaimer } from '../components/common/Disclaimer';
 import {
   ShieldCheck,
   ArrowRight,
@@ -16,6 +17,9 @@ import {
   Sparkles,
   BookOpen,
   ChevronRight,
+  ShieldAlert,
+  MapPin,
+  Building,
 } from 'lucide-react';
 
 export const HomePage: React.FC = () => {
@@ -26,7 +30,7 @@ export const HomePage: React.FC = () => {
     {
       id: 'DEMO-PARCEL-001',
       scenarioNum: 1,
-      title: language === 'bn' ? 'সাম্প্রতিক হস্তান্তর দলিল' : 'Recent Transfer Deed Logged',
+      title: language === 'bn' ? '১. সাম্প্রতিক হস্তান্তর দলিল' : '1. Recent Deed Logged',
       badge: language === 'bn' ? 'পর্যালোচনা জরুরি' : 'Review Recommended',
       badgeClass: 'bg-amber-100 text-amber-900 border-amber-300',
       dag: '402',
@@ -38,7 +42,7 @@ export const HomePage: React.FC = () => {
     {
       id: 'DEMO-PARCEL-002',
       scenarioNum: 2,
-      title: language === 'bn' ? 'নামজারি আবেদন চলমান' : 'Mutation Petition Pending',
+      title: language === 'bn' ? '২. নামজারি আবেদন চলমান' : '2. Mutation Petition Pending',
       badge: language === 'bn' ? 'তথ্য অসম্পূর্ণ' : 'Information Incomplete',
       badgeClass: 'bg-blue-100 text-blue-900 border-blue-300',
       dag: '118',
@@ -50,7 +54,7 @@ export const HomePage: React.FC = () => {
     {
       id: 'DEMO-PARCEL-003',
       scenarioNum: 3,
-      title: language === 'bn' ? 'নামজারি সম্পন্ন' : 'Mutation Completed',
+      title: language === 'bn' ? '৩. নামজারি সম্পন্ন' : '3. Mutation Completed',
       badge: language === 'bn' ? 'বড় অসঙ্গতি পাওয়া যায়নি' : 'No Major Issue Detected',
       badgeClass: 'bg-emerald-100 text-emerald-900 border-emerald-300',
       dag: '85',
@@ -62,7 +66,7 @@ export const HomePage: React.FC = () => {
     {
       id: 'DEMO-PARCEL-004',
       scenarioNum: 4,
-      title: language === 'bn' ? 'জরিপ রেকর্ড অসঙ্গতি' : 'Conflicting Survey Records',
+      title: language === 'bn' ? '৪. জরিপ রেকর্ড অসঙ্গতি' : '4. Conflicting Survey Records',
       badge: language === 'bn' ? 'পর্যালোচনা জরুরি' : 'Review Recommended',
       badgeClass: 'bg-rose-100 text-rose-900 border-rose-300',
       dag: '999',
@@ -74,7 +78,7 @@ export const HomePage: React.FC = () => {
     {
       id: 'DEMO-PARCEL-005',
       scenarioNum: 5,
-      title: language === 'bn' ? 'ব্যাংক মর্টগেজ ও আমমোক্তারনামা' : 'Bank Mortgage & Disputed POA',
+      title: language === 'bn' ? '৫. ব্যাংক মর্টগেজ ও আমমোক্তারনামা' : '5. Bank Mortgage & Disputed POA',
       badge: language === 'bn' ? 'পর্যালোচনা জরুরি' : 'Review Recommended',
       badgeClass: 'bg-purple-100 text-purple-900 border-purple-300',
       dag: '210',
@@ -86,7 +90,7 @@ export const HomePage: React.FC = () => {
     {
       id: 'DEMO-PARCEL-006',
       scenarioNum: 6,
-      title: language === 'bn' ? 'জমির শ্রেণি অমিল (কৃষি বনাম শিল্প)' : 'Classification Mismatch',
+      title: language === 'bn' ? '৬. শ্রেণির অমিল (কৃষি বনাম শিল্প)' : '6. Classification Mismatch',
       badge: language === 'bn' ? 'পর্যালোচনা জরুরি' : 'Review Recommended',
       badgeClass: 'bg-amber-100 text-amber-900 border-amber-300',
       dag: '201',
@@ -98,7 +102,7 @@ export const HomePage: React.FC = () => {
     {
       id: 'DEMO-PARCEL-007',
       scenarioNum: 7,
-      title: language === 'bn' ? 'শরিকি অগ্রক্রয় মামলা (ধারা ৯৬)' : 'Co-Sharer Pre-emption Case',
+      title: language === 'bn' ? '৭. শরিকি অগ্রক্রয় মামলা (ধারা ৯৬)' : '7. Co-Sharer Pre-emption Case',
       badge: language === 'bn' ? 'পর্যালোচনা জরুরি' : 'Review Recommended',
       badgeClass: 'bg-orange-100 text-orange-900 border-orange-300',
       dag: '64',
@@ -110,7 +114,7 @@ export const HomePage: React.FC = () => {
     {
       id: 'DEMO-PARCEL-008',
       scenarioNum: 8,
-      title: language === 'bn' ? 'নিখুঁত ধারাবাহিকতা ও নিয়মিত কর' : 'Clean Title Chain & Paid Tax',
+      title: language === 'bn' ? '৮. নিখুঁত ধারাবাহিকতা ও নিয়মিত কর' : '8. Clean Title Chain & Paid Tax',
       badge: language === 'bn' ? 'বড় অসঙ্গতি পাওয়া যায়নি' : 'No Major Issue Detected',
       badgeClass: 'bg-emerald-100 text-emerald-900 border-emerald-300',
       dag: '304',
@@ -122,15 +126,15 @@ export const HomePage: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-12 pb-12">
+    <div className="space-y-12 pb-16 animate-fade-up">
       {/* Hero Section */}
-      <section className="bg-white rounded-2xl border border-slate-200 p-8 sm:p-12 shadow-xs text-center max-w-4xl mx-auto space-y-6">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-semibold text-gov-primary">
+      <section className="bg-white rounded-2xl border border-slate-200 p-8 sm:p-12 shadow-xs text-center max-w-5xl mx-auto space-y-6">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-semibold text-gov-primary">
           <ShieldCheck className="w-4 h-4 text-gov-primary" />
           <span>
             {language === 'bn'
-              ? 'ভূমি লেনদেন সংকেত ও ঝুঁকি যাচাই এমভিপি'
-              : 'Land Transaction Risk Assessment MVP'}
+              ? 'ভূমিভেরিফাই (BhumiSure) • Verify Before You Buy'
+              : 'BhumiSure (BhumiVerify) • Verify Before You Buy'}
           </span>
         </div>
 
@@ -141,129 +145,120 @@ export const HomePage: React.FC = () => {
             </>
           ) : (
             <>
-              Verify Pre-Registration <span className="text-gov-primary">Land Transaction Signals</span> Before You Buy
+              Verify Land Records & <span className="text-gov-primary">Transaction Risks</span> Before You Buy
             </>
           )}
         </h1>
 
-        <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-sm sm:text-base text-slate-600 max-w-3xl mx-auto leading-relaxed">
           {language === 'bn'
-            ? 'বাংলাদেশে জমি ক্রয়ের ক্ষেত্রে রেজিস্ট্রিকৃত দলিল, ধারা ৮৯ এলটি নোটিশ এবং ই-নামজারির বর্তমান স্থিতি একটি একক ও সহজ প্রতিবেদনে নিরীক্ষণ করুন।'
-            : 'BhumiVerify helps prospective land buyers in Bangladesh assess available deed records, e-mutation progress, and conflicting information before committing money or registering a purchase.'}
+            ? 'বাংলাদেশে জমি ক্রয়ের ক্ষেত্রে সম্ভাব্য লেনদেন ঝুঁকি শনাক্ত করতে, উপলব্ধ রেকর্ড ও দলিল বুঝতে এবং অর্থ পরিশোধের পূর্বে কী যাচাই করতে হবে তা নিরূপণ করতে সহায়তা করে ভূমিভেরিফাই।'
+            : 'BhumiSure helps prospective land buyers in Bangladesh identify potential transaction risks, understand available land-related records, and determine what they should verify before purchasing.'}
         </p>
 
+        {/* Primary CTA Buttons */}
         <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
           <Link
             to="/check"
-            className="btn-primary px-6 py-3 text-sm font-bold shadow-sm"
+            className="btn-primary px-7 py-3 text-sm font-bold shadow-sm"
           >
             <Search className="w-4 h-4" />
-            <span>{language === 'bn' ? 'জমি যাচাই শুরু করুন' : 'Check Land Parcel'}</span>
+            <span>{language === 'bn' ? 'জমি যাচাই শুরু করুন (Check Land)' : 'Check Land Parcel'}</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
 
           <Link
-            to="/about"
-            className="btn-secondary px-5 py-3 text-sm font-medium"
+            to="/results?id=DEMO-PARCEL-001"
+            className="btn-secondary px-6 py-3 text-sm font-medium"
           >
-            <BookOpen className="w-4 h-4 text-slate-500" />
-            <span>{language === 'bn' ? 'আইনগত প্রেক্ষাপট ও নিয়মাবলি' : 'Diligence Rules & Law'}</span>
+            <FileText className="w-4 h-4 text-slate-500" />
+            <span>{language === 'bn' ? 'নমুনা ফলাফল পৃষ্ঠা দেখুন' : 'View Sample Results'}</span>
           </Link>
         </div>
 
-        <div className="pt-4 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500 border-t border-slate-100">
-          <div className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-            <span>{language === 'bn' ? 'বহুমুখী সনাক্তকারী যাচাই' : 'Multi-Identifier Matching'}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-            <span>{language === 'bn' ? 'স্বচ্ছ নিয়মভিত্তিক যুক্তি' : 'Transparent Rule-Based Logic'}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-            <span>{language === 'bn' ? '১০০% ক্লায়েন্ট-সাইড প্রোটোটাইপ' : '100% Client-Side Demo Data'}</span>
-          </div>
+        {/* Prototype Disclaimer Banner */}
+        <div className="pt-4 max-w-2xl mx-auto">
+          <Disclaimer compact={true} />
         </div>
       </section>
 
-      {/* 3-Step Primary Journey */}
-      <section className="space-y-6">
+      {/* 3-Step Primary Journey: Enter details → Review records → Identify what to verify */}
+      <section className="space-y-6 max-w-5xl mx-auto">
         <div className="text-center max-w-2xl mx-auto">
           <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-            {language === 'bn' ? 'সহজ ৩ ধাপে জমি যাচাই প্রক্রিয়া' : 'Simple 3-Step Verification Journey'}
+            {language === 'bn' ? 'সহজ ৩ ধাপে জমি যাচাই প্রক্রিয়া' : 'Three-Step Verification Process'}
           </h2>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
             {language === 'bn'
-              ? 'জটিল ড্যাশবোর্ড বা অপ্রয়োজনীয় পাতার ঝামেলা ছাড়া সরাসরি মূল লক্ষ্যে পৌঁছান।'
-              : 'Focused strictly on the core workflow: identifiers → signals → risk assessment.'}
+              ? 'তথ্য প্রবেশ → রেকর্ড পর্যালোচনা → কী যাচাই করতে হবে নিরূপণ'
+              : 'Enter details → Review records → Identify what to verify'}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Step 1 */}
-          <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-2xs space-y-3">
+          {/* Step 1: Enter details */}
+          <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-2xs space-y-3 relative overflow-hidden">
             <div className="w-9 h-9 rounded-lg bg-emerald-50 text-gov-primary border border-emerald-200 flex items-center justify-center font-bold text-sm">
               ১
             </div>
             <h3 className="text-sm font-bold text-slate-900">
-              {language === 'bn' ? '১. জমির পরিচিতি প্রদান' : '1. Enter Land Identifiers'}
+              {language === 'bn' ? '১. জমির পরিচিতি প্রদান (Enter Details)' : '1. Enter Land Details'}
             </h3>
             <p className="text-xs text-slate-600 leading-relaxed">
               {language === 'bn'
-                ? 'বিভাগ, জেলা, উপজেলা, মৌজা, খতিয়ান এবং দাগ নম্বর নির্বাচন করুন। দাগ একা অনন্য নয়; পূর্ণ প্রশাসনিক বিন্যাস প্রয়োজনীয়।'
-                : 'Provide Division, District, Upazila, Mouza, Khatian, and Dag number. A plot number alone is not unique without complete administrative context.'}
+                ? 'বিভাগ, জেলা, উপজেলা/থানা, মৌজা, জে.এল. নম্বর, খতিয়ান এবং দাগ নম্বর প্রদান করুন। দাগ একা অনন্য নয়; পূর্ণ মৌজা পরিচয় জরুরি।'
+                : 'Enter Division, District, Upazila/Thana, Mouza, JL number, Khatian number, and Dag/plot number to identify the parcel accurately.'}
             </p>
           </div>
 
-          {/* Step 2 */}
-          <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-2xs space-y-3">
+          {/* Step 2: Review records */}
+          <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-2xs space-y-3 relative overflow-hidden">
             <div className="w-9 h-9 rounded-lg bg-teal-50 text-teal-700 border border-teal-200 flex items-center justify-center font-bold text-sm">
               ২
             </div>
             <h3 className="text-sm font-bold text-slate-900">
-              {language === 'bn' ? '২. লেনদেন সংকেত পর্যালোচনা' : '2. Review Transaction Signals'}
+              {language === 'bn' ? '২. রেকর্ড পর্যালোচনা (Review Records)' : '2. Review Available Records'}
             </h3>
             <p className="text-xs text-slate-600 leading-relaxed">
               {language === 'bn'
-                ? 'সাব-রেজিস্ট্রি অফিসে সাম্প্রতিক সাফ-কবলা হস্তান্তর দলিল, ধারা ৮৯ এলটি নোটিশ এবং ই-নামজারি আবেদনের অগ্রগতি লক্ষ্য করুন।'
-                : 'Inspect recent Sub-Registry deed execution, Section 89 LT notices to AC (Land), and ongoing e-mutation proceedings.'}
+                ? 'সাব-রেজিস্ট্রি হস্তান্তর দলিল, ধারা ৮৯ এলটি নোটিশ, ই-নামজারি আবেদন এবং চূড়ান্ত নিষ্পত্তির কালানুক্রমিক টাইমলাইন নিরীক্ষণ করুন।'
+                : 'Inspect registered transfer deeds, Section 89 LT notices, pending mutation applications, and completed mutation in chronological order.'}
             </p>
           </div>
 
-          {/* Step 3 */}
-          <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-2xs space-y-3">
+          {/* Step 3: Identify what to verify */}
+          <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-2xs space-y-3 relative overflow-hidden">
             <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-700 border border-blue-200 flex items-center justify-center font-bold text-sm">
               ৩
             </div>
             <h3 className="text-sm font-bold text-slate-900">
-              {language === 'bn' ? '৩. ঝুঁকি ব্যাখ্যা ও করণীয়' : '3. Risk Assessment & Next Steps'}
+              {language === 'bn' ? '৩. কী যাচাই করতে হবে নিরূপণ (Identify Next Steps)' : '3. Identify What to Verify'}
             </h3>
             <p className="text-xs text-slate-600 leading-relaxed">
               {language === 'bn'
-                ? 'কী পাওয়া গেছে, কেন তা গুরুত্বপূর্ণ, কোন তথ্য অনুপস্থিত এবং পরবর্তীতে কী যাচাই করতে হবে—তা স্বচ্ছভাবে জানুন।'
-                : 'Understand clearly what was detected, why it matters, missing information, and specific next verification steps to take.'}
+                ? 'শনাক্তকৃত ঝুঁকির সহজ ব্যাখ্যা জানুন, কোন তথ্য অনুপস্থিত তা দেখুন এবং সহকারী কমিশনার (ভূমি) বা সাব-রেজিস্ট্রিতে কী তল্লাশ করতে হবে তা জানুন।'
+                : 'Get clear, deterministic risk status, plain-language explanations of warnings, missing evidence, and recommended institutional checks.'}
             </p>
           </div>
         </div>
       </section>
 
-      {/* Demo Scenarios Section */}
-      <section className="space-y-6">
+      {/* Predefined Sample Scenarios */}
+      <section className="space-y-6 max-w-5xl mx-auto">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h2 className="text-xl font-bold text-slate-900 tracking-tight">
-              {language === 'bn' ? 'পরীক্ষামূলক নমুনা দৃশ্যকল্প' : 'Predefined Sample Scenarios'}
+              {language === 'bn' ? '৮টি পরীক্ষামূলক নমুনা দৃশ্যকল্প' : 'Predefined Demonstration Scenarios'}
             </h2>
             <p className="text-xs text-slate-500">
               {language === 'bn'
-                ? 'বিভিন্ন ফলাফল ও ঝুঁকির ধরন বুঝতে নিচের যেকোনো একটি নমুনা সরাসরি পরীক্ষা করুন।'
-                : 'Explore different transaction outcomes using predefined realistic fictional data.'}
+                ? 'বিভিন্ন সম্ভাব্য ফলাফল এবং ঝুঁকির ধরন পরীক্ষা করতে নিচের যেকোনো একটি নমুনা সরাসরি ক্লিক করুন।'
+                : 'Test different transaction outcomes, pending mutations, missing records, and conflict states in 1 click.'}
             </p>
           </div>
 
           <Link to="/check" className="text-xs text-gov-primary font-bold hover:underline flex items-center gap-1 self-start sm:self-auto">
-            <span>{language === 'bn' ? 'সরাসরি জমি যাচাই পাতায় যান' : 'Go to Check Land'}</span>
+            <span>{language === 'bn' ? 'সব দাগ অনুসন্ধান করুন' : 'Open Search Form'}</span>
             <ChevronRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -272,7 +267,7 @@ export const HomePage: React.FC = () => {
           {scenarios.map((sc) => (
             <div
               key={sc.id}
-              className="bg-white rounded-xl border border-slate-200 p-5 shadow-2xs flex flex-col justify-between space-y-4 hover:border-slate-300 transition-all"
+              className="bg-white rounded-xl border border-slate-200 p-5 shadow-2xs flex flex-col justify-between space-y-4 hover:border-slate-300 transition-all group"
             >
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
@@ -284,7 +279,7 @@ export const HomePage: React.FC = () => {
                   </span>
                 </div>
 
-                <h3 className="text-sm font-bold text-slate-900">
+                <h3 className="text-sm font-bold text-slate-900 group-hover:text-gov-primary transition-colors">
                   {sc.title}
                 </h3>
 
@@ -298,71 +293,80 @@ export const HomePage: React.FC = () => {
                 </div>
               </div>
 
-              <Link
-                to={`/check?scenario=${sc.scenarioNum}`}
-                className="w-full text-center py-2 px-3 rounded-lg bg-slate-100 hover:bg-gov-primary hover:text-white text-slate-700 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5"
-              >
-                <span>{language === 'bn' ? 'এই নমুনাটি পরীক্ষা করুন' : 'Test This Scenario'}</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+              <div className="pt-2 flex flex-col gap-1.5">
+                <Link
+                  to={`/results?id=${sc.id}`}
+                  className="w-full text-center py-2 px-3 rounded-lg bg-emerald-50 hover:bg-gov-primary hover:text-white text-gov-primary text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
+                >
+                  <span>{language === 'bn' ? 'ফলাফল রিপোর্ট দেখুন' : 'View Result Report'}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+
+                <Link
+                  to={`/check?parcel=${sc.id}`}
+                  className="w-full text-center py-1.5 px-3 rounded-lg text-slate-500 hover:text-slate-800 text-[11px] font-medium transition-colors"
+                >
+                  {language === 'bn' ? 'ফর্মে প্রি-ফিল করুন' : 'Pre-fill Form'}
+                </Link>
+              </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Core Bangladesh Land Law Diligence Principles */}
-      <section className="bg-slate-900 text-slate-200 rounded-2xl p-8 sm:p-10 space-y-6">
+      {/* 3 Core Legal Principles: Deed ≠ Mutation Application ≠ Mutation Completed */}
+      <section className="bg-slate-900 text-slate-200 rounded-2xl p-8 sm:p-10 space-y-6 max-w-5xl mx-auto">
         <div className="max-w-3xl space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-white/10 text-emerald-400 text-xs font-bold">
             <Scale className="w-3.5 h-3.5" />
-            <span>{language === 'bn' ? 'আইনগত বাস্তবতা ও মূল সতর্কতা' : 'Bangladesh Land Law Principles'}</span>
+            <span>{language === 'bn' ? 'আইনগত বাস্তবতা ও মূল সতর্কতা' : 'Land Law Diligence Essentials'}</span>
           </div>
           <h2 className="text-2xl font-bold text-white tracking-tight">
             {language === 'bn'
-              ? 'জমি ক্রেতাদের যে ৩টি মৌলিক নিয়ম জানা আবশ্যক'
-              : '3 Core Diligence Rules Every Land Buyer Must Know'}
+              ? '৩টি আলাদা বিষয় যা কখনোই এক নয়'
+              : 'Three Distinct Events That Must Never Be Confused'}
           </h2>
           <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
             {language === 'bn'
-              ? 'বাংলাদেশে জমি ক্রয়ে বিরোধ ও জালিয়াতি রোধ করার মূলনীতিসমূহ:'
-              : 'Statutory context governing land deeds, mutation, and record of rights:'}
+              ? 'বাংলাদেশে জমি ক্রয়ে বিরোধ ও জালিয়াতি রোধ করার প্রধান পার্থক্যসমূহ:'
+              : 'Important: a transfer-related event, a mutation application, and completed mutation are three different things.'}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
           <div className="bg-slate-800/80 rounded-xl p-5 border border-slate-700 space-y-2">
-            <h3 className="text-sm font-bold text-emerald-400 flex items-center gap-2">
+            <h3 className="text-sm font-bold text-purple-400 flex items-center gap-2">
               <FileText className="w-4 h-4 shrink-0" />
-              <span>{language === 'bn' ? '১. দলিল ≠ নামজারি' : '1. Deed ≠ Mutation'}</span>
+              <span>{language === 'bn' ? '১. রেজিস্ট্রিকৃত দলিল' : '1. Transfer Deed Event'}</span>
             </h3>
             <p className="text-xs text-slate-300 leading-relaxed">
               {language === 'bn'
-                ? 'সাব-রেজিস্ট্রি অফিসে দলিল রেজিস্ট্রি হওয়ার মাধ্যমে মালিকানার চুক্তি সম্পন্ন হয়, কিন্তু সহকারী কমিশনার (ভূমি) দ্বারা নামজারি ও জমাভাগ অনুমোদন না হওয়া পর্যন্ত সরকারি রাজস্ব রেকর্ডে ক্রেতার নাম অন্তর্ভুক্ত হয় না।'
-                : 'A registered deed transfers title between parties, but under SAT Act Section 89, it does not update the government record of rights until the Assistant Commissioner (Land) formally approves mutation.'}
+                ? 'সাব-রেজিস্ট্রি অফিসে দলিল রেজিস্ট্রির মাধ্যমে ক্রেতা-বিক্রেতার চুক্তি সম্পাদিত হয়। কিন্তু এটি স্বয়ংক্রিয়ভাবে খতিয়ান পরিবর্তন করে না।'
+                : 'A registered deed transfers title between parties, but under SAT Act Section 89, it does not update the government record of rights until mutation.'}
             </p>
           </div>
 
           <div className="bg-slate-800/80 rounded-xl p-5 border border-slate-700 space-y-2">
-            <h3 className="text-sm font-bold text-amber-400 flex items-center gap-2">
+            <h3 className="text-sm font-bold text-blue-400 flex items-center gap-2">
               <Clock className="w-4 h-4 shrink-0" />
-              <span>{language === 'bn' ? '২. আবেদন ≠ অনুমোদন' : '2. Application ≠ Approval'}</span>
+              <span>{language === 'bn' ? '২. নামজারি আবেদন' : '2. Mutation Application'}</span>
             </h3>
             <p className="text-xs text-slate-300 leading-relaxed">
               {language === 'bn'
-                ? 'ই-নামজারি আবেদন দায়ের করা মানেই জমিটির নামজারি নিশ্চিত নয়। মাঠপর্যায়ের নায়েবের তদন্ত ও শুনানিতে কোনো আপত্তি বা ত্রুটি পাওয়া গেলে আবেদন খারিজ হতে পারে।'
-                : 'Filing an online mutation application is merely a request. During field verification by the Union Land Assistant Officer, petitions may face formal objections or rejection.'}
+                ? 'ই-নামজারি আবেদন দায়ের করা কেবল একটি প্রশাসনিক অনুরোধ। নায়েবের তদন্ত ও শুনানিতে আপত্তি আসলে তা বাতিল হতে পারে।'
+                : 'Filing an online application is merely an active petition. During field verification by the revenue officer, petitions may face objections or denial.'}
             </p>
           </div>
 
           <div className="bg-slate-800/80 rounded-xl p-5 border border-slate-700 space-y-2">
-            <h3 className="text-sm font-bold text-rose-400 flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 shrink-0" />
-              <span>{language === 'bn' ? '৩. তথ্য না থাকা ≠ নিরাপদ' : '3. No Event Found ≠ Safe'}</span>
+            <h3 className="text-sm font-bold text-emerald-400 flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 shrink-0" />
+              <span>{language === 'bn' ? '৩. নামজারি সম্পন্ন' : '3. Completed Mutation'}</span>
             </h3>
             <p className="text-xs text-slate-300 leading-relaxed">
               {language === 'bn'
-                ? 'ডেমো ডেটায় কোনো সংকেত বা নোটিশ না পাওয়ার অর্থ কখনোই এটি নয় যে জমিটি সম্পূর্ণ নিরাপদ বা বিরোধমুক্ত। কোনো ডিজিটাল সিস্টেমই সশরীরে বায়া দলিল তল্লাশের বিকল্প নয়।'
-                : 'The absence of negative signals in demo feeds must never be construed as proof of unencumbered title. In-person inspection of the 25-year chain of deeds (Baya deeds) is indispensable.'}
+                ? 'সহকারী কমিশনার (ভূমি) আদেশ পাস করে নতুন খতিয়ান সৃষ্টি ও দাখিলা চালু করলেই কেবল নামজারি চূড়ান্ত ও নিষ্পন্ন বলে গণ্য হয়।'
+                : 'Only when the AC (Land) signs the final mutation order, opens a new Jamabandi, and issues a mutated RoR is the process legally completed.'}
             </p>
           </div>
         </div>
@@ -372,28 +376,15 @@ export const HomePage: React.FC = () => {
             to="/about"
             className="text-xs text-emerald-400 hover:text-emerald-300 hover:underline inline-flex items-center gap-1 font-semibold"
           >
-            <span>{language === 'bn' ? 'বিস্তারিত আইনগত ব্যাখ্যা পড়ুন' : 'Read Full Legal Background & SAT Act Sec 89'}</span>
+            <span>{language === 'bn' ? 'আইনগত কাঠামো ও ধারা ৮৯ বিস্তারিত পড়ুন' : 'Read Section 89 Legal Guidance'}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
       </section>
 
-      {/* Bottom CTA Card */}
-      <section className="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-8 text-center max-w-3xl mx-auto space-y-4">
-        <h2 className="text-xl font-bold text-slate-900">
-          {language === 'bn' ? 'প্রস্তুত আছেন? এখনই জমি যাচাই শুরু করুন' : 'Ready to Assess a Parcel?'}
-        </h2>
-        <p className="text-xs sm:text-sm text-slate-600 max-w-lg mx-auto">
-          {language === 'bn'
-            ? 'যেকোনো প্লট নম্বর প্রবেশ করিয়ে সরাসরি সাব-রেজিস্ট্রি দলিল ও ই-নামজারি সংকেত নিরীক্ষণ করুন।'
-            : 'Enter parcel identifiers or pick one of our preset demo scenarios to evaluate risk signals instantly.'}
-        </p>
-        <div className="pt-2">
-          <Link to="/check" className="btn-primary px-6 py-2.5 text-xs font-bold">
-            <Search className="w-4 h-4" />
-            <span>{language === 'bn' ? 'জমি যাচাই পাতায় যান' : 'Go to Check Land'}</span>
-          </Link>
-        </div>
+      {/* Full Statutory Disclaimer */}
+      <section className="max-w-5xl mx-auto">
+        <Disclaimer compact={false} />
       </section>
     </div>
   );

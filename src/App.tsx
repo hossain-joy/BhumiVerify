@@ -9,6 +9,7 @@ import { AppShell } from './components/layout/AppShell';
 // Core MVP Pages
 import { HomePage } from './pages/HomePage';
 import { CheckLandPage } from './pages/CheckLandPage';
+import { ParcelResultsPage } from './pages/ParcelResultsPage';
 import { AboutPage } from './pages/AboutPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
@@ -24,6 +25,7 @@ export function App() {
                   {/* Core 3-Page MVP Workflow */}
                   <Route path="/" element={<HomePage />} />
                   <Route path="/check" element={<CheckLandPage />} />
+                  <Route path="/results" element={<ParcelResultsPage />} />
                   <Route path="/about" element={<AboutPage />} />
 
                   {/* Backward-compatibility redirects for any old bookmarks */}

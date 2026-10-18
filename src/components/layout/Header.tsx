@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import { LanguageSwitcher } from '../common/LanguageSwitcher';
-import { ShieldCheck, Menu, X, Home, Search, Info } from 'lucide-react';
+import { ShieldCheck, Menu, X, Home, Search, Info, FileText } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const { language } = useLanguage();
@@ -32,6 +32,11 @@ export const Header: React.FC = () => {
       icon: <Search className="w-4 h-4" />,
     },
     {
+      to: '/results',
+      label: language === 'bn' ? 'ফলাফল রিপোর্ট' : 'Parcel Results',
+      icon: <FileText className="w-4 h-4" />,
+    },
+    {
       to: '/about',
       label: language === 'bn' ? 'আমাদের সম্পর্কে' : 'About',
       icon: <Info className="w-4 h-4" />,
@@ -56,14 +61,14 @@ export const Header: React.FC = () => {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-base font-bold tracking-tight text-slate-900 group-hover:text-gov-primary transition-colors">
-                  {language === 'bn' ? 'ভূমিভেরিফাই' : 'BhumiVerify'}
+                  {language === 'bn' ? 'ভূমিসিউর (BhumiSure)' : 'BhumiSure'}
                 </span>
                 <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-gov-primary border border-emerald-200">
-                  {language === 'bn' ? 'ডেমো প্রোটোটাইপ' : 'Demo MVP'}
+                  {language === 'bn' ? 'ডেমো এমভিপি' : 'Demo MVP'}
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 font-medium leading-none mt-0.5">
-                {language === 'bn' ? 'রেজিস্ট্রেশন-পূর্ব ভূমি লেনদেন সংকেত যাচাই' : 'Pre-Registration Land Activity Signals'}
+                {language === 'bn' ? 'Verify Before You Buy • জমি কেনার আগে যাচাই' : 'Verify Before You Buy'}
               </p>
             </div>
           </Link>
