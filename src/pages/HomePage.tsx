@@ -13,6 +13,7 @@ import {
   FileText,
   Clock,
   Sparkles,
+  ShieldCheck,
 } from 'lucide-react';
 
 export const HomePage: React.FC = () => {
@@ -67,6 +68,26 @@ export const HomePage: React.FC = () => {
             {isBn
               ? 'খতিয়ান, দাগ, মালিকানা ও নামজারি তথ্যের সঠিকতা যাচাই করার ডিজিটাল প্ল্যাটফর্ম।'
               : 'The official digital service to verify land titles, mutation status, and ownership records.'}
+          </p>
+        </div>
+
+        {/* Highlighted Banner: Core Problem Solved in 1 Simple Sentence */}
+        <div className="max-w-2xl mx-auto p-4 sm:p-5 rounded-2xl bg-amber-50/95 border-2 border-amber-400 text-amber-950 shadow-xs flex flex-col sm:flex-row items-center gap-3.5 text-center sm:text-left">
+          <div className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-2xs">
+            <ShieldCheck className="w-5 h-5 text-white" />
+          </div>
+          <p className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
+            {isBn ? (
+              <>
+                <span className="text-amber-900 font-extrabold">মূল সমাধান: </span>
+                বায়না বা দলিল করার আগেই নিশ্চিত হোন জমিটি ইতিমধ্যে অন্য কারও নামে রেজিস্ট্রি বা নামজারি করা আছে কি না — যাতে একই জমি একাধিক ব্যক্তির কাছে বিক্রির জালিয়াতি এড়ানো যায়।
+              </>
+            ) : (
+              <>
+                <span className="text-amber-900 font-extrabold">Core Solution: </span>
+                Confirm whether the land is already registered or mutation-applied by someone else before paying earnest money — preventing double-selling fraud.
+              </>
+            )}
           </p>
         </div>
 
