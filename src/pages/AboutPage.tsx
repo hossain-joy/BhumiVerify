@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
+import { BANGLADESH_GEO_DATA } from '../lib/mock-data/bangladeshGeo';
+import { toBengaliNumerals } from '../utils/formatStatus';
 import {
   Scale,
   ShieldCheck,
@@ -15,11 +17,15 @@ import {
   Building,
   Layers,
   ShieldAlert,
+  MapPin,
+  Globe,
 } from 'lucide-react';
 
 export const AboutPage: React.FC = () => {
   const { language } = useLanguage();
   const isBn = language === 'bn';
+  const [activeDivision, setActiveDivision] = useState<string>('Dhaka');
+  const selectedDivData = BANGLADESH_GEO_DATA[activeDivision];
 
   return (
     <div className="max-w-4xl mx-auto space-y-10 pb-16 animate-fade-up">
@@ -154,11 +160,94 @@ export const AboutPage: React.FC = () => {
         </div>
       </section>
 
-      {/* 5. External Official Resource Links (Clearly marked as non-integrated) */}
+      {/* 5. All 8 Divisions & 64 Districts Coverage Directory */}
+      <section className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-2xs space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+          <div className="flex items-center gap-2.5">
+            <MapPin className="w-5 h-5 text-gov-primary" aria-hidden="true" />
+            <h2 className="text-base sm:text-lg font-bold text-slate-900">
+              {isBn ? '৫. সমগ্র বাংলাদেশের ৮টি বিভাগ ও ৬৪ জেলার কভারেজ' : '5. Full Bangladesh Coverage (8 Divisions & 64 Districts)'}
+            </h2>
+          </div>
+          <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-50 text-gov-primary border border-emerald-200/80 self-start sm:self-auto">
+            {isBn ? '৬৪টি জেলা • ১২০+ উপজেলা ও প্রধান এলাকা' : '64 Districts • 120+ Upazilas & Areas'}
+          </span>
+        </div>
+
+        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+          {isBn
+            ? 'ভূমিভেরিফাই প্ল্যাটফর্মে বাংলাদেশের সকল বিভাগ ও ৬৪টি জেলার উপজেলা ও প্রধান প্রধান মৌজাসমূহ অন্তর্ভুক্ত রয়েছে। নিচে যেকোনো বিভাগে ক্লিক করে আওতাভুক্ত জেলা ও উপজেলাগুলো দেখুন:'
+            : 'BhumiVerify covers all administrative divisions and 64 districts across Bangladesh. Select any division below to view covered districts and upazilas:'}
+        </p>
+
+        {/* Division Selector Buttons */}
+        <div className="flex flex-wrap gap-2">
+          {Object.entries(BANGLADESH_GEO_DATA).map(([divKey, div]) => {
+            const isSelected = activeDivision === divKey;
+            const distCount = Object.keys(div.districts).length;
+            return (
+              <button
+                key={divKey}
+                type="button"
+                onClick={() => setActiveDivision(divKey)}
+                className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  isSelected
+                    ? 'bg-gov-primary text-white shadow-xs scale-102'
+                    : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'
+                }`}
+              >
+                <span>{isBn ? div.bengali : div.name}</span>
+                <span
+                  className={`text-xs px-2 py-0.5 rounded-full font-bold ${
+                    isSelected ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
+                  }`}
+                >
+                  {isBn ? toBengaliNumerals(distCount) : distCount}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Districts Grid for selected division */}
+        {selectedDivData && (
+          <div className="pt-2 space-y-3">
+            <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+              <span>{isBn ? `${selectedDivData.bengali} বিভাগের আওতাভুক্ত ${toBengaliNumerals(Object.keys(selectedDivData.districts).length)}টি জেলা:` : `Districts under ${selectedDivData.name} Division (${Object.keys(selectedDivData.districts).length}):`}</span>
+            </h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {Object.entries(selectedDivData.districts).map(([distKey, dist]) => {
+                const upzList = Object.values(dist.upazilas).map((u) => (isBn ? u.bengali : u.name));
+                return (
+                  <div
+                    key={distKey}
+                    className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 transition-all space-y-2 shadow-2xs"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-sm text-slate-900">
+                        {isBn ? dist.bengali : dist.name}
+                      </span>
+                      <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-slate-200/80 text-slate-700 font-semibold">
+                        {isBn ? toBengaliNumerals(upzList.length) : upzList.length} {isBn ? 'উপজেলা' : 'Upazilas'}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                      {upzList.join(', ')}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* 6. External Official Resource Links (Clearly marked as non-integrated) */}
       <section className="bg-white rounded-xl border border-slate-200 p-6 sm:p-8 shadow-2xs space-y-3">
         <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
           <Building className="w-4 h-4 text-gov-primary" aria-hidden="true" />
-          <span>{isBn ? '৫. সরকারি অফিশিয়াল পোর্টালসমূহ' : '5. Official Bangladesh Government Portals'}</span>
+          <span>{isBn ? '৬. সরকারি অফিশিয়াল পোর্টালসমূহ' : '6. Official Bangladesh Government Portals'}</span>
         </h2>
         <p className="text-xs text-slate-500">
           {isBn
