@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSearchParams, useNavigate, Link } from 'react-router-dom';
+import { useSearchParams, useNavigate, Link, useLocation, Navigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { BANGLADESH_GEO_DATA } from '../lib/mock-data/bangladeshGeo';
 import { MOCK_PARCELS, FictionalParcelRecord } from '../data/mockParcels';
@@ -31,7 +31,13 @@ import {
 const STORAGE_KEY = 'bhumisure_form_state';
 
 export const CheckLandPage: React.FC = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, isAuthenticated } = useAuth();
+  const location = useLocation();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
   const { language } = useLanguage();
   const isBn = language === 'bn';
   const [searchParams, setSearchParams] = useSearchParams();

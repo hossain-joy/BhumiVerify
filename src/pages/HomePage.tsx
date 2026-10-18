@@ -77,9 +77,14 @@ export const HomePage: React.FC = () => {
             className="w-full btn-primary py-3.5 px-8 text-base font-extrabold shadow-sm flex items-center justify-center gap-2.5 rounded-xl hover:shadow-md transition-all"
           >
             <Search className="w-5 h-5" aria-hidden="true" />
-            <span>{isBn ? 'জমি যাচাই শুরু করুন' : 'Check a Land Parcel'}</span>
+            <span>{isBn ? 'লগইন করে জমি যাচাই করুন' : 'Sign In & Search Land'}</span>
             <ArrowRight className="w-5 h-5" aria-hidden="true" />
           </Link>
+
+          <p className="text-[11px] font-semibold text-slate-500 flex items-center gap-1.5">
+            <span>🔒</span>
+            <span>{isBn ? 'জমি অনুসন্ধানের জন্য অ্যাকাউন্টে লগইন থাকা বাধ্যতামূলক' : 'Account login is required to access land search'}</span>
+          </p>
 
           <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 pt-1">
             <Link

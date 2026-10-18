@@ -127,40 +127,25 @@ export function App() {
                         </AppLayout>
                       }
                     />
+                    {/* =========================================
+                        AUTHENTICATED APP ROUTES (ProtectedRoute + AppLayout)
+                    ========================================== */}
                     <Route
                       path="/check-land"
                       element={
-                        <AppLayout>
-                          <CheckLandPage />
-                        </AppLayout>
+                        <ProtectedRoute>
+                          <AppLayout>
+                            <CheckLandPage />
+                          </AppLayout>
+                        </ProtectedRoute>
                       }
                     />
                     <Route
                       path="/check"
                       element={
-                        <AppLayout>
-                          <CheckLandPage />
-                        </AppLayout>
-                      }
-                    />
-                    <Route
-                      path="/results"
-                      element={
-                        <AppLayout>
-                          <ParcelResultsPage />
-                        </AppLayout>
-                      }
-                    />
-
-                    {/* =========================================
-                        AUTHENTICATED APP ROUTES (ProtectedRoute + AppLayout)
-                    ========================================== */}
-                    <Route
-                      path="/dashboard"
-                      element={
                         <ProtectedRoute>
                           <AppLayout>
-                            <DashboardPage />
+                            <CheckLandPage />
                           </AppLayout>
                         </ProtectedRoute>
                       }
@@ -171,6 +156,26 @@ export function App() {
                         <ProtectedRoute>
                           <AppLayout>
                             <CheckLandPage />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/results"
+                      element={
+                        <ProtectedRoute>
+                          <AppLayout>
+                            <ParcelResultsPage />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/dashboard"
+                      element={
+                        <ProtectedRoute>
+                          <AppLayout>
+                            <DashboardPage />
                           </AppLayout>
                         </ProtectedRoute>
                       }

@@ -118,7 +118,7 @@ console.log('✔ Security 4: Anti-scraping quota enforcement (5/5 block) passed.
 // ----------------------------------------------------
 function canAccessRoute(route, user) {
   const adminRoutes = ['/admin', '/admin/demo-records', '/admin/audit-log'];
-  const protectedRoutes = ['/dashboard', '/checks', '/compare', '/verification-plan', '/documents', '/settings', '/profile'];
+  const protectedRoutes = ['/check-land', '/check', '/results', '/dashboard', '/checks', '/compare', '/verification-plan', '/documents', '/settings', '/profile'];
   
   if (adminRoutes.some(r => route.startsWith(r))) {
     return user !== null && user.role === 'admin';
@@ -129,14 +129,18 @@ function canAccessRoute(route, user) {
   return true; // Public route
 }
 
-// Anonymous
+// Anonymous: Cannot access search, results, or dashboard without logging in
 assert.strictEqual(canAccessRoute('/', null), true);
 assert.strictEqual(canAccessRoute('/how-it-works', null), true);
+assert.strictEqual(canAccessRoute('/check-land', null), false);
+assert.strictEqual(canAccessRoute('/results', null), false);
 assert.strictEqual(canAccessRoute('/dashboard', null), false);
 assert.strictEqual(canAccessRoute('/admin', null), false);
 
-// Buyer / Citizen
+// Buyer / Citizen: Allowed to search land and view results after logging in
 const buyerUser = { id: 'U-1', role: 'buyer' };
+assert.strictEqual(canAccessRoute('/check-land', buyerUser), true);
+assert.strictEqual(canAccessRoute('/results', buyerUser), true);
 assert.strictEqual(canAccessRoute('/dashboard', buyerUser), true);
 assert.strictEqual(canAccessRoute('/checks', buyerUser), true);
 assert.strictEqual(canAccessRoute('/admin', buyerUser), false);

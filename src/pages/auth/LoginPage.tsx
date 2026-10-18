@@ -29,7 +29,10 @@ export const LoginPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const destination = (location.state as any)?.from?.pathname || '/dashboard';
+  const fromState = (location.state as any)?.from;
+  const destination = fromState
+    ? `${fromState.pathname || ''}${fromState.search || ''}`
+    : '/dashboard';
 
   if (isAuthenticated) {
     return <Navigate to={destination} replace />;
@@ -90,6 +93,17 @@ export const LoginPage: React.FC = () => {
 
         {/* Form Card */}
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-5">
+          {fromState && (
+            <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200/80 text-emerald-900 text-xs flex items-center gap-2.5">
+              <ShieldCheck className="w-4 h-4 text-gov-primary shrink-0" />
+              <span className="font-semibold leading-relaxed">
+                {isBn
+                  ? 'জমির তথ্য অনুসন্ধান ও রিপোর্ট দেখতে প্রথমে আপনার অ্যাকাউন্টে লগইন করুন।'
+                  : 'Please sign in to your account to search and verify land records.'}
+              </span>
+            </div>
+          )}
+
           {error && (
             <div
               className="p-3.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2.5 animate-shake"

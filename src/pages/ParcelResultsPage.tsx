@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams, useNavigate, Link } from 'react-router-dom';
+import { useSearchParams, useNavigate, Link, useLocation, Navigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { useSavedChecks } from '../context/SavedChecksContext';
 import { MOCK_PARCELS, FictionalParcelRecord } from '../data/mockParcels';
@@ -39,7 +39,13 @@ import {
 } from 'lucide-react';
 
 export const ParcelResultsPage: React.FC = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, isAuthenticated } = useAuth();
+  const location = useLocation();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
   const { language } = useLanguage();
   const isBn = language === 'bn';
   const [searchParams] = useSearchParams();
