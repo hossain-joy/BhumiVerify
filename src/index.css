@@ -6,7 +6,7 @@
 
 @layer base {
   html {
-    font-size: 16.5px;
+    font-size: 16px;
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;
     text-rendering: optimizeLegibility;
@@ -28,7 +28,7 @@
   }
 
   input:focus, select:focus, textarea:focus {
-    @apply outline-none ring-2 ring-emerald-500/30 border-emerald-600;
+    @apply outline-none ring-2 ring-emerald-500/30 border-gov-primary;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
 
@@ -46,13 +46,7 @@
 
   a:focus-visible, button:focus-visible, [role="button"]:focus-visible,
   input:focus-visible, select:focus-visible, textarea:focus-visible {
-    @apply outline-none ring-2 ring-emerald-600 ring-offset-2;
-  }
-
-  /* Accessibility floor for small arbitrary text to prevent eye strain */
-  .text-\[8px\], .text-\[9px\], .text-\[10px\], .text-\[11px\], .text-\[12px\] {
-    font-size: 0.875rem !important;
-    line-height: 1.35rem !important;
+    @apply outline-none ring-2 ring-gov-primary ring-offset-2;
   }
 }
 
@@ -80,16 +74,16 @@
 
   /* ── Badge System ── */
   .badge-civic {
-    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold;
   }
 
   /* ── Table System ── */
   .table-header {
-    @apply bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider py-3.5 px-4 text-left border-b border-slate-200;
+    @apply bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider py-3 px-4 text-left border-b border-slate-200;
   }
 
   .table-cell {
-    @apply py-3.5 px-4 text-sm text-slate-800 border-b border-slate-100;
+    @apply py-3 px-4 text-sm text-slate-800 border-b border-slate-100;
   }
 
   .table-row-hover {
@@ -98,24 +92,24 @@
 
   /* ── High-Contrast Core Button System ── */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-base font-bold rounded-xl shadow-xs hover:shadow-sm transition-all duration-150 active:scale-[0.98] cursor-pointer;
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gov-primary hover:bg-gov-primaryHover active:bg-emerald-800 text-white text-sm font-bold rounded-xl shadow-xs hover:shadow-sm transition-all duration-150 active:scale-[0.98] cursor-pointer;
   }
 
   .btn-primary-lg {
-    @apply inline-flex items-center justify-center gap-2.5 px-7 py-3.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-lg font-extrabold rounded-xl shadow-sm hover:shadow-md transition-all duration-150 active:scale-[0.98] cursor-pointer;
+    @apply inline-flex items-center justify-center gap-2.5 px-6 py-3 bg-gov-primary hover:bg-gov-primaryHover active:bg-emerald-800 text-white text-base font-extrabold rounded-xl shadow-sm hover:shadow-md transition-all duration-150 active:scale-[0.98] cursor-pointer;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-800 text-base font-semibold rounded-xl border border-slate-200 hover:border-slate-300 shadow-2xs transition-all duration-150 active:scale-[0.98] cursor-pointer;
+    @apply inline-flex items-center justify-center gap-2 px-3.5 py-2 bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-800 text-sm font-semibold rounded-xl border border-slate-200 hover:border-slate-300 shadow-2xs transition-all duration-150 active:scale-[0.98] cursor-pointer;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 px-3.5 py-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 text-base font-semibold rounded-xl transition-all duration-150 cursor-pointer;
+    @apply inline-flex items-center justify-center gap-2 px-3 py-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 text-sm font-medium rounded-xl transition-all duration-150 cursor-pointer;
   }
 
   /* ── Form System ── */
   .form-input {
-    @apply w-full px-4 py-2.5 text-base border border-slate-300 rounded-xl bg-white text-slate-900 placeholder-slate-400 transition-all duration-150 font-normal focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20;
+    @apply w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl bg-white text-slate-900 placeholder-slate-400 transition-all duration-150 font-normal focus:border-gov-primary focus:ring-2 focus:ring-emerald-500/20;
   }
 
   .form-label {

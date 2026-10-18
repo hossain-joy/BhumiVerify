@@ -31,17 +31,18 @@ export default {
         sans: ['"Hind Siliguri"', 'Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
       },
       fontSize: {
-        '3xs': ['0.8125rem', { lineHeight: '1.25rem' }],
-        '2xs': ['0.875rem', { lineHeight: '1.35rem' }],
-        'xs': ['0.95rem', { lineHeight: '1.5rem' }],
-        'sm': ['1.05rem', { lineHeight: '1.65rem' }],
-        'base': ['1.15rem', { lineHeight: '1.8rem' }],
-        'lg': ['1.3rem', { lineHeight: '1.9rem' }],
-        'xl': ['1.5rem', { lineHeight: '2.1rem' }],
-        '2xl': ['1.85rem', { lineHeight: '2.4rem' }],
-        '3xl': ['2.35rem', { lineHeight: '2.8rem' }],
-        '4xl': ['2.85rem', { lineHeight: '3.2rem' }],
-        '5xl': ['3.6rem', { lineHeight: '1.2' }],
+        '3xs': ['0.6875rem', { lineHeight: '0.95rem' }],   // 11px - micro tags, compact timestamps
+        '2xs': ['0.75rem', { lineHeight: '1.1rem' }],       // 12px - small pills, table tags
+        'xs': ['0.8125rem', { lineHeight: '1.25rem' }],     // 13px - meta, secondary captions
+        'sm': ['0.875rem', { lineHeight: '1.4rem' }],       // 14px - inputs, buttons, navigation
+        'base': ['0.9375rem', { lineHeight: '1.55rem' }],   // 15px - optimal Bengali body text
+        'md': ['1rem', { lineHeight: '1.6rem' }],           // 16px - prominent body text
+        'lg': ['1.125rem', { lineHeight: '1.75rem' }],      // 18px - subheadings, card titles
+        'xl': ['1.25rem', { lineHeight: '1.85rem' }],       // 20px - section headers
+        '2xl': ['1.5rem', { lineHeight: '2rem' }],          // 24px - modal titles, card headlines
+        '3xl': ['1.875rem', { lineHeight: '2.25rem' }],     // 30px - page titles
+        '4xl': ['2.25rem', { lineHeight: '2.6rem' }],       // 36px - hero display
+        '5xl': ['2.75rem', { lineHeight: '1.2' }],          // 44px - display headlines
       },
       boxShadow: {
         '2xs': '0 1px 2px 0 rgba(0, 0, 0, 0.03)',
