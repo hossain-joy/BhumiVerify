@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "node scripts/verify-all-functions.js"
+    "test": "node scripts/verify-all-functions.js && node scripts/verify-all-crud.js"
   },
   "dependencies": {
     "clsx": "^2.1.1",
