@@ -13,13 +13,14 @@ import {
   AlertTriangle,
   Database,
   MapPin,
+  Sparkles,
 } from 'lucide-react';
 
 export const ReviewDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { requests, parcels } = useApp();
   const { language } = useLanguage();
-  const { openCadastralMap } = useUI();
+  const { openCadastralMap, openCertificate } = useUI();
   const [decisionModalOpen, setDecisionModalOpen] = useState(false);
 
   const req = requests.find((r) => r.id === id);
@@ -81,12 +82,24 @@ export const ReviewDetailPage: React.FC = () => {
           <button
             type="button"
             onClick={() => openCadastralMap(req.parcelDetails.dagNumber)}
-            className="px-3 py-2 bg-teal-50 hover:bg-teal-100 text-gov-primary border border-teal-200 rounded-lg text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5 hover:scale-[1.02]"
+            className="px-3 py-2 bg-teal-50 hover:bg-teal-100 text-gov-primary border border-teal-200 rounded-lg text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5 hover:scale-[1.02] cursor-pointer"
             title={language === 'bn' ? 'মৌজা নকশায় দাগ ও সীমানা পরীক্ষা করুন' : 'Inspect cadastral plot on sheet'}
           >
             <MapPin className="w-3.5 h-3.5 text-teal-600" />
             <span>{language === 'bn' ? 'নকশায় দাগ পরীক্ষা' : 'Survey Map'}</span>
           </button>
+
+          {(req.status === 'approved' || req.status === 'limited_approved' || req.status === 'access_active') && (
+            <button
+              type="button"
+              onClick={() => openCertificate(req)}
+              className="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-lg text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5 hover:scale-[1.02] cursor-pointer"
+              title={language === 'bn' ? 'অফিসিয়াল প্রত্যয়নপত্র ও বারকোড প্রিভিউ' : 'Official certified deed record & barcode'}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+              <span>{language === 'bn' ? 'সার্টিফিকেট প্রিভিউ' : 'Certificate'}</span>
+            </button>
+          )}
 
           {(req.status === 'submitted' || req.status === 'under_review') && (
             <button

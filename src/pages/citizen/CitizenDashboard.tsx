@@ -24,12 +24,22 @@ import {
   Calculator,
   Compass,
   Copy,
+  ClipboardCheck,
+  Scale,
+  Bot,
 } from 'lucide-react';
 
 export const CitizenDashboard: React.FC = () => {
   const { currentUser, requests, notifications, resetCitizenIdentity } = useApp();
   const { t, language } = useLanguage();
-  const { openCadastralMap, openCalculator, openTour } = useUI();
+  const {
+    openCadastralMap,
+    openCalculator,
+    openTour,
+    openChecklist,
+    openUnitConverter,
+    openAssistant,
+  } = useUI();
   const { showToast } = useToast();
 
   const userRequests = requests.filter((r) => r.userId === currentUser.id);
@@ -94,10 +104,10 @@ export const CitizenDashboard: React.FC = () => {
       </div>
 
       {/* Interactive Tools Quick Access Bar */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
         <button
           onClick={() => openCadastralMap()}
-          className="p-4 rounded-2xl bg-gradient-to-br from-teal-50/80 via-white to-emerald-50/50 border border-teal-200/80 hover:border-teal-300 text-left flex items-center justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5"
+          className="p-4 rounded-2xl bg-gradient-to-br from-teal-50/80 via-white to-emerald-50/50 border border-teal-200/80 hover:border-teal-300 text-left flex items-center justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
         >
           <div className="flex items-center gap-3.5">
             <div className="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
@@ -117,7 +127,7 @@ export const CitizenDashboard: React.FC = () => {
 
         <button
           onClick={openCalculator}
-          className="p-4 rounded-2xl bg-gradient-to-br from-blue-50/80 via-white to-indigo-50/50 border border-blue-200/80 hover:border-blue-300 text-left flex items-center justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5"
+          className="p-4 rounded-2xl bg-gradient-to-br from-blue-50/80 via-white to-indigo-50/50 border border-blue-200/80 hover:border-blue-300 text-left flex items-center justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
         >
           <div className="flex items-center gap-3.5">
             <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
@@ -136,8 +146,68 @@ export const CitizenDashboard: React.FC = () => {
         </button>
 
         <button
+          onClick={openUnitConverter}
+          className="p-4 rounded-2xl bg-gradient-to-br from-emerald-50/80 via-white to-teal-50/50 border border-emerald-200/80 hover:border-emerald-300 text-left flex items-center justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
+        >
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+              <Scale className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">
+                {language === 'bn' ? 'ভূমি পরিমাপ রূপান্তরকারী' : 'Land Unit Converter'}
+              </p>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                {language === 'bn' ? 'শতাংশ, কাঠা, বিঘা, একর' : 'Decimal, Katha, Bigha, Acre'}
+              </p>
+            </div>
+          </div>
+          <ArrowRight className="w-4 h-4 text-emerald-600 group-hover:translate-x-1 transition-transform" />
+        </button>
+
+        <button
+          onClick={openChecklist}
+          className="p-4 rounded-2xl bg-gradient-to-br from-amber-50/80 via-white to-orange-50/50 border border-amber-200/80 hover:border-amber-300 text-left flex items-center justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
+        >
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-amber-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+              <ClipboardCheck className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-900 group-hover:text-amber-800 transition-colors">
+                {language === 'bn' ? '১০-দফা ক্রেতা চেকলিস্ট' : 'Buyer Diligence Checklist'}
+              </p>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                {language === 'bn' ? 'ক্রয়ের পূর্ববর্তী নিরাপত্তা স্কোর' : '10 statutory safety checks'}
+              </p>
+            </div>
+          </div>
+          <ArrowRight className="w-4 h-4 text-amber-600 group-hover:translate-x-1 transition-transform" />
+        </button>
+
+        <button
+          onClick={openAssistant}
+          className="p-4 rounded-2xl bg-gradient-to-br from-indigo-50/80 via-white to-blue-50/50 border border-indigo-200/80 hover:border-indigo-300 text-left flex items-center justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
+        >
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+              <Bot className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-900 group-hover:text-indigo-700 transition-colors">
+                {language === 'bn' ? 'এআই ভূমি সহকারী' : 'AI Land Diligence Bot'}
+              </p>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                {language === 'bn' ? 'আইন ও রেজিস্ট্রি প্রশ্নোত্তর' : 'Instant land inquiry advisor'}
+              </p>
+            </div>
+          </div>
+          <ArrowRight className="w-4 h-4 text-indigo-600 group-hover:translate-x-1 transition-transform" />
+        </button>
+
+        <button
           onClick={openTour}
-          className="p-4 rounded-2xl bg-gradient-to-br from-violet-50/80 via-white to-purple-50/50 border border-violet-200/80 hover:border-violet-300 text-left flex items-center justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5"
+          className="p-4 rounded-2xl bg-gradient-to-br from-violet-50/80 via-white to-purple-50/50 border border-violet-200/80 hover:border-violet-300 text-left flex items-center justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
         >
           <div className="flex items-center gap-3.5">
             <div className="w-10 h-10 rounded-xl bg-violet-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">

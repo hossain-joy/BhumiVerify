@@ -9,12 +9,21 @@ import {
   ShieldCheck, ArrowRight, AlertTriangle, Lock, Layers, Clock,
   HelpCircle, Sparkles, CheckCircle2, ChevronDown, MapPin, FileText,
   TrendingUp, Users, Database, Zap, Calculator, Compass,
+  Scale, ClipboardCheck, Bot,
 } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
-  const { setRole } = useApp();
+  const { setRole, requests } = useApp();
   const { t, language } = useLanguage();
-  const { openCadastralMap, openCalculator, openTour } = useUI();
+  const {
+    openCadastralMap,
+    openCalculator,
+    openTour,
+    openChecklist,
+    openUnitConverter,
+    openAssistant,
+    openCertificate,
+  } = useUI();
   const navigate = useNavigate();
 
   const handleStartDemo = (role: 'citizen' | 'reviewer' = 'citizen') => {
@@ -122,6 +131,170 @@ export const LandingPage: React.FC = () => {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* ── Interactive Civic Diligence Toolbox ── */}
+      <section className="space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-gov-primary" />
+              {language === 'bn' ? 'নাগরিক ইন্টারঅ্যাক্টিভ ভূমি টুলকিট' : 'Interactive Civic Diligence Toolbox'}
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              {language === 'bn'
+                ? 'ভূমি কেনা-বেচা ও অনুসন্ধানের সকল প্রয়োজনীয় আধুনিক টুলস এক ক্লিকে সরাসরি ব্যবহার করুন'
+                : 'Instant client-side diligence utilities for land buyers, surveyors, and citizens'}
+            </p>
+          </div>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-xs font-semibold text-teal-800">
+            <Zap className="w-3.5 h-3.5 text-teal-600" />
+            {language === 'bn' ? '১০০% ক্লায়েন্ট-সাইড টুলস' : 'Instant Client-Side Tools'}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          {/* 1. Cadastral Map */}
+          <button
+            onClick={() => openCadastralMap()}
+            className="p-5 rounded-2xl bg-gradient-to-br from-teal-50/70 via-white to-emerald-50/40 border border-teal-200/80 hover:border-teal-400 text-left flex items-start justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
+          >
+            <div className="flex items-start gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-teal-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                <MapPin className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-slate-900 group-hover:text-gov-primary transition-colors">
+                  {language === 'bn' ? 'ডিজিটাল মৌজা নকশা' : 'Cadastral Survey Map'}
+                </p>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  {language === 'bn'
+                    ? 'মৌজার দাগ, সংযোগ সড়ক, জলাশয় ও প্লটের নির্ভুল সীমানা নিরীক্ষা'
+                    : 'Interactive SVG survey sheet with plot inspector & status overlays'}
+                </p>
+              </div>
+            </div>
+            <ArrowRight className="w-4 h-4 text-teal-600 group-hover:translate-x-1 transition-transform shrink-0 mt-1" />
+          </button>
+
+          {/* 2. Fee Calculator */}
+          <button
+            onClick={openCalculator}
+            className="p-5 rounded-2xl bg-gradient-to-br from-blue-50/70 via-white to-indigo-50/40 border border-blue-200/80 hover:border-blue-400 text-left flex items-start justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
+          >
+            <div className="flex items-start gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                <Calculator className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
+                  {language === 'bn' ? 'রেজিস্ট্রেশন ফি ও ট্যাক্স হিসাব' : 'Fee & Tax Estimator'}
+                </p>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  {language === 'bn'
+                    ? 'স্ট্যাম্প ডিউটি, সরকারি নিবন্ধন ফি, স্থানীয় কর ও নামজারি ব্যয়ের হিসাব'
+                    : 'Bangladesh Stamp Duty, AIT, local taxes & official mutation fees'}
+                </p>
+              </div>
+            </div>
+            <ArrowRight className="w-4 h-4 text-blue-600 group-hover:translate-x-1 transition-transform shrink-0 mt-1" />
+          </button>
+
+          {/* 3. Unit Converter */}
+          <button
+            onClick={openUnitConverter}
+            className="p-5 rounded-2xl bg-gradient-to-br from-emerald-50/70 via-white to-teal-50/40 border border-emerald-200/80 hover:border-emerald-400 text-left flex items-start justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
+          >
+            <div className="flex items-start gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                <Scale className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">
+                  {language === 'bn' ? 'ভূমি পরিমাপ একক রূপান্তরকারী' : 'Land Unit Converter'}
+                </p>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  {language === 'bn'
+                    ? 'শতাংশ, কাঠা, বিঘা, একর, ছটাক এবং বর্গফুটের রিয়েল-টাইম কনভার্টার'
+                    : 'Instant conversions between Decimal, Katha, Bigha, Acre & Sq.Ft.'}
+                </p>
+              </div>
+            </div>
+            <ArrowRight className="w-4 h-4 text-emerald-600 group-hover:translate-x-1 transition-transform shrink-0 mt-1" />
+          </button>
+
+          {/* 4. Buyer Checklist */}
+          <button
+            onClick={openChecklist}
+            className="p-5 rounded-2xl bg-gradient-to-br from-amber-50/70 via-white to-orange-50/40 border border-amber-200/80 hover:border-amber-400 text-left flex items-start justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
+          >
+            <div className="flex items-start gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-amber-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                <ClipboardCheck className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-slate-900 group-hover:text-amber-800 transition-colors">
+                  {language === 'bn' ? '১০-দফা ক্রেতা যাচাই চেকলিস্ট' : '10-Point Diligence Checklist'}
+                </p>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  {language === 'bn'
+                    ? 'জমি কেনার পূর্ববর্তী ১০টি আবশ্যকীয় আইনি চেক ও নিরাপত্তা স্কোর'
+                    : 'Live statutory readiness gauge with legal citations (SAT & Reg Act)'}
+                </p>
+              </div>
+            </div>
+            <ArrowRight className="w-4 h-4 text-amber-600 group-hover:translate-x-1 transition-transform shrink-0 mt-1" />
+          </button>
+
+          {/* 5. AI Diligence Bot */}
+          <button
+            onClick={openAssistant}
+            className="p-5 rounded-2xl bg-gradient-to-br from-indigo-50/70 via-white to-blue-50/40 border border-indigo-200/80 hover:border-indigo-400 text-left flex items-start justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
+          >
+            <div className="flex items-start gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                <Bot className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-slate-900 group-hover:text-indigo-700 transition-colors">
+                  {language === 'bn' ? 'এআই ভূমি সহকারী বট' : 'AI Diligence Advisor'}
+                </p>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  {language === 'bn'
+                    ? 'নামজারি, এলটি নোটিশ ও রেজিস্ট্রি সংক্রান্ত যেকোনো প্রশ্নের তাৎক্ষণিক উত্তর'
+                    : 'Contextual answers for e-Mutation, Sub-Registry deeds & legal rules'}
+                </p>
+              </div>
+            </div>
+            <ArrowRight className="w-4 h-4 text-indigo-600 group-hover:translate-x-1 transition-transform shrink-0 mt-1" />
+          </button>
+
+          {/* 6. Official Certificate Demo */}
+          <button
+            onClick={() => {
+              const activeReq = requests.find((r) => r.status === 'access_active') || requests[0];
+              openCertificate(activeReq);
+            }}
+            className="p-5 rounded-2xl bg-gradient-to-br from-violet-50/70 via-white to-purple-50/40 border border-violet-200/80 hover:border-violet-400 text-left flex items-start justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
+          >
+            <div className="flex items-start gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-violet-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-slate-900 group-hover:text-violet-700 transition-colors">
+                  {language === 'bn' ? 'অফিসিয়াল সার্টিফিকেট ডেমো' : 'Official Certificate Sample'}
+                </p>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  {language === 'bn'
+                    ? 'কিউআর কোড ও ডিজিটাল সিলসহ নমুনা ভেরিফিকেশন প্রত্যয়নপত্র'
+                    : 'Printable certified land diligence certificate with QR verification'}
+                </p>
+              </div>
+            </div>
+            <ArrowRight className="w-4 h-4 text-violet-600 group-hover:translate-x-1 transition-transform shrink-0 mt-1" />
+          </button>
         </div>
       </section>
 

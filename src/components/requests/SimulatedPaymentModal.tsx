@@ -5,6 +5,7 @@ import { formatBDT } from '../../lib/utils';
 import { useApp } from '../../context/AppContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useToast } from '../../context/ToastContext';
+import { triggerConfetti } from '../../lib/confetti';
 import {
   CreditCard,
   Building,
@@ -58,6 +59,7 @@ export const SimulatedPaymentModal: React.FC<SimulatedPaymentModalProps> = ({
       setProcessing(false);
 
       if (result.success) {
+        triggerConfetti();
         showToast({
           type: 'success',
           title: language === 'bn' ? 'পেমেন্ট সফল হয়েছে!' : 'Payment Confirmed!',

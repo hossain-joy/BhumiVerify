@@ -21,6 +21,10 @@ import {
   ArrowRight,
   Sparkles,
   Command,
+  ClipboardCheck,
+  ArrowRightLeft,
+  MessageSquare,
+  Award,
 } from 'lucide-react';
 
 interface PaletteItem {
@@ -35,8 +39,18 @@ interface PaletteItem {
 }
 
 export const CommandPalette: React.FC = () => {
-  const { isCommandPaletteOpen, closeCommandPalette, openCadastralMap, openCalculator, openTour } = useUI();
-  const { setRole, resetAllDemoData, verifyCitizenIdentity } = useApp();
+  const {
+    isCommandPaletteOpen,
+    closeCommandPalette,
+    openCadastralMap,
+    openCalculator,
+    openTour,
+    openChecklist,
+    openUnitConverter,
+    openAssistant,
+    openCertificate,
+  } = useUI();
+  const { setRole, resetAllDemoData, verifyCitizenIdentity, requests } = useApp();
   const { language, setLanguage } = useLanguage();
   const { showToast } = useToast();
   const navigate = useNavigate();
@@ -150,6 +164,59 @@ export const CommandPalette: React.FC = () => {
         action: () => {
           closeCommandPalette();
           openTour();
+        },
+      },
+      {
+        id: 'tool-checklist',
+        title: isBn ? '১০-দফা জমি ক্রয় প্রাক-যাচাই চেকলিস্ট ও ঝুঁকি স্কোর' : '10-Point Land Due Diligence Checklist',
+        subtitle: isBn ? 'বায়না বা দলিলের পূর্বে আইনি ও দখলীয় শর্তসমূহ খতিয়ে দেখুন' : 'Verify chain deeds, mutation, physical possession and civil court checks',
+        category: 'tools',
+        icon: <ClipboardCheck className="w-4 h-4 text-teal-600" />,
+        badge: isBn ? 'চেকলিস্ট' : 'Checklist',
+        badgeColor: 'bg-teal-100 text-teal-800 border-teal-200',
+        action: () => {
+          closeCommandPalette();
+          openChecklist();
+        },
+      },
+      {
+        id: 'tool-converter',
+        title: isBn ? 'বাংলাদেশি ভূমি পরিমাপ রূপান্তরক (Unit Converter)' : 'Bangladesh Land Unit Converter',
+        subtitle: isBn ? 'শতাংশ, কাঠা, বিঘা, একর, ছটাক এবং বর্গফুটের সঠিক রূপান্তর' : 'Convert decimals, katha, bigha, acres and square feet',
+        category: 'tools',
+        icon: <ArrowRightLeft className="w-4 h-4 text-amber-600" />,
+        badge: isBn ? 'পরিমাপ' : 'Units',
+        badgeColor: 'bg-amber-100 text-amber-800 border-amber-200',
+        action: () => {
+          closeCommandPalette();
+          openUnitConverter();
+        },
+      },
+      {
+        id: 'tool-assistant',
+        title: isBn ? 'এআই ডিজিটাল ভূমি সহকারী (Land Diligence Assistant)' : 'AI Land Diligence Assistant',
+        subtitle: isBn ? 'বায়া দলিল, নামজারি আইন, ও অংশীদারি সংক্রান্ত প্রশ্নের তাৎক্ষণিক উত্তর' : 'Ask questions about Bangladesh land conveyance, deeds and mutations',
+        category: 'tools',
+        icon: <MessageSquare className="w-4 h-4 text-emerald-600" />,
+        badge: isBn ? 'এআই চ্যাট' : 'AI Chat',
+        badgeColor: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+        action: () => {
+          closeCommandPalette();
+          openAssistant();
+        },
+      },
+      {
+        id: 'tool-certificate',
+        title: isBn ? 'ডিজিটাল ভূমি যাচাই প্রত্যয়নপত্র (Official Certificate)' : 'Official Land Diligence Certificate Sample',
+        subtitle: isBn ? 'কিউআর কোড ও ডিজিটাল সিল সম্বলিত অফিসিয়াল প্রত্যয়নপত্র দেখুন' : 'View official verified certificate with QR code and signature',
+        category: 'tools',
+        icon: <Award className="w-4 h-4 text-amber-600" />,
+        badge: isBn ? 'সার্টিফিকেট' : 'Certificate',
+        badgeColor: 'bg-amber-100 text-amber-800 border-amber-200',
+        action: () => {
+          closeCommandPalette();
+          const targetReq = requests[2] || requests[0];
+          openCertificate(targetReq);
         },
       },
 

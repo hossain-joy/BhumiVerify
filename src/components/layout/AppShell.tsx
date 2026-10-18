@@ -8,6 +8,10 @@ import { CommandPalette } from '../common/CommandPalette';
 import { CadastralMapModal } from '../land/CadastralMapModal';
 import { LandFeeCalculatorModal } from '../common/LandFeeCalculatorModal';
 import { FeatureTourModal } from '../common/FeatureTourModal';
+import { BuyerDiligenceChecklistModal } from '../common/BuyerDiligenceChecklistModal';
+import { LandUnitConverterModal } from '../common/LandUnitConverterModal';
+import { LandAssistantWidget } from '../common/LandAssistantWidget';
+import { OfficialCertificateModal } from '../common/OfficialCertificateModal';
 import { ToastContainer } from '../common/ToastContainer';
 
 interface AppShellProps {
@@ -26,6 +30,10 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
       <CadastralMapModal />
       <LandFeeCalculatorModal />
       <FeatureTourModal />
+      <BuyerDiligenceChecklistModal />
+      <LandUnitConverterModal />
+      <OfficialCertificateModal />
+      <LandAssistantWidget />
       <ToastContainer />
 
       {/* Main Layout Chrome */}

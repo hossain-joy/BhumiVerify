@@ -12,10 +12,23 @@ import {
   VolumeX,
   ArrowUp,
   X,
+  ClipboardCheck,
+  ArrowRightLeft,
+  MessageSquare,
 } from 'lucide-react';
 
 export const QuickActionDock: React.FC = () => {
-  const { openCommandPalette, openCadastralMap, openCalculator, openTour, soundEnabled, toggleSound } = useUI();
+  const {
+    openCommandPalette,
+    openCadastralMap,
+    openCalculator,
+    openTour,
+    openChecklist,
+    openUnitConverter,
+    toggleAssistant,
+    soundEnabled,
+    toggleSound,
+  } = useUI();
   const { language } = useLanguage();
   const { showToast } = useToast();
 
@@ -24,7 +37,7 @@ export const QuickActionDock: React.FC = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 300);
+      setShowScrollTop(window.scrollY > 250);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -51,6 +64,54 @@ export const QuickActionDock: React.FC = () => {
       {/* Expanded Tools Menu */}
       {expanded && (
         <div className="pointer-events-auto flex flex-col items-end gap-2 animate-slide-down mb-1">
+          {/* AI Diligence Assistant */}
+          <button
+            onClick={() => {
+              setExpanded(false);
+              toggleAssistant();
+            }}
+            className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/95 backdrop-blur-md border border-slate-200/90 text-slate-800 shadow-float hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition-all text-xs font-bold group"
+          >
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity text-[11px] text-slate-500 font-medium">
+              {isBn ? 'ডিজিটাল সহকারী' : 'AI Assistant'}
+            </span>
+            <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+              <MessageSquare className="w-4 h-4" />
+            </div>
+          </button>
+
+          {/* 10-Point Checklist */}
+          <button
+            onClick={() => {
+              setExpanded(false);
+              openChecklist();
+            }}
+            className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/95 backdrop-blur-md border border-slate-200/90 text-slate-800 shadow-float hover:bg-teal-50 hover:text-gov-primary hover:border-teal-200 transition-all text-xs font-bold group"
+          >
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity text-[11px] text-slate-500 font-medium">
+              {isBn ? '১০-দফা চেকলিস্ট' : '10-Pt Checklist'}
+            </span>
+            <div className="w-7 h-7 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
+              <ClipboardCheck className="w-4 h-4" />
+            </div>
+          </button>
+
+          {/* Land Unit Converter */}
+          <button
+            onClick={() => {
+              setExpanded(false);
+              openUnitConverter();
+            }}
+            className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/95 backdrop-blur-md border border-slate-200/90 text-slate-800 shadow-float hover:bg-amber-50 hover:text-amber-700 hover:border-amber-200 transition-all text-xs font-bold group"
+          >
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity text-[11px] text-slate-500 font-medium">
+              {isBn ? 'পরিমাপ রূপান্তরক' : 'Unit Converter'}
+            </span>
+            <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
+              <ArrowRightLeft className="w-4 h-4" />
+            </div>
+          </button>
+
           {/* Cadastral Map */}
           <button
             onClick={() => {
@@ -126,6 +187,16 @@ export const QuickActionDock: React.FC = () => {
             <ArrowUp className="w-4 h-4" />
           </button>
         )}
+
+        {/* Floating AI Assistant Trigger Pill */}
+        <button
+          onClick={toggleAssistant}
+          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-float transition-all text-xs font-bold hover:scale-105 active:scale-95 shadow-glow-sm"
+          aria-label="Open AI Land Assistant"
+        >
+          <MessageSquare className="w-3.5 h-3.5" />
+          <span>{isBn ? 'সহকারী' : 'AI Assistant'}</span>
+        </button>
 
         {/* Spotlight Quick Search Button */}
         <button

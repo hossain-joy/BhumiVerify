@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { soundEffects } from '../lib/soundEffects';
+import { AccessRequest } from '../types';
 
 interface UIContextType {
   isCommandPaletteOpen: boolean;
@@ -19,6 +20,24 @@ interface UIContextType {
   openTour: () => void;
   closeTour: () => void;
 
+  isChecklistOpen: boolean;
+  openChecklist: () => void;
+  closeChecklist: () => void;
+
+  isUnitConverterOpen: boolean;
+  openUnitConverter: () => void;
+  closeUnitConverter: () => void;
+
+  isAssistantOpen: boolean;
+  openAssistant: () => void;
+  closeAssistant: () => void;
+  toggleAssistant: () => void;
+
+  isCertificateOpen: boolean;
+  openCertificate: (req?: AccessRequest) => void;
+  closeCertificate: () => void;
+  activeCertificateRequest?: AccessRequest;
+
   soundEnabled: boolean;
   toggleSound: () => boolean;
 }
@@ -31,6 +50,11 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   const [activeMapDag, setActiveMapDag] = useState<string | undefined>(undefined);
   const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
   const [isTourOpen, setIsTourOpen] = useState(false);
+  const [isChecklistOpen, setIsChecklistOpen] = useState(false);
+  const [isUnitConverterOpen, setIsUnitConverterOpen] = useState(false);
+  const [isAssistantOpen, setIsAssistantOpen] = useState(false);
+  const [isCertificateOpen, setIsCertificateOpen] = useState(false);
+  const [activeCertificateRequest, setActiveCertificateRequest] = useState<AccessRequest | undefined>(undefined);
   const [soundEnabled, setSoundEnabled] = useState(() => soundEffects.isEnabled());
 
   const openCommandPalette = useCallback(() => {
@@ -70,6 +94,48 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     setIsTourOpen(false);
   }, []);
 
+  const openChecklist = useCallback(() => {
+    soundEffects.playClick();
+    setIsChecklistOpen(true);
+  }, []);
+
+  const closeChecklist = useCallback(() => {
+    setIsChecklistOpen(false);
+  }, []);
+
+  const openUnitConverter = useCallback(() => {
+    soundEffects.playClick();
+    setIsUnitConverterOpen(true);
+  }, []);
+
+  const closeUnitConverter = useCallback(() => {
+    setIsUnitConverterOpen(false);
+  }, []);
+
+  const openAssistant = useCallback(() => {
+    soundEffects.playClick();
+    setIsAssistantOpen(true);
+  }, []);
+
+  const closeAssistant = useCallback(() => {
+    setIsAssistantOpen(false);
+  }, []);
+
+  const toggleAssistant = useCallback(() => {
+    soundEffects.playClick();
+    setIsAssistantOpen((prev) => !prev);
+  }, []);
+
+  const openCertificate = useCallback((req?: AccessRequest) => {
+    soundEffects.playClick();
+    setActiveCertificateRequest(req);
+    setIsCertificateOpen(true);
+  }, []);
+
+  const closeCertificate = useCallback(() => {
+    setIsCertificateOpen(false);
+  }, []);
+
   const toggleSound = useCallback(() => {
     const newState = soundEffects.toggle();
     setSoundEnabled(newState);
@@ -88,6 +154,10 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
         setIsCadastralMapOpen(false);
         setIsCalculatorOpen(false);
         setIsTourOpen(false);
+        setIsChecklistOpen(false);
+        setIsUnitConverterOpen(false);
+        setIsAssistantOpen(false);
+        setIsCertificateOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -110,6 +180,20 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
         isTourOpen,
         openTour,
         closeTour,
+        isChecklistOpen,
+        openChecklist,
+        closeChecklist,
+        isUnitConverterOpen,
+        openUnitConverter,
+        closeUnitConverter,
+        isAssistantOpen,
+        openAssistant,
+        closeAssistant,
+        toggleAssistant,
+        isCertificateOpen,
+        openCertificate,
+        closeCertificate,
+        activeCertificateRequest,
         soundEnabled,
         toggleSound,
       }}
