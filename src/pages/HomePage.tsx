@@ -64,9 +64,9 @@ export const HomePage: React.FC = () => {
     <div className="space-y-12 pb-16 animate-fade-up">
       {/* Hero Section */}
       <section className="bg-white rounded-2xl border border-slate-200 p-8 sm:p-12 shadow-2xs text-center max-w-4xl mx-auto space-y-6">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-semibold text-gov-primary">
-          <ShieldCheck className="w-4 h-4 text-gov-primary" aria-hidden="true" />
-          <span>BhumiVerify • Verify Before You Buy.</span>
+        <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-emerald-50/90 border border-emerald-200 text-xs font-semibold text-gov-primary shadow-2xs">
+          <img src="/logo.png" alt="ভূমি মন্ত্রণালয়" className="w-5 h-5 rounded-full bg-white object-contain" />
+          <span>{isBn ? 'ভূমি মন্ত্রণালয় • ভূমিভেরিফাই ডিজিটাল সেবা' : 'Ministry of Land • BhumiVerify Civic Diligence'}</span>
         </div>
 
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">

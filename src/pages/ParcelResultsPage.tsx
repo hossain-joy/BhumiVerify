@@ -366,24 +366,29 @@ export const ParcelResultsPage: React.FC = () => {
       {/* 1. Result Header */}
       <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-2xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-3">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="font-mono text-xs font-bold text-gov-primary bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
-                {parcel.id}
-              </span>
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
-                {isBn ? 'যাচাইকৃত রেকর্ড' : 'Verified Record'}
-              </span>
+          <div className="flex items-start gap-3">
+            <div className="w-11 h-11 rounded-xl bg-white border border-slate-200 p-1 flex items-center justify-center shrink-0 shadow-2xs mt-1">
+              <img src="/logo.png" alt="ভূমি মন্ত্রণালয়" className="w-full h-full object-contain" />
             </div>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-              {isBn ? 'উপলব্ধ তথ্য পর্যালোচনা' : 'Review the available information.'}
-            </h1>
-            <p className="text-xs text-slate-500 mt-0.5">
-              {isBn ? 'সর্বশেষ হালনাগাদ: ' : 'Last updated: '}
-              <span className="font-medium text-slate-700">
-                {formatSafeDate(parcel.updatedDate, isBn ? 'তারিখ পাওয়া যায়নি' : 'Unknown date')}
-              </span>
-            </p>
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="font-mono text-xs font-bold text-gov-primary bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
+                  {parcel.id}
+                </span>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                  {isBn ? 'ভূমি মন্ত্রণালয় রেকর্ড' : 'Ministry of Land Record'}
+                </span>
+              </div>
+              <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+                {isBn ? 'উপলব্ধ তথ্য পর্যালোচনা' : 'Review the available information.'}
+              </h1>
+              <p className="text-xs text-slate-500 mt-0.5">
+                {isBn ? 'সর্বশেষ হালনাগাদ: ' : 'Last updated: '}
+                <span className="font-medium text-slate-700">
+                  {formatSafeDate(parcel.updatedDate, isBn ? 'তারিখ পাওয়া যায়নি' : 'Unknown date')}
+                </span>
+              </p>
+            </div>
           </div>
 
           {/* Top Actions: Edit parcel details, Save check, Print, & New search */}

@@ -173,18 +173,28 @@ export const CheckReportPage: React.FC = () => {
       <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 sm:p-8 space-y-8 print:border-none print:shadow-none print:p-0">
         {/* Report Header */}
         <div className="border-b border-slate-200 pb-6 space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-xs font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
-                {isBn ? 'রিপোর্ট:' : 'REPORT:'} {check.id}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 p-1 flex items-center justify-center shrink-0 shadow-2xs">
+                <img src="/logo.png" alt="গণপ্রজাতন্ত্রী বাংলাদেশ সরকার - ভূমি মন্ত্রণালয়" className="w-full h-full object-contain" />
+              </div>
+              <div>
+                <h2 className="text-xs font-bold text-slate-900 leading-tight">
+                  {isBn ? 'গণপ্রজাতন্ত্রী বাংলাদেশ সরকার • ভূমি মন্ত্রণালয়' : "Government of the People's Republic of Bangladesh • Ministry of Land"}
+                </h2>
+                <p className="text-[11px] text-gov-primary font-semibold">
+                  {isBn ? 'ভূমিভেরিফাই — জমি সত্যতা ও প্রাক-নিবন্ধন যাচাই প্রতিবেদন' : 'BhumiVerify — Land Pre-Registration Diligence Report'}
+                </p>
+              </div>
+            </div>
+            <div className="sm:text-right text-xs text-slate-500">
+              <span className="font-mono text-xs font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded inline-block sm:block">
+                {isBn ? 'রিপোর্ট ID: ' : 'REPORT: '}{check.id}
               </span>
-              <span className="text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded">
-                {isBn ? 'যাচাইকরণ ফলাফল' : 'Verified Report'}
+              <span className="text-[10px] text-slate-400 mt-0.5 block">
+                {isBn ? 'তৈরির তারিখ: ' : 'Generated: '}{new Date(check.createdAt).toLocaleDateString(isBn ? 'bn-BD' : 'en-US')}
               </span>
             </div>
-            <span className="text-xs text-slate-400">
-              {isBn ? 'তৈরির তারিখ:' : 'Generated:'} {new Date(check.createdAt).toLocaleDateString(isBn ? 'bn-BD' : 'en-US')}
-            </span>
           </div>
 
           <div>

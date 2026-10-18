@@ -75,8 +75,8 @@ export const LoginPage: React.FC = () => {
           <div className="flex justify-center pb-1">
             <LanguageSwitcher compact={true} />
           </div>
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gov-primary text-white shadow-sm mb-2">
-            <ShieldCheck className="w-6 h-6" />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white border border-slate-200/90 shadow-xs p-1 mb-2">
+            <img src="/logo.png" alt="ভূমি মন্ত্রণালয়" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900">
             {isBn ? 'ভূমিভেরিফাইতে লগইন করুন' : 'Sign in to BhumiVerify'}

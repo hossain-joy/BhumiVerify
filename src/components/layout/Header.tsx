@@ -130,6 +130,21 @@ export const Header: React.FC = () => {
           : 'border-b border-slate-200/80 shadow-2xs'
       }`}
     >
+      {/* Top Civic Ribbon */}
+      <div className="bg-slate-900 text-slate-300 text-[11px] py-1 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <img src="/logo.png" alt="গণপ্রজাতন্ত্রী বাংলাদেশ সরকার" className="w-3.5 h-3.5 rounded-full bg-white object-contain" />
+            <span className="font-semibold text-slate-200">
+              {isBn ? 'গণপ্রজাতন্ত্রী বাংলাদেশ সরকার • ভূমি মন্ত্রণালয়' : "Government of the People's Republic of Bangladesh • Ministry of Land"}
+            </span>
+          </div>
+          <div className="hidden sm:flex items-center gap-2 text-slate-400 text-[10px]">
+            <span>{isBn ? 'জনবান্ধব ডিজিটালাইজড ভূমিসেবায় স্বাগতম' : 'People-friendly Digital Land Services'}</span>
+          </div>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-3">
           {/* 1. Left: Brand & Wordmark */}
@@ -138,13 +153,20 @@ export const Header: React.FC = () => {
             className="flex items-center gap-2.5 sm:gap-3 group shrink-0"
             aria-label="BhumiVerify Home - Verify Before You Buy"
           >
-            <div className="w-9 h-9 rounded-xl bg-gov-primary flex items-center justify-center text-white shadow-xs transition-transform duration-200 group-hover:scale-105">
-              <ShieldCheck className="w-5 h-5 text-white" aria-hidden="true" />
+            <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center p-0.5 transition-transform duration-200 group-hover:scale-105 shrink-0 overflow-hidden">
+              <img
+                src="/logo.png"
+                alt="ভূমি মন্ত্রণালয় / BhumiVerify"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
                 <span className="text-base font-extrabold tracking-tight text-slate-900 group-hover:text-gov-primary transition-colors">
                   {isBn ? 'ভূমিভেরিফাই' : 'BhumiVerify'}
+                </span>
+                <span className="text-[10px] font-semibold bg-emerald-50 text-gov-primary border border-emerald-200/80 px-1.5 py-0.2 rounded hidden sm:inline-flex items-center">
+                  {isBn ? 'ভূমি মন্ত্রণালয়' : 'Ministry of Land'}
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 font-medium leading-none mt-0.5 hidden sm:block">

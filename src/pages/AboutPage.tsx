@@ -25,20 +25,25 @@ export const AboutPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-10 pb-16 animate-fade-up">
       {/* Header */}
-      <div className="border-b border-slate-200 pb-5 space-y-2">
-        <div className="flex items-center gap-2">
-          <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-gov-primary border border-emerald-200 text-xs font-semibold">
-            {isBn ? 'আমাদের উদ্দেশ্য' : 'Platform Mission'}
-          </span>
+      <div className="border-b border-slate-200 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-gov-primary border border-emerald-200 text-xs font-semibold">
+              {isBn ? 'ভূমি মন্ত্রণালয় • আমাদের উদ্দেশ্য' : 'Ministry of Land • Platform Mission'}
+            </span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            {isBn ? 'ভূমিভেরিফাই (BhumiVerify) সম্পর্কে' : 'About BhumiVerify'}
+          </h1>
+          <p className="text-sm text-slate-600 leading-relaxed max-w-2xl">
+            {isBn
+              ? 'Verify Before You Buy — জমি কেনার পূর্বে সম্ভাব্য লেনদেন ঝুঁকি ও করণীয় নিরূপণের প্রযুক্তিগত প্ল্যাটফর্ম।'
+              : 'Verify Before You Buy — A pre-registration diligence platform for prospective land buyers in Bangladesh.'}
+          </p>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-          {isBn ? 'ভূমিভেরিফাই (BhumiVerify) সম্পর্কে' : 'About BhumiVerify'}
-        </h1>
-        <p className="text-sm text-slate-600 leading-relaxed">
-          {isBn
-            ? 'Verify Before You Buy — জমি কেনার পূর্বে সম্ভাব্য লেনদেন ঝুঁকি ও করণীয় নিরূপণের প্রযুক্তিগত প্ল্যাটফর্ম।'
-            : 'Verify Before You Buy — A pre-registration diligence platform for prospective land buyers in Bangladesh.'}
-        </p>
+        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white border border-slate-200 shadow-2xs p-1.5 shrink-0 flex items-center justify-center">
+          <img src="/logo.png" alt="ভূমি মন্ত্রণালয় লোগো" className="w-full h-full object-contain" />
+        </div>
       </div>
 
       {/* 1. What BhumiVerify is intended to help with */}

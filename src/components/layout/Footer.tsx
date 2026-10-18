@@ -13,16 +13,25 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand & Purpose */}
           <div className="md:col-span-1 space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gov-primary flex items-center justify-center text-white font-bold text-xs">
-                BV
+            <div className="flex items-center gap-2.5">
+              <div className="w-10 h-10 rounded-xl bg-white border border-slate-700 p-1 flex items-center justify-center shrink-0 shadow-sm">
+                <img
+                  src="/logo.png"
+                  alt="ভূমি মন্ত্রণালয়"
+                  className="w-full h-full object-contain"
+                />
               </div>
-              <span className="text-sm font-bold text-white tracking-tight">
-                {isBn ? 'ভূমিভেরিফাই' : 'BhumiVerify'}
-              </span>
+              <div>
+                <span className="text-sm font-bold text-white tracking-tight block">
+                  {isBn ? 'ভূমিভেরিফাই' : 'BhumiVerify'}
+                </span>
+                <span className="text-[10px] text-emerald-400 font-medium block">
+                  {isBn ? 'ভূমি মন্ত্রণালয়, গণপ্রজাতন্ত্রী বাংলাদেশ' : 'Ministry of Land, Bangladesh'}
+                </span>
+              </div>
             </div>
             <p className="text-slate-400 text-xs leading-relaxed">
-              {isBn ? 'কেনার আগে যাচাই করুন।' : 'Verify Before You Buy.'}
+              {isBn ? 'জনবান্ধব ডিজিটালাইজড ভূমিসেবায় স্বাগতম।' : 'Verify Before You Buy — Welcome to digital land services.'}
             </p>
             <p className="text-slate-400 text-xs leading-relaxed">
               {isBn
