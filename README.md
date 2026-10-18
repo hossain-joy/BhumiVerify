@@ -1,189 +1,126 @@
-# ভূমিভেরিফাই (BhumiVerify / LandTech BD)
-### জমি রেজিস্ট্রেশন পূর্ববর্তী জালিয়াতি প্রতিরোধ ও নিয়ন্ত্রিত ভূমি-তথ্য যাচাই প্ল্যাটফর্ম
+# ভূমিভেরিফাই (BhumiVerify)
+### Pre-Registration Land Transaction Risk Assessment MVP • Bangladesh GovTech
 
-> **হ্যাকাথন ও মেন্টর মূল্যায়নের জন্য প্রস্তুতকৃত কারিগরি ডেমো প্রোটোটাইপ (Technical Demonstration Prototype)**  
-> *গণপ্রজাতন্ত্রী বাংলাদেশ সরকারের ডিজিটাল ভূমি সেবা ব্যবস্থাপনার আদলে প্রণীত একটি স্বাধীন ও স্বয়ংসম্পূর্ণ প্রোটোটাইপ। এর কার্যক্রমে কোনো লাইভ সরকারি নেটওয়ার্ক কল বা বহিরাগত সার্ভারের সংযোগের প্রয়োজন নেই।*
-
----
-
-## ⚠️ সংবিধিবদ্ধ সতর্কবার্তা ও সীমাবদ্ধতা (Statutory Notice & Limitations)
-
-> **"ভূমিভেরিফাই (BhumiVerify) একটি নমুনা ডেটাভিত্তিক ডেমো প্রোটোটাইপ। এটি কোনো সরকারি প্রাতিষ্ঠানিক সেবা, মূল খতিয়ান বা স্বত্ব সনদের বিকল্প নয়, আইনি পরামর্শ নয় এবং প্রতারণামুক্তির নিশ্চয়তা প্রদান করে না। বাস্তবে এরূপ প্ল্যাটফর্ম ব্যবহারের জন্য সংশ্লিষ্ট কর্তৃপক্ষের অনুমোদন, ডেটা অ্যাক্সেস চুক্তি, ডেটা সুরক্ষা আইন ও আইনি পরীক্ষা সম্পন্ন করা আবশ্যক।"**
-
-- প্ল্যাটফর্মের প্রতিটি রেকর্ড স্পষ্ট অক্ষরে **ডেমো ডেটা (DEMO DATA)** হিসেবে চিহ্নিত।
-- প্রতিটি ডেটা ফিড ও সোর্স **সিমুলেটেড সোর্স (SIMULATED SOURCE)** হিসেবে ট্যাগ করা।
-
-### ভূমি যাচাইয়ের মৌলিক আইনি নীতিমালা (Core Land Diligence Principles)
-1. **রেজিস্ট্রিকৃত দলিল ≠ নামজারি সম্পন্ন:** সাব-রেজিস্ট্রি অফিসে জমি রেজিস্ট্রেশন করলেই স্বয়ংক্রিয়ভাবে রাজস্ব রেকর্ডে মালিকানা পরিবর্তিত হয় না, যতক্ষণ না সহকারী কমিশনার (ভূমি) কর্তৃক ই-নামজারি (e-Mutation) আবেদন অনুমোদিত হয়।
-2. **নামজারি আবেদন ≠ অনুমোদনের প্রমাণ:** অনলাইনে নামজারির আবেদন দাখিল করা মানেই খতিয়ান সৃষ্টি নয়; শুনানিতে আপত্তি থাকলে বা তথ্যে গড়মিল থাকলে আবেদন খারিজ হতে পারে।
-3. **কোনো সংকেত না থাকা ≠ জমি সম্পূর্ণ নিরাপদ:** ডেমো সিস্টেমে সাম্প্রতিক কোনো বিরোধ বা লেনদেনের রেকর্ড না থাকার অর্থ এই নয় যে জমিটি শতভাগ নিরাপদ। জমি কেনার পূর্বে অবশ্যই সংশ্লিষ্ট উপজেলা ভূমি অফিস ও সাব-রেজিস্ট্রি অফিসে সশরীরে তল্লাশি (Search) সম্পন্ন করতে হবে।
+> **A focused, clean, functional MVP for assessing pre-registration land transaction signals in Bangladesh.**  
+> *Built with React, TypeScript, and Tailwind CSS. Client-side prototype powered entirely by realistic fictional demo records. No external API calls or live database dependencies required.*
 
 ---
 
-## 🎯 সমস্যা ও আমাদের সমাধান (Problem Statement & Solution)
+## 🎯 1. Core Purpose & Objective
 
-### বিদ্যমান সমস্যাসমূহ:
-- **তথ্যের সংযোগহীনতা (Information Silos):** সাব-রেজিস্ট্রি অফিস (আইন মন্ত্রণালয়) এবং উপজেলা ভূমি অফিসের (ভূমি মন্ত্রণালয়) মধ্যে তাৎক্ষণিক সমন্বয়ের ঘাটতি থাকে।
-- **বহুগুণ বিক্রি বা জালিয়াতি (Multiple Transfers):** একই জমির বিপরীতে একাধিক বায়না চুক্তি বা দলিল সম্পাদন করে ক্রেতাদের প্রতারিত করার সুযোগ থাকে।
-- **স্বচ্ছতার অভাব:** জমি কেনার আগে সাধারণ নাগরিকের পক্ষে সাম্প্রতিক কোনো আবেদন বা বিরোধ আছে কি না তা সহজে যাচাই করার একক সুযোগ সীমিত।
+In Bangladesh, prospective land buyers face a dangerous information gap: committing money or executing deed registration before knowing whether a transfer deed has already been registered, an e-mutation petition is pending, or historical survey sheets conflict.
 
-### ভূমিভেরিফাই প্ল্যাটফর্মের সমাধান:
-- **রেজিস্ট্রেশন-পূর্ববর্তী আগাম সংকেত (Pre-Registration Early Signals):** দাগ ও খতিয়ান অনুসন্ধানের মাধ্যমে কোনো সক্রিয় নামজারি আবেদন বা সাম্প্রতিক হস্তান্তরের তথ্য থাকলে আগাম সংকেত দেয়।
-- **নিয়ন্ত্রিত তথ্য উন্মুক্তকরণ (Controlled Disclosure):** সরাসরি সংবেদনশীল রেকর্ড প্রকাশ না করে দায়িত্বপ্রাপ্ত সরকারি পর্যালোচকের অনুমোদনের পর শর্তসাপেক্ষে নির্দিষ্ট মেয়াদের জন্য তথ্য দেখার সুযোগ দেওয়া হয়।
-- **অপরিবর্তনীয় অডিট ট্রেইল (Immutable Audit Trail):** প্রতিটি অনুসন্ধান, অনুমোদন, প্রত্যাখ্যান এবং পেমেন্ট ট্র্যাকিং সিস্টেমে স্থায়ীভাবে সংরক্ষণ করা হয়।
+**BhumiVerify solves this by providing one primary, transparent journey:**
+$$\text{Enter parcel identifiers} \longrightarrow \text{Review matched sample parcel} \longrightarrow \text{View risk overview \& activity timeline}$$
 
 ---
 
-## 🏛️ সরকারি পোর্টাল গবেষণা ও ইনফরমেশন আর্কিটেকচার
+## 🌟 2. Minimal 3-Page Structure
 
-এই প্ল্যাটফর্মের কাঠামো ও কার্যপদ্ধতি বাংলাদেশের সরকারি ডিজিটাল ভূমি সেবা ব্যবস্থা বিশ্লেষণের মাধ্যমে তৈরি করা হয়েছে:
-- **ভূমি মন্ত্রণালয়:** [https://minland.gov.bd/](https://minland.gov.bd/)
-- **ভূমি তথ্য বাতায়ন:** [https://land.gov.bd/](https://land.gov.bd/)
-- **ই-নামজারি কেন্দ্রীয় ব্যবস্থা:** [https://mutation.land.gov.bd/](https://mutation.land.gov.bd/)
-- **ভূমি নিবন্ধন ব্যবস্থাপনা অটোমেশন প্রকল্প:** [https://eregistration.gov.bd/](https://eregistration.gov.bd/)
+Instead of fragmented administrative portals, the application is streamlined into three essential public-service pages:
 
-### নকশা ও কাঠামোগত বৈশিষ্ট্য:
-- **ক্যাডাস্ট্রাল স্তরায়ন (Cadastral Hierarchy):** বিভাগ ➔ জেলা ➔ উপজেলা ➔ মৌজা ➔ জে.এল. নম্বর ➔ খতিয়ান ➔ দাগ নম্বর।
-- **যথাযথ পরিভাষা:** রাষ্ট্রীয় অধিগ্রহণ ও প্রজাস্বত্ব আইন (SAT Act 1950)-এর ৮৯ ধারা মোতাবেক নোটিশ (LT Notice), খতিয়ান প্রকারভেদ (CS, SA, RS, BS/City), মিস কেস ইত্যাদি পরিভাষার বাস্তবসম্মত প্রয়োগ।
-- **নাগরিক বান্ধব ইউজার ইন্টারফেস:** পরিচ্ছন্ন সরকারি পোর্টালের আদলে ডিপ নেভি ও টিল থিম, দ্বৈত ভাষা (বাংলা ও ইংরেজি) সাপোর্ট এবং স্পর্শকাতর রেকর্ডের জন্য বিশেষ স্ট্যাটাস ব্যাজ।
-
----
-
-## 👥 বহু-ভূমিকাভিত্তিক ব্যবহারকারী ব্যবস্থাপনা (Multi-Role System)
-
-সিস্টেমের উপরে অবস্থিত **"ডেমো রোল সুইচার"** (Top Demo Role Switcher) দিয়ে যেকোনো মুহূর্তে ভূমিকা পরিবর্তন করা যায়। সমস্ত ডেটা ব্রাউজারের `localStorage`-এ স্বয়ংক্রিয়ভাবে সিঙ্ক থাকে:
-
-| ভূমিকা (Role) | প্রধান দায়িত্ব | মূল পেজ ও ফিচারসমূহ |
-|---|---|---|
-| **নাগরিক / ক্রেতা (Citizen / Buyer)** | জমি কেনার আগে নির্দিষ্ট দাগের লেনদেন সংক্রান্ত সংকেত প্রাপ্তির জন্য আবেদন ও স্ট্যাটাস যাচাই | ওভারভিউ ড্যাশবোর্ড, নতুন আবেদন, আবেদন তালিকা, আবেদনের বিস্তারিত, সিমুলেটেড পেমেন্ট, ঝুঁকি পর্যালোচনা, প্রোফাইল ও এনআইডি ভেরিফিকেশন |
-| **সরকারি পর্যালোচক (Official Reviewer)** | নাগরিকের আবেদন ও যৌক্তিকতা মূল্যায়ন এবং তথ্য উন্মুক্তকরণের সীমানা নির্ধারণ | পর্যালোচক ড্যাশবোর্ড, পেন্ডিং আবেদন কিউ, সিদ্ধান্ত মডাল (অনুমোদন / সীমিত অনুমোদন / অধিক তথ্য তলব / প্রত্যাখ্যান), সিদ্ধান্তের ইতিহাস |
-| **কমপ্লায়েন্স অডিটর (Auditor)** | সিস্টেমের স্বচ্ছতা, অ্যাক্সেস লগ ও সংযোগ পর্যবেক্ষণ | সিস্টেম অডিট লগ, নিয়ন্ত্রিত টোকেন অ্যাক্সেস হিস্ট্রি, ডেটাসোর্স হেলথ ও আপটাইম মনিটরিং |
-| **সিস্টেম অ্যাডমিনিস্ট্রেটর (Admin)** | সরকারি ফি নীতি, এসএলএ টাইমার ও ডেমো ডেটা ব্যবস্থাপনা | ডেমো ফি কনফিগারেশন (BDT), এসএলএ সময়সীমা, ডেমো রেকর্ডস পরিসংখ্যান, এক ক্লিকে সম্পূর্ণ ডেটা রিসেট |
-
----
-
-## 🧪 মূল্যায়নের জন্য পূর্ব-নির্ধারিত ডেমো পরিস্থিতি (Seeded Demo Scenarios)
-
-প্ল্যাটফর্মে ৪টি বাস্তবমুখী ও বৈচিত্র্যপূর্ণ প্লট/পার্সেল আগে থেকেই যুক্ত রয়েছে:
-
-1. **`DEMO-PARCEL-001` (তেজগাঁও শিল্পাঞ্চল, দাগ ৪০২)**
-   - **প্রেক্ষাপট:** ১৮ দিন পূর্বে সাব-রেজিস্ট্রি অফিসে হস্তান্তরের দলিল নিবন্ধিত হয়েছে; তবে নামজারি এখনো অনিষ্পন্ন।
-   - **সংকেত:** *"সাম্প্রতিক হস্তান্তর ঘটনা বিদ্যমান — নামজারি খতিয়ান যাচাই আবশ্যক।"*
-   - **শিক্ষা:** শুধু দলিল রেজিস্ট্রি হওয়া মানেই নামজারি নিশ্চিত নয়।
-
-2. **`DEMO-PARCEL-002` (ধানমন্ডি আ/এ, দাগ ১১৮)**
-   - **প্রেক্ষাপট:** অনলাইনে ই-নামজারির আবেদন চলমান; সহকারী কমিশনার (ভূমি) অফিসে শুনানির তারিখ নির্ধারিত।
-   - **সংকেত:** *"ই-নামজারি আবেদন চলমান — শুনানি ও চূড়ান্ত আদেশের পূর্বে অগ্রিম সতর্ক থাকুন।"*
-   - **শিক্ষা:** আবেদন জমা হওয়া আর নামজারি অনুমোদন হওয়া এক বিষয় নয়।
-
-3. **`DEMO-PARCEL-003` (গুলশান, দাগ ৮৫)**
-   - **প্রেক্ষাপট:** নামজারি প্রক্রিয়া সফলভাবে সম্পন্ন এবং নতুন খতিয়ান ৯৯১ জারি হয়েছে।
-   - **সংকেত:** *"নামজারি সম্পন্ন — তথাপি প্রথাগত রাজস্ব ও দেওয়ানি তল্লাশি বজায় রাখুন।"*
-   - **শিক্ষা:** নামজারি রেকর্ড থাকা সত্ত্বেও অন্যান্য দায় বা বন্ধক সংক্রান্ত যাচাই প্রয়োজন।
-
-4. **`DEMO-PARCEL-004` (সাভার / আমিনবাজার, দাগ ৯৯৯)**
-   - **প্রেক্ষাপট:** এসএ (SA) জরিপ ও আরএস (RS) ক্যাডাস্ট্রাল ম্যাপে দাগ ও সীমানার বৈসাদৃশ্য।
-   - **সংকেত:** *"সম্ভাব্য মিল / রেকর্ডে অসামঞ্জস্য — প্রাতিষ্ঠানিক পর্যালোচনা ও সরেজমিন সার্ভে প্রয়োজন।"*
-   - **শিক্ষা:** স্বয়ংক্রিয় তথ্য প্রকাশ স্থগিত থাকে; সরেজমিনে কানুনগো বা সার্ভেয়ারের প্রতিবেদন আবশ্যক।
+1. **Home (`/`)**:
+   - Platform value proposition and problem statement.
+   - 3-step verification guide.
+   - 4 pre-configured demo scenario cards for instant 1-click testing.
+   - Core statutory land diligence principles under Bangladesh law.
+2. **Check Land (`/check`)**:
+   - Multi-identifier input form (Division, District, Upazila, Mouza, Khatian, Dag number).
+   - Form validation & pre-fill scenario buttons.
+   - Parcel identification summary for the matched record.
+   - 3 core status checkpoints (Transfer Deed Event, Mutation Application Status, Mutation Completion Status).
+   - Rule-based risk assessment badge (`Review Recommended`, `Information Incomplete`, `No Major Issue Detected in Available Data`).
+   - 4-box transparent explanation:
+     - **What was detected**
+     - **Why it may matter**
+     - **What information is missing**
+     - **What the user should verify next**
+   - Chronological activity timeline with dates, sources, and caveats.
+   - Action to start a new search or print summary report.
+3. **About (`/about`)**:
+   - Institutional context: The structural disconnect between Sub-Registry deed registration (Ministry of Law) and AC Land mutation (Ministry of Land).
+   - Section 89 of the State Acquisition and Tenancy (SAT) Act, 1950 (Statutory Land Transfer / LT Notice).
+   - Rule-based transparent methodology (deterministic logic without opaque AI).
+   - Statutory disclaimers and links to official Bangladesh government land portals.
 
 ---
 
-## 🔐 পরীক্ষিত মূল ব্যবসায়িক নিয়মাবলী (Tested Business Rules)
+## 🧪 3. Predefined Fictional Demo Scenarios
 
-- **পরিচয় যাচাইকরণ (Identity Gate):** এনআইডি ভেরিফিকেশন ছাড়া কোনো নাগরিক নতুন আবেদন দাখিল করতে পারেন না (প্রোফাইল থেকে ডেমো ভেরিফিকেশন অন/অফ করা যায়)।
-- **ক্যাডাস্ট্রাল স্তরভিত্তিক বাধ্যবাধকতা:** শুধু দাগ নম্বর দিয়ে অনুসন্ধান গ্রহণযোগ্য নয়; বিভাগ, জেলা, উপজেলা, এবং মৌজা বাধ্যতামূলক।
-- **পর্যালোচকের নিয়ন্ত্রণ:** পর্যালোচকের লিখিত অনুমোদন ছাড়া সংবেদনশীল তথ্য কখনোই নাগরিকের সামনে প্রকাশ পাবে না। প্রত্যাখ্যান বা অধিক তথ্য তলবের ক্ষেত্রে সুনির্দিষ্ট কারণ উল্লেখ বাধ্যতামূলক।
-- **সীমিত অনুমোদন (Limited Scope Approval):** কর্মকর্তা চাইলে কেবল সাধারণ খতিয়ান তথ্য প্রকাশ করতে পারেন এবং আর্থিক বা সংবেদনশীল অংশ ব্লক করে রাখতে পারেন।
-- **সিমুলেটেড পেমেন্ট গেটওয়ে:** কেবল আবেদন অনুমোদিত হলেই ফি পরিশোধের গেটওয়ে দৃশ্যমান হয়। বিকাশ, নগদ, রকেট, কার্ড বা ইন্টারনেট ব্যাংকিংয়ের মাধ্যমে সফল ও ব্যর্থ উভয় ধরনের পেমেন্ট টেস্ট করা যায়।
-- **নির্দিষ্ট মেয়াদভিত্তিক অ্যাক্সেস (Time-Locked Access):** ফি পরিশোধের পর প্রাপ্ত অনুমোদন টোকেন নির্ধারিত সময়ের (ডিফল্ট ৭২ ঘণ্টা) পর স্বয়ংক্রিয়ভাবে নিষ্ক্রিয় হয়ে যায়।
-- **অপরিবর্তনীয় অডিট ট্রেইল:** সিস্টেমে সংঘটিত প্রতিটি অ্যাকশন (লগইন, আবেদন, পর্যালোচকের সিদ্ধান্ত, পেমেন্ট, তথ্য দর্শন) টাইমস্ট্যাম্প ও আইপি সহ অডিট লগে লিপিবদ্ধ হয়।
+The system includes 4 realistic fictional parcel records demonstrating distinct transaction outcomes:
 
----
+| Parcel ID | Location | Identifiers | Risk Assessment Label | Key Signal & Caveat |
+|---|---|---|---|---|
+| **`DEMO-PARCEL-001`** | Tejgaon, Dhaka | Mouza: Tejgaon I/A<br>Dag: **402**, Khatian: 1204 | **Review Recommended** | **Recent Transfer Deed Recorded:** Saf-Kabala deed executed and Section 89 LT notice dispatched, but e-mutation is not completed in land records. *Deed does not equal mutation.* |
+| **`DEMO-PARCEL-002`** | Dhanmondi, Dhaka | Mouza: Dhanmondi R/A<br>Dag: **118**, Khatian: 541 | **Information Incomplete** | **Mutation Petition Pending:** Online application filed and hearing scheduled at AC Land; final order not yet issued. *Application is not proof of approval.* |
+| **`DEMO-PARCEL-003`** | Gulshan, Dhaka | Mouza: Gulshan<br>Dag: **85**, Khatian: 991 | **No Major Issue Detected in Available Data** | **Mutation Completed:** AC Land order approved and updated mutation khatian issued. *Pre-purchase due diligence, physical beacon check, and civil title search still required.* |
+| **`DEMO-PARCEL-004`** | Savar / Aminbazar | Mouza: Aminbazar<br>Dag: **999**, Khatian: 301 | **Review Recommended** | **Conflicting Survey Records:** Discrepancy detected between historic SA sheet and modern RS digitization with acreage mismatch. *Ground survey required.* |
 
-## 📁 প্রজেক্ট ডিরেক্টরি কাঠামো (Project Structure)
-
-```plaintext
-BhumiVerify/
-├── public/                     # স্ট্যাটিক অ্যাসেটস
-├── src/
-│   ├── components/             # পুনর্ব্যবহারযোগ্য UI কম্পোনেন্টস
-│   │   ├── common/             # AlertBox, Badge, Modal, Stepper, LanguageSwitcher ইত্যাদি
-│   │   ├── land/               # পার্সেল কার্ড, ঝুঁকি ড্যাশবোর্ড ভিউ
-│   │   ├── layout/             # Header, Footer, AppShell, DisclaimerBanner, RoleSwitcher
-│   │   ├── requests/           # আবেদন স্ট্যাটাস ব্যাজ, সিমুলেটেড পেমেন্ট মডাল
-│   │   ├── reviewer/           # পর্যালোচকের সিদ্ধান্ত গ্রহণ মডাল
-│   │   └── timeline/           # জমির কার্যকলাপের ঐতিহাসিক টাইমলাইন
-│   ├── context/                # গ্লোবাল স্টেট (AppContext, LanguageContext)
-│   ├── lib/
-│   │   ├── mock-data/          # ডেমো পার্সেল, অডিট হিস্ট্রি, ভৌগোলিক তালিকা (মৌজা, উপজেলা)
-│   │   ├── mock-services/      # লোকালস্টোরেজ ভিত্তিক সিমুলেটেড সার্ভিস ও লজিক
-│   │   ├── translations.ts     # বাংলা ও ইংরেজি সম্পূর্ণ অনুবাদ ডিকশনারি
-│   │   └── utils.ts            # ফরম্যাটিং ও হেল্পার ফাংশন
-│   ├── pages/                  # অ্যাপ্লিকেশন পেজসমূহ
-│   │   ├── admin/              # অ্যাডমিন ওভারভিউ ও সেটিংস
-│   │   ├── auditor/            # অডিট লগ, ডেটাসোর্স হেলথ, অ্যাক্সেস হিস্ট্রি
-│   │   ├── citizen/            # নাগরিক ড্যাশবোর্ড, নতুন আবেদন, রিকোয়েস্ট ডিটেইলস, এনআইডি ভেরিফিকেশন
-│   │   ├── reviewer/           # রিভিউয়ার ড্যাশবোর্ড, কিউ, পর্যালোচনা বিস্তারিত, সিদ্ধান্তের ইতিহাস
-│   │   ├── LandingPage.tsx     # মূল ল্যান্ডিং পেজ
-│   │   └── NotFoundPage.tsx    # ৪০৪ পেজ
-│   ├── types/                  # টাইপস্ক্রিপ্ট ইন্টারফেস ও ডেটা মডেল
-│   ├── App.tsx                 # রাউটিং ও মূল লেআউট সমন্বয়
-│   ├── index.css               # টেইলউইন্ড সিএসএস স্টাইল
-│   └── main.tsx                # রিঅ্যাক্ট অ্যাপ্লিকেশন এন্ট্রি পয়েন্ট
-├── .gitignore                  # গিট ইগনোর কনফিগারেশন
-├── package.json                # প্রজেক্ট ডিপেনডেন্সি ও স্ক্রিপ্ট
-├── tailwind.config.js          # টেইলউইন্ড ডিজাইন সিস্টেম টোকেন
-├── tsconfig.json               # টাইপস্ক্রিপ্ট কনফিগারেশন
-└── vite.config.ts              # ভাইট বিল্ড কনফিগারেশন
-```
+*Non-Existent Parcels (e.g., Dag 88888)*: Display a clear empty state explaining that no records were found in demo data, along with the warning that missing records do not guarantee the land is unencumbered.
 
 ---
 
-## 🚀 লোকাল সেটআপ ও রান করার নির্দেশিকা (Getting Started)
+## ⚖️ 4. Core Land Diligence Principles
 
-### প্রয়োজনীয় সফটওয়্যার:
-- **Node.js** (সংস্করণ ১৮ বা তার ঊর্ধ্বে)
-- **npm** (সংস্করণ ৯ বা তার ঊর্ধ্বে)
+BhumiVerify educates citizens on three fundamental legal tenets:
 
-### ধাপসমূহ:
+1. **Deed ≠ Mutation (দলিল ≠ নামজারি):** Under Section 89 of the SAT Act, 1950, a registered transfer deed transfers ownership between parties, but revenue records and tax liability (Dakhila) are only updated when the Assistant Commissioner (Land) approves an e-mutation.
+2. **Application ≠ Approval (আবেদন ≠ অনুমোদন):** An active e-mutation petition submitted online is not proof of approval. Applications may be objected to or rejected during field verification by the Union Land Assistant Officer (ULAO).
+3. **No Record Found ≠ Parcel is Safe (তথ্য না থাকা ≠ নিরাপদ):** The absence of negative signals in demo feeds must never be treated as evidence that the land is dispute-free. In-person physical possession verification and a 25-year chain-of-deeds (Baya deeds) title search at the Sub-Registry Office are mandatory.
 
+---
+
+## 🚫 5. Removed Complexities & Non-Core Features
+
+To preserve simplicity, usability, and a complete working core workflow, the following unnecessary complexities were eliminated:
+- ❌ Role-switching systems (Citizen, Reviewer, Auditor, Admin).
+- ❌ Separate reviewer queues, auditor logs, and administrator settings dashboards.
+- ❌ Identity verification gates (simulated NID uploads).
+- ❌ Access-request approval workflows and SLA countdown timers.
+- ❌ Simulated payment gateways and payment receipts.
+- ❌ Notification center and user profile management.
+- ❌ Complex decorative popups (cadastral map overlay, fee calculator, feature tour, parcel comparator, keyboard shortcuts).
+
+---
+
+## 💻 6. Technical Stack & Local Setup
+
+- **Framework:** React 19 + TypeScript
+- **Bundler:** Vite 6
+- **Styling:** Vanilla CSS + Tailwind CSS (GovTech deep green & navy design system)
+- **Icons:** Lucide React
+- **Internationalization:** Bilingual (Bangla default with instant English toggle)
+
+### Prerequisites
+- Node.js (v18 or higher recommended)
+- npm
+
+### Installation & Execution
 ```bash
-# ১. ডিপেনডেন্সি ইনস্টল করুন
+# Clone the repository
+git clone https://github.com/hossain-joy/BhumiVerify.git
+cd BhumiVerify
+
+# Install dependencies
 npm install
 
-# ২. লোকাল ডেভেলপমেন্ট সার্ভার চালু করুন
+# Start the Vite development server
 npm run dev
 
-# ৩. টাইপচেক ও প্রোডাকশন বিল্ড তৈরি করুন
+# Build production bundle with TypeScript type-checking
 npm run build
-
-# ৪. প্রোডাকশন প্রিভিউ সার্ভার দেখুন
-npm run preview
 ```
 
-ব্রাউজারে [http://localhost:5173](http://localhost:5173) ওপেন করুন।
+---
+
+## ⚠️ 7. Statutory Notice & Limitations
+
+> **"BhumiVerify is an independent digital prototype created for educational and hackathon demonstration purposes. It does not access real government databases, does not contain real citizen records, and does not provide legal title clearance, ownership certification, or fraud warranties. Formal land transactions require certified physical documents and consultation with an authorized property attorney and local land authorities."**
 
 ---
 
-## 🔄 ডেমো ডেটা রিসেট করার উপায় (Resetting Demo State)
-
-মূল্যায়ন বা টেস্টিংয়ের পর সিস্টেমকে পুনরায় প্রাথমিক অবস্থায় ফিরিয়ে নেওয়ার জন্য:
-1. স্ক্রিনের উপরের বার থেকে সরাসরি **"রিসেট ডেমো"** (Reset Demo) বাটনে ক্লিক করুন, অথবা
-2. **অ্যাডমিনিস্ট্রেটর** ভূমিকায় গিয়ে **"সকল ডেমো ডেটা রিসেট করুন"** চাপুন।
-
----
-
-## 🛠️ প্রযুক্তিগত স্ট্যাক (Technology Stack)
-
-- **ফ্রেমওয়ার্ক:** React 18 + TypeScript + Vite
-- **রাউটিং:** React Router v6
-- **স্টাইলিং:** Tailwind CSS (পাবলিক সার্ভিস কালার প্যালেট)
-- **আইকন:** Lucide React
-- **স্টেট ম্যানেজমেন্ট:** React Context API + LocalStorage Synchronization
-- **নেটওয়ার্ক আর্কিটেকচার:** ১০০% ক্লায়েন্ট-সাইড সিমুলেশন (কোনো বাহ্যিক এপিআই কল বা ট্র্যাকিং নেই)
-
----
-
-## 📜 স্বত্ব ও লাইসেন্স (License)
-
-প্রকল্পটি হ্যাকাথন ও শিক্ষামূলক উদ্দেশ্যে তৈরি একটি ওপেন ডেমোন্স্ট্রেটর। বিস্তারিত জানার জন্য প্রজেক্ট রিপোজিটরি অনুসরণ করুন।
+### Official Bangladesh Land Administration Portals
+- **National Land Portal:** [https://land.gov.bd/](https://land.gov.bd/)
+- **e-Mutation Central System:** [https://mutation.land.gov.bd/](https://mutation.land.gov.bd/)
+- **Ministry of Land:** [https://minland.gov.bd/](https://minland.gov.bd/)
+- **Directorate of Registration:** [https://eregistration.gov.bd/](https://eregistration.gov.bd/)
