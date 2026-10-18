@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { useUI } from '../../context/UIContext';
+import { useToast } from '../../context/ToastContext';
 import { DATA_CATEGORIES } from '../../types';
 import { RequestStatusBadge } from '../../components/requests/RequestStatusBadge';
 import { Stepper } from '../../components/common/Stepper';
@@ -22,12 +24,17 @@ import {
   HelpCircle,
   Send,
   Lock,
+  Printer,
+  Copy,
+  Sparkles,
 } from 'lucide-react';
 
 export const RequestDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { requests, submitCitizenUpdate } = useApp();
   const { t, language } = useLanguage();
+  const { openCadastralMap } = useUI();
+  const { showToast } = useToast();
 
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [clarificationText, setClarificationText] = useState('');
@@ -127,6 +134,21 @@ export const RequestDetailPage: React.FC = () => {
               <h1 className="text-xl font-bold text-slate-900 font-mono">
                 {request.id}
               </h1>
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.clipboard.writeText(request.id);
+                  showToast({
+                    type: 'success',
+                    title: language === 'bn' ? 'আবেদন আইডি কপি হয়েছে!' : 'Tracking ID Copied!',
+                    message: request.id,
+                  });
+                }}
+                className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded transition-colors"
+                title={language === 'bn' ? 'আইডি কপি করুন' : 'Copy Tracking ID'}
+              >
+                <Copy className="w-4 h-4" />
+              </button>
               <RequestStatusBadge status={request.status} />
               <DemoDataTag type="demo_data" />
             </div>
@@ -138,26 +160,49 @@ export const RequestDetailPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Quick CTA depending on status */}
-        {request.status === 'payment_pending' && (
+        {/* Action Buttons Toolbar */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Cadastral Map Button */}
           <button
-            onClick={() => setPaymentModalOpen(true)}
-            className="px-4 py-2 bg-gov-primary hover:bg-gov-primaryHover text-white text-xs font-semibold rounded-md shadow-xs transition-colors flex items-center gap-1.5 shrink-0 animate-pulse"
+            onClick={() => openCadastralMap(request.parcelDetails.dagNumber)}
+            className="px-3 py-2 bg-teal-50 hover:bg-teal-100 text-gov-primary border border-teal-200 rounded-lg text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5 hover:scale-[1.02]"
+            title={language === 'bn' ? 'মৌজা নকশায় এই দাগ দেখুন' : 'Inspect plot on survey sheet'}
           >
-            <CreditCard className="w-4 h-4" />
-            {language === 'bn' ? 'ডেমো ফি পরিশোধ করুন' : 'Proceed to Demo Payment'}
+            <MapPin className="w-3.5 h-3.5 text-teal-600" />
+            <span>{language === 'bn' ? 'নকশায় দাগ দেখুন' : 'Survey Map'}</span>
           </button>
-        )}
 
-        {request.status === 'access_active' && request.parcelId && (
-          <Link
-            to={`/citizen/parcel-overview/${request.parcelId}?req=${request.id}`}
-            className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold rounded-md shadow-xs transition-colors flex items-center gap-1.5 shrink-0"
+          {/* Print Report Button */}
+          <button
+            onClick={() => window.print()}
+            className="px-3 py-2 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-lg text-xs font-semibold transition-all shadow-2xs flex items-center gap-1.5 hover:scale-[1.02]"
+            title={language === 'bn' ? 'অফিসিয়াল রিপোর্ট প্রিন্ট করুন' : 'Print verification report'}
           >
-            <FileCheck2 className="w-4 h-4" />
-            {language === 'bn' ? 'অনুমোদিত সংকেতসমূহ দেখুন' : 'Open Approved Signals Overview'}
-          </Link>
-        )}
+            <Printer className="w-3.5 h-3.5 text-slate-600" />
+            <span>{language === 'bn' ? 'প্রিন্ট রিপোর্ট' : 'Print'}</span>
+          </button>
+
+          {/* Quick CTA depending on status */}
+          {request.status === 'payment_pending' && (
+            <button
+              onClick={() => setPaymentModalOpen(true)}
+              className="px-4 py-2 bg-gov-primary hover:bg-gov-primaryHover text-white text-xs font-bold rounded-lg shadow-xs transition-colors flex items-center gap-1.5 shrink-0 animate-pulse hover:scale-[1.02]"
+            >
+              <CreditCard className="w-4 h-4" />
+              {language === 'bn' ? 'ডেমো ফি পরিশোধ করুন' : 'Proceed to Demo Payment'}
+            </button>
+          )}
+
+          {request.status === 'access_active' && request.parcelId && (
+            <Link
+              to={`/citizen/parcel-overview/${request.parcelId}?req=${request.id}`}
+              className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-lg shadow-xs transition-colors flex items-center gap-1.5 shrink-0 hover:scale-[1.02]"
+            >
+              <FileCheck2 className="w-4 h-4" />
+              {language === 'bn' ? 'অনুমোদিত সংকেতসমূহ দেখুন' : 'Open Approved Signals Overview'}
+            </Link>
+          )}
+        </div>
       </div>
 
       {/* Workflow Stepper */}

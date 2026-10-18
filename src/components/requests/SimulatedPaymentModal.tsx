@@ -4,6 +4,7 @@ import { Modal } from '../common/Modal';
 import { formatBDT } from '../../lib/utils';
 import { useApp } from '../../context/AppContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { useToast } from '../../context/ToastContext';
 import {
   CreditCard,
   Building,
@@ -28,6 +29,7 @@ export const SimulatedPaymentModal: React.FC<SimulatedPaymentModalProps> = ({
 }) => {
   const { settings, simulatePayment } = useApp();
   const { t, language } = useLanguage();
+  const { showToast } = useToast();
   const [selectedMethod, setSelectedMethod] = useState<'bkash' | 'nagad' | 'card' | 'bank'>('bkash');
   const [mockWalletNumber, setMockWalletNumber] = useState('01711-000000');
   const [mockPin, setMockPin] = useState('••••');
@@ -56,6 +58,14 @@ export const SimulatedPaymentModal: React.FC<SimulatedPaymentModalProps> = ({
       setProcessing(false);
 
       if (result.success) {
+        showToast({
+          type: 'success',
+          title: language === 'bn' ? 'পেমেন্ট সফল হয়েছে!' : 'Payment Confirmed!',
+          message:
+            language === 'bn'
+              ? `${formatBDT(feeAmount)} টাকা পরিশোধ সম্পন্ন। সংকেতসমূহ উন্মুক্ত হয়েছে।`
+              : `Payment of ${formatBDT(feeAmount)} confirmed. Signals unlocked.`,
+        });
         setFeedback({
           type: 'success',
           message:
@@ -69,6 +79,15 @@ export const SimulatedPaymentModal: React.FC<SimulatedPaymentModalProps> = ({
           if (onPaymentComplete) onPaymentComplete();
         }, 1400);
       } else {
+        showToast({
+          type: 'error',
+          title: language === 'bn' ? 'পেমেন্ট ব্যর্থ হয়েছে' : 'Payment Failed',
+          message:
+            result.error ||
+            (language === 'bn'
+              ? 'সিমুলেটেড পেমেন্ট প্রত্যাখ্যাত হয়েছে।'
+              : 'Simulated payment declined.'),
+        });
         setFeedback({
           type: 'error',
           message:

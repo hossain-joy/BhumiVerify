@@ -3,6 +3,7 @@ import { AccessRequest, DATA_CATEGORIES } from '../../types';
 import { Modal } from '../common/Modal';
 import { useApp } from '../../context/AppContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { useToast } from '../../context/ToastContext';
 import {
   CheckCircle2,
   AlertTriangle,
@@ -28,6 +29,7 @@ export const DecisionModal: React.FC<DecisionModalProps> = ({
 }) => {
   const { reviewRequest, settings } = useApp();
   const { t, language } = useLanguage();
+  const { showToast } = useToast();
 
   const [decision, setDecision] = useState<
     'approved' | 'limited_approved' | 'more_info_required' | 'rejected'
@@ -85,9 +87,22 @@ export const DecisionModal: React.FC<DecisionModalProps> = ({
       setSubmitting(false);
 
       if (result.success) {
+        showToast({
+          type: decision === 'rejected' ? 'warning' : 'success',
+          title: language === 'bn' ? 'সিদ্ধান্ত লিপিবদ্ধ হয়েছে!' : 'Decision Recorded!',
+          message:
+            language === 'bn'
+              ? `আবেদন ${request.id}-এর সিদ্ধান্ত সফলভাবে সংরক্ষিত হয়েছে`
+              : `Decision recorded for request ${request.id}`,
+        });
         onClose();
         if (onDecisionComplete) onDecisionComplete();
       } else {
+        showToast({
+          type: 'error',
+          title: language === 'bn' ? 'সিদ্ধান্ত সংরক্ষণে ত্রুটি' : 'Error Recording Decision',
+          message: result.error || 'Failed to record decision',
+        });
         setError(result.error || 'Failed to record decision');
       }
     }, 400);

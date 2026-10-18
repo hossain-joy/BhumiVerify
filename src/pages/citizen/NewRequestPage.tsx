@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { useUI } from '../../context/UIContext';
+import { useToast } from '../../context/ToastContext';
 import { DATA_CATEGORIES, ParcelInputDetails } from '../../types';
 import { BANGLADESH_GEO_DATA } from '../../lib/mock-data/bangladeshGeo';
 import { DemoDataTag } from '../../components/common/DemoDataTag';
@@ -17,11 +19,14 @@ import {
   Info,
   MapPin,
   Compass,
+  Calculator,
 } from 'lucide-react';
 
 export const NewRequestPage: React.FC = () => {
   const { currentUser, createRequest, settings } = useApp();
   const { t, language } = useLanguage();
+  const { openCadastralMap, openCalculator } = useUI();
+  const { showToast } = useToast();
   const navigate = useNavigate();
 
   const isVerified = currentUser.identityStatus === 'verified_demo';
@@ -256,8 +261,18 @@ export const NewRequestPage: React.FC = () => {
       setSubmitting(false);
 
       if (res.success && res.request) {
+        showToast({
+          type: 'success',
+          title: language === 'bn' ? 'আবেদন সফলভাবে দাখিল হয়েছে!' : 'Inquiry Submitted Successfully!',
+          message: language === 'bn' ? `ট্র্যাকিং নম্বর: ${res.request.id}` : `Tracking ID: ${res.request.id}`,
+        });
         navigate(`/citizen/requests/${res.request.id}`);
       } else {
+        showToast({
+          type: 'error',
+          title: language === 'bn' ? 'আবেদন দাখিল ব্যর্থ' : 'Submission Failed',
+          message: res.error || (language === 'bn' ? 'দয়া করে সকল তথ্য পূরণ করুন' : 'Please check required fields'),
+        });
         setError(res.error || 'Failed to submit request');
       }
     }, 500);
@@ -397,13 +412,37 @@ export const NewRequestPage: React.FC = () => {
       {/* Main Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Section 1: Cadastral Hierarchy with Cascading Selection */}
-        <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-2xs space-y-4">
-          <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider pb-2 border-b border-slate-100 flex items-center justify-between">
-            <span>{language === 'bn' ? '১. প্রশাসনিক ও ভৌগোলিক এখতিয়ার' : '1. Cadastral Jurisdiction & Administrative Hierarchy'}</span>
-            <span className="text-xs text-gov-primary font-normal">
-              {language === 'bn' ? 'বাংলাদেশ ভূমি অফিস কাঠামো' : 'Authentic Bangladesh Land Office Structure'}
-            </span>
-          </h3>
+        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-card space-y-4">
+          <div className="pb-3 border-b border-slate-100 flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
+                {language === 'bn' ? '১. প্রশাসনিক ও ভৌগোলিক এখতিয়ার' : '1. Cadastral Jurisdiction & Administrative Hierarchy'}
+              </h3>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                {language === 'bn' ? 'বাংলাদেশ ডিজিটাল ভূমি রেকর্ড কাঠামো' : 'Digital Land Administration Structure'}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => openCadastralMap(dagNumber)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-50 hover:bg-teal-100 text-gov-primary border border-teal-200 rounded-lg text-xs font-bold transition-all shadow-2xs hover:scale-[1.02]"
+              >
+                <MapPin className="w-3.5 h-3.5 text-teal-600" />
+                <span>{language === 'bn' ? 'মৌজা নকশা থেকে দাগ নির্বাচন' : 'Pick from Cadastral Map'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={openCalculator}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold transition-all shadow-2xs hover:scale-[1.02]"
+              >
+                <Calculator className="w-3.5 h-3.5 text-blue-600" />
+                <span>{language === 'bn' ? 'ফি হিসাব' : 'Fee Estimator'}</span>
+              </button>
+            </div>
+          </div>
 
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">

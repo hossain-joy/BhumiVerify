@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { useUI } from '../../context/UIContext';
 import { DecisionModal } from '../../components/reviewer/DecisionModal';
 import { RequestStatusBadge } from '../../components/requests/RequestStatusBadge';
 import { DemoDataTag } from '../../components/common/DemoDataTag';
@@ -18,6 +19,7 @@ export const ReviewDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { requests, parcels } = useApp();
   const { language } = useLanguage();
+  const { openCadastralMap } = useUI();
   const [decisionModalOpen, setDecisionModalOpen] = useState(false);
 
   const req = requests.find((r) => r.id === id);
@@ -74,16 +76,28 @@ export const ReviewDetailPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Action Button */}
-        {(req.status === 'submitted' || req.status === 'under_review') && (
+        {/* Action Buttons Toolbar */}
+        <div className="flex flex-wrap items-center gap-2">
           <button
-            onClick={() => setDecisionModalOpen(true)}
-            className="px-4 py-2 bg-gov-primary hover:bg-gov-primaryHover text-white text-xs font-bold rounded-lg shadow-xs transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer"
+            type="button"
+            onClick={() => openCadastralMap(req.parcelDetails.dagNumber)}
+            className="px-3 py-2 bg-teal-50 hover:bg-teal-100 text-gov-primary border border-teal-200 rounded-lg text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5 hover:scale-[1.02]"
+            title={language === 'bn' ? 'মৌজা নকশায় দাগ ও সীমানা পরীক্ষা করুন' : 'Inspect cadastral plot on sheet'}
           >
-            <ShieldCheck className="w-4 h-4" />
-            {language === 'bn' ? 'আবেদন নিষ্পত্তি করুন' : 'Adjudicate Request'}
+            <MapPin className="w-3.5 h-3.5 text-teal-600" />
+            <span>{language === 'bn' ? 'নকশায় দাগ পরীক্ষা' : 'Survey Map'}</span>
           </button>
-        )}
+
+          {(req.status === 'submitted' || req.status === 'under_review') && (
+            <button
+              onClick={() => setDecisionModalOpen(true)}
+              className="px-4 py-2 bg-gov-primary hover:bg-gov-primaryHover text-white text-xs font-bold rounded-lg shadow-xs transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer hover:scale-[1.02]"
+            >
+              <ShieldCheck className="w-4 h-4" />
+              {language === 'bn' ? 'আবেদন নিষ্পত্তি করুন' : 'Adjudicate Request'}
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Citizen Identity & Purpose Dossier */}

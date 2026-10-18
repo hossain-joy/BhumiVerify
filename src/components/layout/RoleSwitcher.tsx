@@ -1,17 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { useToast } from '../../context/ToastContext';
 import { UserRole } from '../../types';
 import {
-  Shield,
-  User,
-  FileCheck2,
-  Settings2,
-  RefreshCw,
-  Sparkles,
-  ChevronDown,
-  ArrowRight,
-  ExternalLink,
+  Shield, User, FileCheck2, Settings2, RefreshCw, Sparkles,
+  ChevronDown, ArrowRight,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -23,8 +17,8 @@ export const RoleSwitcher: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setScenariosOpen(false);
       }
     };
@@ -32,190 +26,179 @@ export const RoleSwitcher: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const roles: { id: UserRole; label: string; icon: React.ReactNode; desc: string; home: string }[] = [
-    {
-      id: 'citizen',
-      label: t.roles.citizen,
-      icon: <User className="w-3.5 h-3.5" />,
-      desc: language === 'bn' ? 'সম্ভাব্য ক্রেতা — জমির তথ্য আবেদন ও সংকেত পর্যবেক্ষণ' : 'Prospective buyer requesting parcel signals',
-      home: '/citizen',
-    },
-    {
-      id: 'reviewer',
-      label: t.roles.reviewer,
-      icon: <FileCheck2 className="w-3.5 h-3.5" />,
-      desc: language === 'bn' ? 'অফিসার ডেস্ক — আবেদন যাচাই, অনুমোদন ও নিষ্পত্তির ক্ষমতা' : 'Assesses purpose, approves/restricts scope',
-      home: '/reviewer',
-    },
-    {
-      id: 'auditor',
-      label: t.roles.auditor,
-      icon: <Shield className="w-3.5 h-3.5" />,
-      desc: language === 'bn' ? 'কমপ্লায়েন্স অডিটর — স্থায়ী অডিট ট্রেইল ও অ্যাক্সেস লগ' : 'Independent audit trail & access history',
-      home: '/auditor',
-    },
-    {
-      id: 'admin',
-      label: t.roles.admin,
-      icon: <Settings2 className="w-3.5 h-3.5" />,
-      desc: language === 'bn' ? 'সিস্টেম অ্যাডমিন — ফি, এসএলএ ও প্ল্যাটফর্ম সেটিংস' : 'Fee, SLA & demo configuration',
-      home: '/admin',
-    },
+  const roles: { id: UserRole; label: string; icon: React.ReactNode; home: string; color: string }[] = [
+    { id: 'citizen', label: t.roles.citizen, icon: <User className="w-3 h-3" />, home: '/citizen', color: 'hover:bg-teal-600' },
+    { id: 'reviewer', label: t.roles.reviewer, icon: <FileCheck2 className="w-3 h-3" />, home: '/reviewer', color: 'hover:bg-blue-600' },
+    { id: 'auditor', label: t.roles.auditor, icon: <Shield className="w-3 h-3" />, home: '/auditor', color: 'hover:bg-violet-600' },
+    { id: 'admin', label: t.roles.admin, icon: <Settings2 className="w-3 h-3" />, home: '/admin', color: 'hover:bg-slate-600' },
   ];
+
+  const activeColors: Record<string, string> = {
+    citizen: 'bg-teal-600',
+    reviewer: 'bg-blue-600',
+    auditor: 'bg-violet-600',
+    admin: 'bg-slate-600',
+  };
 
   const quickScenarios = [
     {
       id: 'REQ-2026-001',
-      title: language === 'bn' ? 'সিনারিও ১: রিভিউ অপেক্ষমাণ (তেজগাঁও দাগ ৪০২)' : 'Scenario 1: Under Review (Tejgaon Dag 402)',
-      desc: language === 'bn' ? 'সাম্প্রতিক হস্তান্তর দলিল বিদ্যমান • এসএলএ সময়সীমাভুক্ত' : 'Recent transfer deed recorded • Active SLA countdown',
+      title: language === 'bn' ? 'সিনারিও ১: রিভিউ অপেক্ষমাণ (তেজগাঁও ৪০২)' : 'Scenario 1: Under Review (Tejgaon 402)',
+      desc: language === 'bn' ? 'সাম্প্রতিক হস্তান্তর দলিল • এসএলএ সক্রিয়' : 'Recent transfer deed • Active SLA',
       url: '/citizen/requests/REQ-2026-001',
-      badge: language === 'bn' ? 'রিভিউ অপেক্ষমাণ' : 'Under Review',
-      badgeClass: 'bg-amber-100 text-amber-900 border-amber-300',
+      badge: language === 'bn' ? 'রিভিউ' : 'Review',
+      color: 'bg-amber-100 text-amber-800 border-amber-200',
+      dot: 'bg-amber-500',
     },
     {
       id: 'REQ-2026-002',
-      title: language === 'bn' ? 'সিনারিও ২: পেমেন্ট অপেক্ষমাণ (ধানমন্ডি দাগ ১১৮)' : 'Scenario 2: Payment Pending (Dhanmondi Dag 118)',
-      desc: language === 'bn' ? 'কর্মকর্তা অনুমোদিত • সিমুলেটেড বিকাশ/নগদ ফি বাকি' : 'Officer approved • Ready for simulated bKash/Nagad fee',
+      title: language === 'bn' ? 'সিনারিও ২: পেমেন্ট অপেক্ষমাণ (ধানমন্ডি ১১৮)' : 'Scenario 2: Payment Pending (Dhanmondi 118)',
+      desc: language === 'bn' ? 'অনুমোদিত • বিকাশ/নগদ ফি বাকি' : 'Approved • bKash/Nagad fee pending',
       url: '/citizen/requests/REQ-2026-002',
-      badge: language === 'bn' ? 'পেমেন্ট বাকি' : 'Payment Pending',
-      badgeClass: 'bg-blue-100 text-blue-900 border-blue-300',
+      badge: language === 'bn' ? 'পেমেন্ট' : 'Payment',
+      color: 'bg-blue-100 text-blue-800 border-blue-200',
+      dot: 'bg-blue-500',
     },
     {
       id: 'REQ-2026-003',
-      title: language === 'bn' ? 'সিনারিও ৩: সক্রিয় সংকেত ও টাইমলাইন (গুলশান দাগ ৮৫)' : 'Scenario 3: Active Disclosure (Gulshan Dag 85)',
-      desc: language === 'bn' ? 'অনুমোদিত ও ফি পরিশোধিত • লাইভ টাইমলাইন উন্মুক্ত' : 'Approved & paid • Live chronological timeline unlocked',
+      title: language === 'bn' ? 'সিনারিও ৩: সক্রিয় টাইমলাইন (গুলশান ৮৫)' : 'Scenario 3: Active Signals (Gulshan 85)',
+      desc: language === 'bn' ? 'ফি পরিশোধিত • লাইভ টাইমলাইন' : 'Paid • Live timeline unlocked',
       url: '/citizen/requests/REQ-2026-003',
-      badge: language === 'bn' ? 'সক্রিয় সেশন' : 'Active Access',
-      badgeClass: 'bg-emerald-100 text-emerald-900 border-emerald-300',
+      badge: language === 'bn' ? 'সক্রিয়' : 'Active',
+      color: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+      dot: 'bg-emerald-500',
     },
     {
       id: 'REQ-2026-004',
-      title: language === 'bn' ? 'সিনারিও ৪: নামঞ্জুর ও সীমানা অস্পষ্টতা (আমিনবাজার)' : 'Scenario 4: Rejected / Boundary Issue (Aminbazar)',
-      desc: language === 'bn' ? 'আইনি বিরোধে নামঞ্জুর • লিখিত পর্যবেক্ষণ সংযুক্ত' : 'Contested boundaries • Formal legal refusal order',
+      title: language === 'bn' ? 'সিনারিও ৪: নামঞ্জুর (আমিনবাজার ৯৯৯)' : 'Scenario 4: Rejected (Aminbazar 999)',
+      desc: language === 'bn' ? 'সীমানা বিরোধ • লিখিত প্রত্যাখ্যান' : 'Boundary dispute • Written refusal',
       url: '/citizen/requests/REQ-2026-004',
       badge: language === 'bn' ? 'নামঞ্জুর' : 'Rejected',
-      badgeClass: 'bg-rose-100 text-rose-900 border-rose-300',
+      color: 'bg-rose-100 text-rose-800 border-rose-200',
+      dot: 'bg-rose-500',
     },
   ];
+
+  const { showToast } = useToast();
 
   const handleRoleChange = (roleId: UserRole, homeUrl: string) => {
     setRole(roleId);
     navigate(homeUrl);
+    const roleTitles: Record<UserRole, string> = {
+      citizen: language === 'bn' ? 'নাগরিক ভূমিকা সক্রিয়' : 'Citizen Mode Active',
+      reviewer: language === 'bn' ? 'পর্যালোচক কর্মকর্তা ভূমিকা সক্রিয়' : 'Official Reviewer Mode Active',
+      auditor: language === 'bn' ? 'কমপ্লায়েন্স অডিটর ভূমিকা সক্রিয়' : 'Compliance Auditor Mode Active',
+      admin: language === 'bn' ? 'সিস্টেম অ্যাডমিনিস্ট্রেটর ভূমিকা সক্রিয়' : 'System Admin Mode Active',
+    };
+    showToast({
+      type: 'info',
+      title: roleTitles[roleId],
+      message: language === 'bn' ? 'ভূমিকা অনুযায়ী ভিউ ও ড্যাশবোর্ড লোড হয়েছে' : 'Perspective switched successfully',
+    });
   };
 
-  const handleScenarioSelect = (url: string) => {
-    setScenariosOpen(false);
-    navigate(url);
+  const handleResetData = () => {
+    const msg = language === 'bn'
+      ? 'সব ডেমো ডেটা রিসেট করতে চান?'
+      : 'Reset all demo data to initial state?';
+    if (window.confirm(msg)) {
+      resetAllDemoData();
+      navigate('/citizen');
+      showToast({
+        type: 'info',
+        title: language === 'bn' ? 'ডেমো ডেটা রিসেট সম্পন্ন' : 'Demo Data Reset',
+        message: language === 'bn' ? 'সমস্ত রেকর্ড প্রাথমিক অবস্থায় ফিরে এসেছে' : 'All demo records restored to baseline',
+      });
+    }
   };
 
   return (
-    <div className="bg-slate-900 text-slate-100 text-xs py-1.5 px-4 border-b border-slate-800">
-      <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2.5">
-        {/* Role Switcher Pills */}
+    <div className="bg-gov-dark text-slate-100 text-xs border-b border-white/5">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-1.5 flex flex-wrap items-center justify-between gap-2">
+
+        {/* Role Pills */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="font-semibold text-slate-400 uppercase tracking-wider text-[10px] hidden sm:inline">
+          <span className="text-slate-500 text-[10px] font-semibold uppercase tracking-widest hidden sm:inline">
             {t.roles.roleSwitcher}
           </span>
-          <div className="flex flex-wrap items-center gap-1">
+          <div className="flex items-center gap-1 p-0.5 bg-white/5 rounded-lg border border-white/10">
             {roles.map((r) => {
               const isActive = currentRole === r.id;
               return (
                 <button
                   key={r.id}
                   onClick={() => handleRoleChange(r.id, r.home)}
-                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium transition-all ${
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium transition-all duration-150 ${
                     isActive
-                      ? 'bg-gov-teal text-white shadow-xs font-semibold ring-1 ring-teal-400'
-                      : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white'
+                      ? `${activeColors[r.id]} text-white shadow-xs`
+                      : `text-slate-400 hover:text-white ${r.color} hover:text-white`
                   }`}
-                  title={r.desc}
                 >
                   {r.icon}
                   <span>{r.label}</span>
-                  {isActive && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 ml-0.5 animate-pulse" />
-                  )}
+                  {isActive && <span className="w-1.5 h-1.5 rounded-full bg-white/70 animate-pulse-slow" />}
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Right Section: Quick Demo Scenarios Dropdown & Reset */}
-        <div className="flex items-center gap-2 text-[11px] text-slate-400">
-          {/* Quick Demo Scenarios Dropdown */}
+        {/* Right: Scenarios + Reset */}
+        <div className="flex items-center gap-2">
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setScenariosOpen(!scenariosOpen)}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 font-medium transition-colors"
-              title="Test 4 pre-seeded evaluation scenarios"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-[11px] font-medium transition-all duration-150"
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              <span>{language === 'bn' ? '৪টি মূল দৃশ্যপট' : '4 Demo Scenarios'}</span>
-              <ChevronDown className={`w-3 h-3 transition-transform ${scenariosOpen ? 'rotate-180' : ''}`} />
+              <Sparkles className="w-3 h-3" />
+              <span>{language === 'bn' ? '৪টি দৃশ্যপট' : '4 Scenarios'}</span>
+              <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${scenariosOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {scenariosOpen && (
-              <div className="absolute right-0 mt-1.5 w-80 sm:w-96 bg-white rounded-lg shadow-xl border border-slate-200 text-slate-800 p-2 z-50 animate-in fade-in slide-in-from-top-2">
-                <div className="px-2 py-1.5 border-b border-slate-100 mb-1 flex items-center justify-between">
+              <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-float border border-slate-200 text-slate-800 overflow-hidden z-50 animate-slide-down">
+                <div className="px-4 py-3 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100 flex items-center justify-between">
                   <span className="font-bold text-xs text-slate-900 flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                    {language === 'bn' ? 'মূল্যায়ন দৃশ্যপট দ্রুত বাছাই' : 'Quick Scenario Selector'}
+                    {language === 'bn' ? 'মূল্যায়ন দৃশ্যপট' : 'Quick Scenario Jump'}
                   </span>
-                  <span className="text-[10px] text-slate-400 font-mono">1-Click Jump</span>
+                  <span className="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">1-click</span>
                 </div>
-
-                <div className="space-y-1">
+                <div className="p-2 space-y-1">
                   {quickScenarios.map((sc) => (
                     <button
                       key={sc.id}
-                      onClick={() => handleScenarioSelect(sc.url)}
-                      className="w-full text-left p-2 rounded-md hover:bg-slate-50 transition-colors flex items-start justify-between gap-2 border border-transparent hover:border-slate-200 group"
+                      onClick={() => { setScenariosOpen(false); navigate(sc.url); }}
+                      className="w-full text-left p-2.5 rounded-lg hover:bg-slate-50 transition-all duration-150 flex items-center justify-between gap-3 group border border-transparent hover:border-slate-200"
                     >
-                      <div className="space-y-0.5">
-                        <div className="font-semibold text-xs text-slate-900 group-hover:text-gov-primary flex items-center gap-1.5">
-                          <span>{sc.title}</span>
+                      <div className="flex items-start gap-2.5">
+                        <div className={`w-2 h-2 rounded-full ${sc.dot} mt-1.5 shrink-0`} />
+                        <div>
+                          <p className="font-semibold text-xs text-slate-900 group-hover:text-gov-primary transition-colors">{sc.title}</p>
+                          <p className="text-[11px] text-slate-500 mt-0.5">{sc.desc}</p>
                         </div>
-                        <p className="text-[11px] text-slate-500 leading-snug">{sc.desc}</p>
                       </div>
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded font-semibold shrink-0 border ${sc.badgeClass}`}>
-                        {sc.badge}
-                      </span>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold border shrink-0 ${sc.color}`}>{sc.badge}</span>
                     </button>
                   ))}
                 </div>
-
-                <div className="mt-2 pt-2 border-t border-slate-100 px-2 text-[10px] text-slate-400 flex items-center justify-between">
-                  <span>{language === 'bn' ? 'সকল ডেটা লোকাল ব্রাউজারে সংরক্ষিত' : 'Zero-backend evaluation prototype'}</span>
+                <div className="px-4 py-2.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+                  <span className="text-[10px] text-slate-400">{language === 'bn' ? 'লোকাল ব্রাউজার ডেটা' : 'Zero-backend prototype'}</span>
                   <button
-                    onClick={() => {
-                      setScenariosOpen(false);
-                      navigate('/citizen/new-request');
-                    }}
-                    className="text-gov-primary font-semibold hover:underline flex items-center gap-0.5"
+                    onClick={() => { setScenariosOpen(false); navigate('/citizen/new-request'); }}
+                    className="text-[11px] text-gov-primary font-semibold hover:underline flex items-center gap-1"
                   >
-                    <span>{language === 'bn' ? 'নতুন আবেদন ফরম' : 'New Request Form'}</span>
-                    <ArrowRight className="w-2.5 h-2.5" />
+                    {language === 'bn' ? 'নতুন আবেদন' : 'New Request'}
+                    <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Reset Demo Button */}
           <button
-            onClick={() => {
-              const confirmMsg =
-                language === 'bn'
-                  ? 'সব ডেমো ডেটা (পার্সেল, আবেদন, অডিট লগ) প্রাথমিক অবস্থায় রিসেট করতে চান?'
-                  : 'Reset all demo data (parcels, requests, audit logs) to initial scenarios?';
-              if (window.confirm(confirmMsg)) {
-                resetAllDemoData();
-                navigate('/citizen');
-              }
-            }}
-            className="inline-flex items-center gap-1 text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded border border-slate-700 transition-colors"
-            title="Reset demo data to initial scenario state"
+            onClick={handleResetData}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-medium transition-all duration-150"
           >
             <RefreshCw className="w-3 h-3 text-teal-400" />
             <span className="hidden sm:inline">{t.roles.resetDemo}</span>

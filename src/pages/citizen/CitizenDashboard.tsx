@@ -1,7 +1,8 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { useUI } from '../../context/UIContext';
+import { useToast } from '../../context/ToastContext';
 import { DemoDataTag } from '../../components/common/DemoDataTag';
 import { RequestStatusBadge } from '../../components/requests/RequestStatusBadge';
 import { formatDate, formatDateTime, getTimeRemaining } from '../../lib/utils';
@@ -17,11 +18,19 @@ import {
   Layers,
   ChevronRight,
   Sparkles,
+  FileText,
+  CircleCheck,
+  MapPin,
+  Calculator,
+  Compass,
+  Copy,
 } from 'lucide-react';
 
 export const CitizenDashboard: React.FC = () => {
   const { currentUser, requests, notifications, resetCitizenIdentity } = useApp();
   const { t, language } = useLanguage();
+  const { openCadastralMap, openCalculator, openTour } = useUI();
+  const { showToast } = useToast();
 
   const userRequests = requests.filter((r) => r.userId === currentUser.id);
 
@@ -32,7 +41,6 @@ export const CitizenDashboard: React.FC = () => {
       (r) => r.status === 'more_info_required' || r.status === 'payment_pending'
     ).length,
     active: userRequests.filter((r) => r.status === 'access_active').length,
-    expired: userRequests.filter((r) => r.status === 'expired').length,
   };
 
   const recentRequests = [...userRequests].slice(0, 5);
@@ -44,30 +52,31 @@ export const CitizenDashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Welcome & Identity Bar */}
-      <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <h1 className="text-xl font-bold text-slate-900">
+      <div className="relative overflow-hidden bg-white rounded-2xl border border-slate-200 p-5 sm:p-7 shadow-card flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <div className="absolute -right-8 -top-12 w-48 h-48 rounded-full bg-teal-50 pointer-events-none" />
+        <div className="relative min-w-0">
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
               {language === 'bn' ? `${currentUser.name}, স্বাগতম` : `${t.citizen.welcome}, ${currentUser.name}`}
             </h1>
             <DemoDataTag type="demo_data" />
           </div>
-          <p className="text-xs text-slate-500">
+          <p className="text-sm text-slate-600 leading-relaxed">
             {language === 'bn' ? 'নাগরিক ভূমি তথ্য সেবা পোর্টাল • জাতীয় পরিচয়পত্র:' : 'Citizen Diligence Portal • National ID:'}{' '}
-            <strong>{currentUser.maskedNid}</strong>
+            <strong className="font-semibold text-slate-800">{currentUser.maskedNid}</strong>
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
+        <div className="relative flex flex-wrap items-center gap-2.5">
           {currentUser.identityStatus === 'verified_demo' ? (
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-emerald-50 border border-emerald-200 text-xs text-emerald-800">
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-50 border border-emerald-200 text-sm text-emerald-800">
               <ShieldCheck className="w-4 h-4 text-emerald-600" />
               <span>{language === 'bn' ? 'পরিচয়:' : 'Identity:'} <strong>{t.nav.verifiedDemo}</strong></span>
             </div>
           ) : (
             <Link
               to="/citizen/verify-identity"
-              className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-amber-50 hover:bg-amber-100 border border-amber-300 text-xs text-amber-900 font-semibold transition-colors"
+              className="flex items-center gap-2 min-h-11 px-3 py-2 rounded-lg bg-amber-50 hover:bg-amber-100 border border-amber-300 text-sm text-amber-900 font-semibold transition-colors focus-ring"
             >
               <AlertCircle className="w-4 h-4 text-amber-600" />
               <span>{language === 'bn' ? 'পরিচয় অযাচাইকৃত — এখনই যাচাই করুন' : 'Identity Unverified — Verify Now'}</span>
@@ -76,12 +85,75 @@ export const CitizenDashboard: React.FC = () => {
 
           <Link
             to="/citizen/new-request"
-            className="px-4 py-2 bg-gov-primary hover:bg-gov-primaryHover text-white text-xs font-semibold rounded-md shadow-xs transition-colors flex items-center gap-1.5"
+            className="min-h-11 px-5 py-2.5 bg-gov-primary hover:bg-gov-primaryHover text-white text-sm font-semibold rounded-lg shadow-xs transition-all hover:shadow-card-hover active:scale-[0.98] flex items-center gap-2 focus-ring"
           >
             <FilePlus className="w-4 h-4" />
             {t.citizen.requestLandInfo}
           </Link>
         </div>
+      </div>
+
+      {/* Interactive Tools Quick Access Bar */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+        <button
+          onClick={() => openCadastralMap()}
+          className="p-4 rounded-2xl bg-gradient-to-br from-teal-50/80 via-white to-emerald-50/50 border border-teal-200/80 hover:border-teal-300 text-left flex items-center justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5"
+        >
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+              <MapPin className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-900 group-hover:text-gov-primary transition-colors">
+                {language === 'bn' ? 'ডিজিটাল মৌজা নকশা' : 'Cadastral Survey Map'}
+              </p>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                {language === 'bn' ? 'দাগ ও সীমানা ভিউয়ার' : 'Inspect plots & boundary sheets'}
+              </p>
+            </div>
+          </div>
+          <ArrowRight className="w-4 h-4 text-teal-600 group-hover:translate-x-1 transition-transform" />
+        </button>
+
+        <button
+          onClick={openCalculator}
+          className="p-4 rounded-2xl bg-gradient-to-br from-blue-50/80 via-white to-indigo-50/50 border border-blue-200/80 hover:border-blue-300 text-left flex items-center justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5"
+        >
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+              <Calculator className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
+                {language === 'bn' ? 'রেজিস্ট্রেশন ফি হিসাব' : 'Fee & Tax Estimator'}
+              </p>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                {language === 'bn' ? 'স্ট্যাম্প ডিউটি ও নামজারি খরচ' : 'Stamp duty & mutation charges'}
+              </p>
+            </div>
+          </div>
+          <ArrowRight className="w-4 h-4 text-blue-600 group-hover:translate-x-1 transition-transform" />
+        </button>
+
+        <button
+          onClick={openTour}
+          className="p-4 rounded-2xl bg-gradient-to-br from-violet-50/80 via-white to-purple-50/50 border border-violet-200/80 hover:border-violet-300 text-left flex items-center justify-between group shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5"
+        >
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-violet-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+              <Compass className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-900 group-hover:text-violet-700 transition-colors">
+                {language === 'bn' ? 'প্ল্যাটফর্ম গাইড ও ওয়াকথ্রু' : 'Platform Tour & Guide'}
+              </p>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                {language === 'bn' ? '৪টি ধাপে প্ল্যাটফর্ম পরিচিতি' : 'How BhumiVerify works in 4 steps'}
+              </p>
+            </div>
+          </div>
+          <ArrowRight className="w-4 h-4 text-violet-600 group-hover:translate-x-1 transition-transform" />
+        </button>
       </div>
 
 
@@ -145,18 +217,18 @@ export const CitizenDashboard: React.FC = () => {
       )}
 
       {/* 4-Step Civic Workflow Roadmap */}
-      <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-2xs">
+      <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-card">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-            <Layers className="w-3.5 h-3.5 text-gov-primary" />
+          <span className="text-sm font-bold text-slate-800 flex items-center gap-2">
+            <Layers className="w-4 h-4 text-gov-primary" />
             {language === 'bn' ? '৪-ধাপের নিয়ন্ত্রিত তথ্য প্রাপ্তি পরিক্রমা' : '4-Step Controlled Disclosure Workflow'}
           </span>
-          <span className="text-[10px] text-slate-400">
+          <span className="hidden sm:inline text-xs text-slate-500">
             {language === 'bn' ? 'স্বচ্ছ ও নিরাপদ প্রক্রিয়া' : 'Structured Governance Flow'}
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
           {/* Step 1 */}
           <div className="p-3 rounded-md border border-emerald-200 bg-emerald-50/60 flex items-start gap-2.5">
             <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
@@ -166,7 +238,7 @@ export const CitizenDashboard: React.FC = () => {
               <span className="font-bold text-emerald-900 block">
                 {language === 'bn' ? '১. পরিচয় যাচাই' : '1. Verify Identity'}
               </span>
-              <p className="text-[11px] text-emerald-800 leading-snug mt-0.5">
+              <p className="text-xs text-emerald-800 leading-snug mt-1">
                 {currentUser.identityStatus === 'verified_demo'
                   ? (language === 'bn' ? 'ডেমো পরিচয়পত্র যাচাইকৃত' : 'Demo NID Verified')
                   : (language === 'bn' ? 'যাচাই সম্পন্ন করুন' : 'Verification Needed')}
@@ -186,7 +258,7 @@ export const CitizenDashboard: React.FC = () => {
               <span className="font-bold text-slate-900 group-hover:text-gov-primary transition-colors block">
                 {language === 'bn' ? '২. জমির তথ্য আবেদন' : '2. Submit Inquiry'}
               </span>
-              <p className="text-[11px] text-slate-600 leading-snug mt-0.5">
+              <p className="text-xs text-slate-600 leading-snug mt-1">
                 {language === 'bn' ? 'দাগ ও ক্রয়ের উদ্দেশ্য ঘোষণা' : 'Declare Dag & Purpose'}
               </p>
             </div>
@@ -201,7 +273,7 @@ export const CitizenDashboard: React.FC = () => {
               <span className="font-bold text-slate-800 block">
                 {language === 'bn' ? '৩. কর্মকর্তা রিভিউ' : '3. Officer Review'}
               </span>
-              <p className="text-[11px] text-slate-500 leading-snug mt-0.5">
+              <p className="text-xs text-slate-500 leading-snug mt-1">
                 {language === 'bn' ? 'সহকারী কমিশনার (ভূমি) ডেস্ক' : 'AC (Land) Adjudication'}
               </p>
             </div>
@@ -216,7 +288,7 @@ export const CitizenDashboard: React.FC = () => {
               <span className="font-bold text-slate-800 block">
                 {language === 'bn' ? '৪. ফি ও টাইমলাইন' : '4. Fee & Timeline'}
               </span>
-              <p className="text-[11px] text-slate-500 leading-snug mt-0.5">
+              <p className="text-xs text-slate-500 leading-snug mt-1">
                 {language === 'bn' ? 'সক্রিয় সংকেত ও বায়া দলিল' : 'Time-locked Signals'}
               </p>
             </div>
@@ -225,14 +297,14 @@ export const CitizenDashboard: React.FC = () => {
       </div>
 
       {/* 4 Seeded Scenarios Quick Cards */}
-      <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-2xs space-y-3">
+      <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-card space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-amber-500" />
               {language === 'bn' ? 'মূল্যায়ন দৃশ্যপট — ৪টি পরিস্থিতি পরীক্ষা করুন' : 'Evaluation Scenarios — Test 4 Key Cases'}
             </h3>
-            <p className="text-[11px] text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-500 mt-1">
               {language === 'bn'
                 ? 'হ্যাকাথন ও মেন্টরদের সুবিধার্থে ৪টি প্রস্তুতকৃত অবস্থা সরাসরি পরীক্ষা করার জন্য সাজানো হয়েছে।'
                 : 'Pre-seeded scenario records representing diverse cadastral and mutation circumstances.'}
@@ -241,7 +313,7 @@ export const CitizenDashboard: React.FC = () => {
           <DemoDataTag type="simulated_source" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
           {/* Card 1 */}
           <Link
             to="/citizen/requests/REQ-2026-001"
@@ -344,24 +416,49 @@ export const CitizenDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Compact Request Metric Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="bg-white p-3.5 rounded-lg border border-slate-200">
-          <span className="text-slate-500 text-[11px] block">{t.citizen.totalInquiries}</span>
-          <span className="text-xl font-bold text-slate-900 mt-0.5 block">{counts.total}</span>
-        </div>
-        <div className="bg-white p-3.5 rounded-lg border border-slate-200">
-          <span className="text-amber-700 text-[11px] block">{t.citizen.underReview}</span>
-          <span className="text-xl font-bold text-amber-800 mt-0.5 block">{counts.underReview}</span>
-        </div>
-        <div className="bg-white p-3.5 rounded-lg border border-slate-200">
-          <span className="text-emerald-700 text-[11px] block">{t.citizen.activeDisclosures}</span>
-          <span className="text-xl font-bold text-emerald-800 mt-0.5 block">{counts.active}</span>
-        </div>
-        <div className="bg-white p-3.5 rounded-lg border border-slate-200">
-          <span className="text-slate-400 text-[11px] block">{t.citizen.expiredSessions}</span>
-          <span className="text-xl font-bold text-slate-600 mt-0.5 block">{counts.expired}</span>
-        </div>
+      {/* Request summaries put items needing attention first. */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {[
+          {
+            label: t.citizen.totalInquiries,
+            value: counts.total,
+            detail: language === 'bn' ? 'আপনার জমা দেওয়া আবেদন' : 'All submitted requests',
+            icon: <FileText className="w-5 h-5" />,
+            color: 'text-slate-700 bg-slate-100',
+          },
+          {
+            label: language === 'bn' ? 'আপনার পদক্ষেপ প্রয়োজন' : 'Needs your attention',
+            value: counts.actionRequired,
+            detail: language === 'bn' ? 'পেমেন্ট বা তথ্য জমা দিন' : 'Payment or details due',
+            icon: <AlertTriangle className="w-5 h-5" />,
+            color: 'text-amber-700 bg-amber-100',
+          },
+          {
+            label: t.citizen.underReview,
+            value: counts.underReview,
+            detail: language === 'bn' ? 'কর্মকর্তার পর্যালোচনায়' : 'With an officer for review',
+            icon: <Clock className="w-5 h-5" />,
+            color: 'text-blue-700 bg-blue-100',
+          },
+          {
+            label: t.citizen.activeDisclosures,
+            value: counts.active,
+            detail: language === 'bn' ? 'নিরাপদে তথ্য দেখুন' : 'Signals available to view',
+            icon: <CircleCheck className="w-5 h-5" />,
+            color: 'text-emerald-700 bg-emerald-100',
+          },
+        ].map((metric) => (
+          <div key={metric.label} className="bg-white p-4 rounded-xl border border-slate-200 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <span className="text-sm font-medium text-slate-600 block">{metric.label}</span>
+                <span className="text-3xl leading-none font-bold text-slate-900 mt-2 block">{metric.value}</span>
+              </div>
+              <span className={`w-10 h-10 rounded-xl flex items-center justify-center ${metric.color}`}>{metric.icon}</span>
+            </div>
+            <p className="text-xs text-slate-500 mt-3">{metric.detail}</p>
+          </div>
+        ))}
       </div>
 
       {/* Recent Requests Section */}
@@ -404,7 +501,25 @@ export const CitizenDashboard: React.FC = () => {
                   return (
                     <tr key={req.id} className="hover:bg-slate-50/70 transition-colors">
                       <td className="py-3 px-4 font-mono font-medium text-slate-900">
-                        {req.id}
+                        <div className="flex items-center gap-1.5 group">
+                          <span>{req.id}</span>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigator.clipboard.writeText(req.id);
+                              showToast({
+                                type: 'success',
+                                title: language === 'bn' ? 'আবেদন আইডি কপি হয়েছে!' : 'Tracking ID Copied!',
+                                message: req.id,
+                              });
+                            }}
+                            className="opacity-0 group-hover:opacity-100 p-1 hover:bg-slate-200 rounded text-slate-400 hover:text-slate-700 transition-all"
+                            title="Copy Tracking ID"
+                          >
+                            <Copy className="w-3 h-3" />
+                          </button>
+                        </div>
                       </td>
                       <td className="py-3 px-4">
                         <div className="font-semibold text-slate-800">

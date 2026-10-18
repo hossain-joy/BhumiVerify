@@ -2,6 +2,8 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './context/LanguageContext';
 import { AppProvider } from './context/AppContext';
+import { ToastProvider } from './context/ToastContext';
+import { UIProvider } from './context/UIContext';
 import { AppShell } from './components/layout/AppShell';
 
 // Pages
@@ -35,8 +37,10 @@ export function App() {
     <BrowserRouter>
       <LanguageProvider>
         <AppProvider>
-          <AppShell>
-            <Routes>
+          <ToastProvider>
+            <UIProvider>
+              <AppShell>
+                <Routes>
               {/* Landing */}
               <Route path="/" element={<LandingPage />} />
 
@@ -73,10 +77,12 @@ export function App() {
             {/* 404 */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
-        </AppShell>
-      </AppProvider>
-    </LanguageProvider>
-  </BrowserRouter>
+              </AppShell>
+            </UIProvider>
+          </ToastProvider>
+        </AppProvider>
+      </LanguageProvider>
+    </BrowserRouter>
   );
 }
 
