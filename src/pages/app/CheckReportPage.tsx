@@ -5,6 +5,9 @@ import { MOCK_PARCELS, FictionalParcelRecord } from '../../data/mockParcels';
 import { Modal } from '../../components/common/Modal';
 import { ClearLandConceptCard } from '../../components/land/ClearLandConceptCard';
 import { SubRegistryLiveCard } from '../../components/land/SubRegistryLiveCard';
+import { OrganizedLandReport, ParcelTimelineEvent } from '../../components/land/OrganizedLandReport';
+import { assessParcel } from '../../utils/assessParcel';
+import { sortTimelineEvents } from '../../utils/sortEvents';
 import { useLanguage } from '../../context/LanguageContext';
 import { formatStatusLabel, toBengaliNumerals } from '../../utils/formatStatus';
 import { getTaskTitle, getTaskDescription, getTaskNotes } from '../../utils/taskTranslations';
@@ -147,6 +150,9 @@ export const CheckReportPage: React.FC = () => {
         },
       }
     : null;
+
+  const assessment = parcelForConcept ? assessParcel(parcelForConcept) : null;
+  const sortedEvents: ParcelTimelineEvent[] = parcelForConcept ? sortTimelineEvents(parcelForConcept.events || []) : [];
 
   if (!check) {
     return (
@@ -297,182 +303,17 @@ export const CheckReportPage: React.FC = () => {
             </p>
           </div>
 
-          {/* Status Alert Banner */}
-          <div className={`p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${getStatusBadge(check.statusLabel)}`}>
-            <div className="space-y-1">
-              <span className="text-[11px] uppercase tracking-wider font-extrabold block">
-                {isBn ? 'যাচাই ফলাফল' : 'Verification Status'}
-              </span>
-              <h2 className="text-base font-bold">{formatStatusLabel(check.statusLabel, isBn)}</h2>
-              <p className="text-xs opacity-90 leading-relaxed max-w-2xl">
-                {isBn && underlyingParcel?.statusExplanationBn ? underlyingParcel.statusExplanationBn : check.summary}
-              </p>
-            </div>
-          </div>
-
-          {/* Sub-Registry Office Direct Connection, LT Notice & 12-15 Year Nil Search & Lawsuit Verdict */}
-          {parcelForConcept?.subRegistryData && (
-            <SubRegistryLiveCard subRegistry={parcelForConcept.subRegistryData} isBn={isBn} />
-          )}
-
-          {/* Clear Land Concept & Buyer Plain-Language Verdict */}
-          {parcelForConcept && (
-            <ClearLandConceptCard parcel={parcelForConcept} isBn={isBn} />
-          )}
         </div>
 
-        {/* Section: Parcel Identifiers Submitted */}
-        <div className="space-y-3">
-          <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-gov-primary" />
-            <span>{isBn ? 'প্রবেশকৃত জমির পরিচিতি' : 'Submitted Parcel Identifiers'}</span>
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs">
-            <div>
-              <span className="block text-[10px] text-slate-400 uppercase font-semibold">{isBn ? 'বিভাগ' : 'Division'}</span>
-              <span className="font-bold text-slate-800">{check.division}</span>
-            </div>
-            <div>
-              <span className="block text-[10px] text-slate-400 uppercase font-semibold">{isBn ? 'জেলা' : 'District'}</span>
-              <span className="font-bold text-slate-800">{check.district}</span>
-            </div>
-            <div>
-              <span className="block text-[10px] text-slate-400 uppercase font-semibold">{isBn ? 'উপজেলা / থানা' : 'Upazila / Thana'}</span>
-              <span className="font-bold text-slate-800">{check.upazila}</span>
-            </div>
-            <div>
-              <span className="block text-[10px] text-slate-400 uppercase font-semibold">{isBn ? 'মৌজা' : 'Mouza'}</span>
-              <span className="font-bold text-slate-800">{check.mouza}</span>
-            </div>
-            <div>
-              <span className="block text-[10px] text-slate-400 uppercase font-semibold">{isBn ? 'খতিয়ান নম্বর' : 'Khatian Number'}</span>
-              <span className="font-bold text-slate-800 font-mono">{isBn ? toBengaliNumerals(check.khatianNumber) : check.khatianNumber}</span>
-            </div>
-            <div>
-              <span className="block text-[10px] text-slate-400 uppercase font-semibold">{isBn ? 'দাগ নম্বর' : 'Dag (Plot) Number'}</span>
-              <span className="font-bold text-slate-800 font-mono">{isBn ? toBengaliNumerals(check.dagNumber) : check.dagNumber}</span>
-            </div>
-            <div>
-              <span className="block text-[10px] text-slate-400 uppercase font-semibold">{isBn ? 'জে.এল. নম্বর' : 'JL Number'}</span>
-              <span className="text-slate-800 font-mono">
-                {check.jlNumber ? (isBn ? toBengaliNumerals(check.jlNumber) : check.jlNumber) : (isBn ? 'প্রদান করা হয়নি' : 'Not provided')}
-              </span>
-            </div>
-            <div>
-              <span className="block text-[10px] text-slate-400 uppercase font-semibold">{isBn ? 'জমির পরিমাণ' : 'Recorded Land Area'}</span>
-              <span className="text-slate-800">
-                {check.area ? (isBn ? `${toBengaliNumerals(check.area)} শতাংশ` : check.area) : (isBn ? 'রেকর্ড করা নেই' : 'Not recorded')}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Section: Simulated Event Timeline */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-              <Clock className="w-4 h-4 text-gov-primary" />
-              <span>{isBn ? 'রেকর্ডকৃত ঘটনা প্রবাহ' : 'Recorded Event Timeline'}</span>
-            </h2>
-            <span className="text-[11px] text-slate-400">
-              {isBn
-                ? `${toBengaliNumerals(underlyingParcel?.events?.length || 0)}টি ঘটনা অন্তর্ভুক্ত`
-                : `${underlyingParcel?.events?.length || 0} event(s) recorded`}
-            </span>
-          </div>
-
-          {!underlyingParcel || underlyingParcel.events.length === 0 ? (
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 text-center">
-              {isBn
-                ? 'এই খতিয়ান বা দাগে কোনো সাম্প্রতিক লেনদেন রেকর্ড পাওয়া যায়নি।'
-                : 'No recent transaction events recorded for this parcel.'}
-            </div>
-          ) : (
-            <div className="space-y-3 relative before:absolute before:inset-0 before:left-3 before:w-0.5 before:bg-slate-200">
-              {underlyingParcel.events.map((evt, idx) => (
-                <div key={evt.id || idx} className="relative flex items-start gap-4 pl-8">
-                  <div className="absolute left-1.5 top-1.5 w-3.5 h-3.5 rounded-full bg-white border-2 border-gov-primary" />
-                  <div className="flex-1 bg-slate-50/80 p-3.5 rounded-xl border border-slate-200 text-xs space-y-1.5">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${getEventBadge(evt.type)}`}>
-                        {evt.type === 'transfer_related'
-                          ? (isBn ? 'রেজিস্ট্রি দলিল / হস্তান্তর ঘটনা' : 'Registered Deed / Transfer Event')
-                          : evt.type === 'mutation_application'
-                          ? (isBn ? 'নামজারি আবেদন দাখিল' : 'Mutation Application Submitted')
-                          : (isBn ? 'নামজারি চূড়ান্ত নিষ্পত্তি আদেশ' : 'Mutation Completed Order')}
-                      </span>
-                      <span className="text-slate-500 font-mono text-[11px]">
-                        {evt.date ? (isBn ? toBengaliNumerals(evt.date) : evt.date) : (isBn ? 'তারিখ অনুপস্থিত' : 'Date not recorded')}
-                      </span>
-                    </div>
-
-                    <h3 className="font-bold text-slate-900 text-sm">
-                      {isBn && evt.titleBn ? evt.titleBn : evt.title}
-                    </h3>
-                    <p className="text-slate-600 leading-relaxed">
-                      {isBn && evt.explanationBn ? evt.explanationBn : evt.explanation}
-                    </p>
-                    {evt.reference && (
-                      <div className="text-[10px] text-slate-400 font-mono pt-1">
-                        {isBn ? 'রেফারেন্স:' : 'Reference:'} {evt.reference}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Section: Specific Findings & What this does NOT establish */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Findings */}
-          <div className="p-5 rounded-xl border border-slate-200 bg-slate-50 space-y-3 text-xs">
-            <h2 className="font-bold text-slate-900 uppercase tracking-wider text-xs flex items-center gap-2">
-              <Info className="w-4 h-4 text-gov-primary" />
-              <span>{isBn ? 'অনুসন্ধান পর্যবেক্ষণ' : 'Due Diligence Findings'}</span>
-            </h2>
-            {underlyingParcel?.findings?.map((f, i) => (
-              <div key={i} className="space-y-1 bg-white p-3 rounded-lg border border-slate-200">
-                <h3 className="font-bold text-slate-900">
-                  {isBn && f.titleBn ? f.titleBn : f.title}
-                </h3>
-                <p className="text-slate-600 leading-relaxed">
-                  {isBn && f.whyItMattersBn ? f.whyItMattersBn : f.whyItMatters}
-                </p>
-                <p className="text-[11px] text-gov-primary font-medium pt-1">
-                  {isBn ? 'করণীয়:' : 'Action:'} {isBn && f.nextStepBn ? f.nextStepBn : f.nextStep}
-                </p>
-              </div>
-            )) || (
-              <p className="text-slate-500">
-                {isBn ? 'রেকর্ডে কোনো বড় ধরনের অসঙ্গতি পরিলক্ষিত হয়নি।' : 'No acute conflicts detected in available records.'}
-              </p>
-            )}
-          </div>
-
-          {/* What This Does NOT Establish */}
-          <div className="p-5 rounded-xl border border-rose-200 bg-rose-50/50 space-y-3 text-xs text-rose-950">
-            <h2 className="font-bold text-rose-900 uppercase tracking-wider text-xs flex items-center gap-2">
-              <ShieldAlert className="w-4 h-4 text-rose-600" />
-              <span>{isBn ? 'এই রিপোর্ট যা প্রমাণ করে না' : 'What This Report Does NOT Establish'}</span>
-            </h2>
-            <ul className="space-y-2 leading-relaxed text-rose-900">
-              <li className="flex items-start gap-2">
-                <span className="text-rose-600 font-bold">•</span>
-                <span>{isBn ? 'বিক্রেতার প্রকৃত স্বত্ব বা নির্ভেজাল মালিকানা প্রমাণ করে না।' : 'Does NOT establish that the seller holds genuine ownership or marketable title.'}</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-rose-600 font-bold">•</span>
-                <span>{isBn ? 'কোনো অপ্রকাশিত বন্ধক, আদালতের নিষেধাজ্ঞা বা পারিবারিক মোকদ্দমা রয়েছে কি না তা নিশ্চিত করে না।' : 'Does NOT confirm whether unrecorded mortgages, court injunctions, or family suits exist.'}</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-rose-600 font-bold">•</span>
-                <span>{isBn ? 'জমির মাঠপর্যায়ের বাস্তব সীমানা বা প্রত্যক্ষ শারীরিক দখল নিশ্চিত করে না।' : 'Does NOT confirm ground physical boundaries or actual possession.'}</span>
-              </li>
-            </ul>
-          </div>
-        </div>
+        {/* Master Unified Organized Land Diligence Report */}
+        {parcelForConcept && assessment && (
+          <OrganizedLandReport
+            parcel={parcelForConcept}
+            isBn={isBn}
+            assessment={assessment}
+            sortedEvents={sortedEvents}
+          />
+        )}
 
         {/* Section: Interactive Verification Plan Tasks */}
         <div className="space-y-4">
