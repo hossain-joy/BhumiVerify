@@ -109,31 +109,31 @@ export const SubRegistryLiveCard: React.FC<SubRegistryLiveCardProps> = ({
                 {litigation.hasLitigation ? (
                   isBn ? (
                     <span className="text-rose-900">
-                      সতর্কতা: জমিতে সক্রিয় দেওয়ানি মামলা ও আদালতের নিষেধাজ্ঞা রয়েছে!
+                      মামলাযুক্ত জমি — ক্রয় নিষিদ্ধ
                     </span>
                   ) : (
                     <span className="text-rose-900">
-                      Warning: Active Civil Lawsuit & Injunction on Record!
+                      Active Lawsuit — Barred
                     </span>
                   )
                 ) : nilSearch.status === 'clear' ? (
                   isBn ? (
                     <span className="text-emerald-900">
-                      মামলা নাই — জমিটি আদালত ও সাব-রেজিস্ট্রি রেকর্ডে সম্পূর্ণ নির্দায় ও বিরোধমুক্ত
+                      মামলা নাই — জমি সম্পূর্ণ নির্দায়
                     </span>
                   ) : (
                     <span className="text-emerald-900">
-                      No Lawsuits Detected — Clean Title & Dispute-Free in Sub-Registry Records
+                      Clean Title — Dispute Free
                     </span>
                   )
                 ) : (
                   isBn ? (
                     <span className="text-amber-900">
-                      তথ্য অসম্পূর্ণ — বালাম বইয়ের পুরনো আর্কাইভ ম্যানুয়াল অনুসন্ধান প্রয়োজন
+                      যাচাই প্রয়োজন — তল্লাশি আবশ্যক
                     </span>
                   ) : (
                     <span className="text-amber-900">
-                      Incomplete Title Chain — Physical Archival Volume Search Required
+                      Review Needed — Search Required
                     </span>
                   )
                 )}
@@ -142,27 +142,26 @@ export const SubRegistryLiveCard: React.FC<SubRegistryLiveCardProps> = ({
                 {litigation.hasLitigation ? (
                   isBn ? (
                     <>
-                      সাব-রেজিস্ট্রি অফিসের রেজিস্ট্রিকৃত নোটিশ ও আদালতের কজ-লিস্ট অনুযায়ী এই দাগের জমিতে আইনি বিরোধ বিচারাধীন রয়েছে। 
-                      <strong> মামলা নিষ্পত্তি ছাড়া এই জমিতে কোনো প্রকার বায়না, ক্রয় বা আর্থিক লেনদেন করা চূড়ান্ত ঝুঁকিপূর্ণ।</strong>
+                      আদালতে দেওয়ানি মামলা বিচারাধীন। যেকোনো বায়না বা আর্থিক লেনদেন স্থগিত রাখুন।
                     </>
                   ) : (
-                    'Sub-Registry and court filings indicate active civil litigation. Financial commitments or deed registration are prohibited pending court adjudication.'
+                    'Active civil suit. All financial transactions barred.'
                   )
                 ) : nilSearch.status === 'clear' ? (
                   isBn ? (
                     <>
-                      বিগত {toBengaliNumerals(nilSearch.searchYears)} বছরের সাব-রেজিস্ট্রি বালাম বই এবং সংশ্লিষ্ট আদালতের রেকর্ডে কোনো ধরনের দেওয়ানি মামলা, নিষেধাজ্ঞা, ব্যাংক বন্ধক বা ওয়ারিশান বিরোধ পাওয়া যায়নি।
+                      বিগত {toBengaliNumerals(nilSearch.searchYears)} বছরের বালাম ও আদালতে কোনো মামলা বা বন্ধক নেই।
                     </>
                   ) : (
-                    `A comprehensive ${nilSearch.searchYears}-year Sub-Registry title search reveals no unrecorded conveyances, mortgages, or pending civil suits.`
+                    `No lawsuit or mortgage found in ${nilSearch.searchYears}-year search.`
                   )
                 ) : (
                   isBn ? (
                     <>
-                      কেন্দ্রীয় ডিজিটাল সূচিতে সম্পূর্ণ ২৫ বছরের বায়া দলিলের চেইন মেলেনি। বিক্রেতার নিকট থেকে মূল দলিলের সার্টিফাইড কপি তলব করুন।
+                      বালাম আর্কাইভ থেকে দলিলের চেইন যাচাই প্রয়োজন।
                     </>
                   ) : (
-                    '25-year chain of title references are missing from digital indices. Certified copies of baseline deeds must be inspected manually.'
+                    'Physical deed chain inspection recommended.'
                   )
                 )}
               </p>
@@ -182,17 +181,17 @@ export const SubRegistryLiveCard: React.FC<SubRegistryLiveCardProps> = ({
               {litigation.hasLitigation ? (
                 <>
                   <ShieldAlert className="w-4 h-4 text-rose-700" />
-                  <span>{isBn ? 'মামলা বিদ্যমান' : 'Lawsuit Detected'}</span>
+                  <span>{isBn ? 'মামলা আছে' : 'Lawsuit'}</span>
                 </>
               ) : nilSearch.status === 'clear' ? (
                 <>
                   <ShieldCheck className="w-4 h-4 text-emerald-700" />
-                  <span>{isBn ? 'মামলামুক্ত (Dispute Free)' : 'Dispute Free'}</span>
+                  <span>{isBn ? 'নির্দায়' : 'Clear'}</span>
                 </>
               ) : (
                 <>
                   <AlertTriangle className="w-4 h-4 text-amber-700" />
-                  <span>{isBn ? 'যাচাই প্রয়োজন' : 'Check Required'}</span>
+                  <span>{isBn ? 'যাচাই প্রয়োজন' : 'Review'}</span>
                 </>
               )}
             </span>

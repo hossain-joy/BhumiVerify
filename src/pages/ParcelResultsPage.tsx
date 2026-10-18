@@ -405,7 +405,7 @@ export const ParcelResultsPage: React.FC = () => {
                 </span>
               </div>
               <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-                {isBn ? 'উপলব্ধ তথ্য পর্যালোচনা' : 'Review the available information.'}
+                {isBn ? 'জমি যাচাইয়ের ফলাফল' : 'Land Verification Result'}
               </h1>
               <p className="text-xs text-slate-500 mt-0.5">
                 {isBn ? 'সর্বশেষ হালনাগাদ: ' : 'Last updated: '}

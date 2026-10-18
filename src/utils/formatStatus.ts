@@ -1,38 +1,62 @@
 export function formatStatusLabel(label: string, isBn: boolean): string {
   if (!isBn) {
-    if (label === 'বড় অসঙ্গতি পাওয়া যায়নি' || label === 'উপলব্ধ তথ্যে বড় অসঙ্গতি পাওয়া যায়নি') {
-      return 'No Major Issue Detected in Available Data';
+    if (
+      label === 'বড় অসঙ্গতি পাওয়া যায়নি' ||
+      label === 'উপলব্ধ তথ্যে বড় অসঙ্গতি পাওয়া যায়নি' ||
+      label === 'No Major Issue Detected in Available Data' ||
+      label === 'no_major_issue' ||
+      label === 'নির্দায়'
+    ) {
+      return 'Clear';
     }
-    if (label === 'পর্যালোচনা জরুরি') {
-      return 'Review Recommended';
+    if (
+      label === 'পর্যালোচনা জরুরি' ||
+      label === 'Review Recommended' ||
+      label === 'review_recommended' ||
+      label === 'সতর্কতা' ||
+      label === 'পর্যালোচনা'
+    ) {
+      return 'Review';
     }
-    if (label === 'তথ্য অসম্পূর্ণ') {
-      return 'Information Incomplete';
+    if (
+      label === 'তথ্য অসম্পূর্ণ' ||
+      label === 'Information Incomplete' ||
+      label === 'information_incomplete' ||
+      label === 'অসম্পূর্ণ'
+    ) {
+      return 'Incomplete';
     }
     return label;
   }
 
-  // Bangla conversions
+  // Bangla conversions - Ultra Short
   if (
     label === 'No Major Issue Detected in Available Data' ||
     label === 'no_major_issue' ||
-    label === 'বড় অসঙ্গতি পাওয়া যায়নি'
+    label === 'বড় অসঙ্গতি পাওয়া যায়নি' ||
+    label === 'উপলব্ধ তথ্যে বড় অসঙ্গতি পাওয়া যায়নি' ||
+    label === 'Clear' ||
+    label === 'নির্দায়'
   ) {
-    return 'উপলব্ধ তথ্যে বড় অসঙ্গতি পাওয়া যায়নি';
+    return 'নির্দায়';
   }
   if (
     label === 'Review Recommended' ||
     label === 'review_recommended' ||
-    label === 'পর্যালোচনা জরুরি'
+    label === 'পর্যালোচনা জরুরি' ||
+    label === 'Review' ||
+    label === 'সতর্কতা'
   ) {
-    return 'পর্যালোচনা জরুরি';
+    return 'সতর্কতা';
   }
   if (
     label === 'Information Incomplete' ||
     label === 'information_incomplete' ||
-    label === 'তথ্য অসম্পূর্ণ'
+    label === 'তথ্য অসম্পূর্ণ' ||
+    label === 'Incomplete' ||
+    label === 'অসম্পূর্ণ'
   ) {
-    return 'তথ্য অসম্পূর্ণ';
+    return 'অসম্পূর্ণ';
   }
 
   return label;

@@ -139,21 +139,21 @@ export const OrganizedLandReport: React.FC<OrganizedLandReportProps> = ({
                 >
                   {hasLitigation
                     ? isBn
-                      ? 'সক্রিয় মামলা চিহ্নিত (Lawsuit Detected)'
-                      : 'Active Lawsuit Detected'
+                      ? 'মামলা আছে'
+                      : 'Lawsuit'
                     : isNoMajorIssue
                     ? isBn
-                      ? 'মামলামুক্ত ও নির্দায় (Dispute Free)'
-                      : 'Dispute Free Title'
+                      ? 'নির্দায়'
+                      : 'Clear'
                     : isBn
-                    ? 'যাচাই প্রয়োজন (Review Needed)'
-                    : 'Discrepancy Detected'}
+                    ? 'যাচাই প্রয়োজন'
+                    : 'Review'}
                 </span>
 
                 {subReg?.isConnected && (
                   <span className="text-xs px-3 py-0.5 rounded-full font-bold bg-white text-indigo-900 border border-indigo-200 flex items-center gap-1.5 shadow-2xs">
                     <Radio className="w-3.5 h-3.5 text-emerald-600 animate-pulse" />
-                    <span>{isBn ? 'সাব-রেজিস্ট্রি গেটওয়ে সংযুক্ত' : 'Sub-Registry Connected'}</span>
+                    <span>{isBn ? 'গেটওয়ে লাইভ' : 'Gateway Live'}</span>
                   </span>
                 )}
               </div>
@@ -161,50 +161,50 @@ export const OrganizedLandReport: React.FC<OrganizedLandReportProps> = ({
               <h2 className="text-xl sm:text-2xl font-black text-slate-900 leading-snug">
                 {hasLitigation
                   ? isBn
-                    ? 'সতর্কতা: জমিতে সক্রিয় দেওয়ানি মামলা ও আদালতের নিষেধাজ্ঞা রয়েছে!'
-                    : 'Warning: Active Lawsuit & Injunction on Record!'
+                    ? 'মামলাযুক্ত জমি — ক্রয় নিষিদ্ধ'
+                    : 'Active Lawsuit — Barred'
                   : isNoMajorIssue
                   ? isBn
-                    ? 'মামলা নাই — জমিটি আদালত ও সাব-রেজিস্ট্রি রেকর্ডে সম্পূর্ণ নির্দায়'
-                    : 'Clean Title — Dispute-Free in Sub-Registry & Court Records'
+                    ? 'নির্দায় জমি — কোনো মামলা নেই'
+                    : 'Clear Title — Clean'
                   : isBn
-                  ? 'সতর্কতা: নামজারি বা দলিলের তথ্যে অমিল — সমাধান প্রয়োজন'
-                  : 'Notice: Title Discrepancies Require Official Scrutiny'}
+                  ? 'রেকর্ড অমিল — যাচাই প্রয়োজন'
+                  : 'Discrepancy — Review'}
               </h2>
 
               <p className="text-sm font-medium leading-relaxed opacity-95 max-w-3xl">
                 {hasLitigation ? (
                   isBn ? (
                     <>
-                      বিজ্ঞ দেওয়ানি আদালতের কজ-লিস্ট ও সাব-রেজিস্ট্রির রেকর্ড অনুযায়ী এই দাগের জমিতে আইনি বিরোধ বিচারাধীন।{' '}
+                      আদালতে দেওয়ানি মামলা বিচারাধীন।{' '}
                       <strong className="text-rose-900 underline">
-                        আদালতের নিষ্পত্তি ছাড়া এই জমিতে কোনো প্রকার বায়না, ক্রয় বা আর্থিক লেনদেন সম্পূর্ণ নিষিদ্ধ।
+                        যেকোনো বায়না বা লেনদেন সম্পূর্ণ নিষিদ্ধ।
                       </strong>
                     </>
                   ) : (
-                    'Active civil litigation and injunction order detected. Any financial commitment or registration is legally barred.'
+                    'Civil lawsuit pending. Financial transactions strictly barred.'
                   )
                 ) : isNoMajorIssue ? (
                   isBn ? (
                     <>
-                      বিগত ১৫ বছরের সাব-রেজিস্ট্রি বালাম এবং দেওয়ানি আদালতের রেকর্ডে কোনো মামলা বা গোপন বন্ধক নেই।{' '}
+                      রেকর্ড ও বালামে কোনো মামলা বা বন্ধক নেই।{' '}
                       <strong className="text-emerald-900">
-                        মালিকানার ধারাবাহিকতা সঠিক রয়েছে; শর্তসাপেক্ষে বায়ানানামা করা বিবেচনাযোগ্য।
+                        মালিকানা ধারাবাহিক ও জমি নির্দায়।
                       </strong>
                     </>
                   ) : (
-                    'Clean title lineage with no civil disputes or bank mortgages across a 15-year Balam search.'
+                    'No litigation or mortgage found. Title is clean.'
                   )
                 ) : (
                   isBn ? (
                     <>
-                      জমির বায়া দলিল বা নামজারির তথ্যে ঘাটতি রয়েছে।{' '}
+                      নামজারি বা দলিলে তথ্যের অমিল আছে।{' '}
                       <strong className="text-amber-900">
-                        এসি (ল্যান্ড) অফিস থেকে মূল পর্চা যাচাই ও সমাধান না হওয়া পর্যন্ত বায়না স্থগিত রাখুন।
+                        মূল পর্চা যাচাই ছাড়া বায়না স্থগিত রাখুন।
                       </strong>
                     </>
                   ) : (
-                    'Record discrepancies detected. Resolve mutation status at the AC (Land) office before committing funds.'
+                    'Record mismatch detected. Verify documents before proceeding.'
                   )
                 )}
               </p>
@@ -246,8 +246,8 @@ export const OrganizedLandReport: React.FC<OrganizedLandReportProps> = ({
             </div>
             <p className="text-[11px] text-slate-600 leading-snug">
               {hasTransfer
-                ? (isBn ? 'সাব-রেজিস্ট্রি অফিসে রেজিস্ট্রিকৃত দলিলের রেফারেন্স বিদ্যমান।' : 'Registered deed reference recorded in index.')
-                : (isBn ? 'মূল দলিলের সার্টিফাইড কপি স্বচক্ষে পর্যবেক্ষণ করতে হবে।' : 'Baseline chain deeds must be physically verified.')}
+                ? (isBn ? 'রেজিস্ট্রিকৃত দলিলের রেফারেন্স রেকর্ডভুক্ত আছে।' : 'Registered deed reference on record.')
+                : (isBn ? 'মূল দলিলের সার্টিফাইড কপি যাচাই প্রয়োজন।' : 'Deed certification check needed.')}
             </p>
           </div>
 
@@ -256,7 +256,7 @@ export const OrganizedLandReport: React.FC<OrganizedLandReportProps> = ({
             <div className="flex items-center justify-between text-xs">
               <span className="font-bold text-slate-800 flex items-center gap-1.5">
                 <Building2 className="w-4 h-4 text-gov-primary" />
-                <span>{isBn ? '২. নামজারি (Mutation)' : '2. Mutation'}</span>
+                <span>{isBn ? '২. নামজারি' : '2. Mutation'}</span>
               </span>
               <span className={`text-[10px] font-black px-2 py-0.2 rounded-full ${
                 hasMutationDone
@@ -274,10 +274,10 @@ export const OrganizedLandReport: React.FC<OrganizedLandReportProps> = ({
             </div>
             <p className="text-[11px] text-slate-600 leading-snug">
               {hasMutationDone
-                ? (isBn ? 'এসি (ল্যান্ড) অফিস থেকে পৃথক নামজারি খতিয়ান অনুমোদিত।' : 'Dedicated mutation khatian issued by revenue circle.')
+                ? (isBn ? 'নামজারি অনুমোদিত ও হালনাগাদ।' : 'Mutation approved and updated.')
                 : hasMutationApp
-                ? (isBn ? 'নামজারি আবেদন চলমান; শুনানি ও ডিসিআর যাচাই প্রয়োজন।' : 'Petition under review with Assistant Commissioner.')
-                : (isBn ? 'বিক্রেতার নিজের নামে নামজারি পর্চা এখনো অনুপস্থিত।' : 'No verified mutation porcha in seller name.')}
+                ? (isBn ? 'নামজারি আবেদন প্রক্রিয়াধীন।' : 'Mutation petition in progress.')
+                : (isBn ? 'বিক্রেতার নামে নামজারি পর্চা অনুপস্থিত।' : 'No mutation porcha on record.')}
             </p>
           </div>
 
@@ -298,8 +298,8 @@ export const OrganizedLandReport: React.FC<OrganizedLandReportProps> = ({
             </div>
             <p className="text-[11px] text-slate-600 leading-snug">
               {hasLitigation
-                ? (isBn ? 'আদালতের স্থগিতাদেশ বলবৎ — জমি হস্তান্তর আইনত নিষিদ্ধ।' : 'Active civil dispute and interim court injunction.')
-                : (isBn ? 'আদালতের কজ-লিস্ট ও বালামে কোনো মামলা নথিবদ্ধ নেই।' : 'No civil litigation or injunction on official records.')}
+                ? (isBn ? 'আদালতের স্থগিতাদেশ বলবৎ — হস্তান্তর নিষিদ্ধ।' : 'Court injunction active — transfer barred.')
+                : (isBn ? 'আদালতে কোনো মামলা নথিবদ্ধ নেই।' : 'No lawsuits on official record.')}
             </p>
           </div>
 
@@ -308,7 +308,7 @@ export const OrganizedLandReport: React.FC<OrganizedLandReportProps> = ({
             <div className="flex items-center justify-between text-xs">
               <span className="font-bold text-slate-800 flex items-center gap-1.5">
                 <Search className="w-4 h-4 text-gov-primary" />
-                <span>{isBn ? '৪. ১২-১৫ বছর তল্লাশি' : '4. Nil Search'}</span>
+                <span>{isBn ? '৪. বালাম তল্লাশি' : '4. Nil Search'}</span>
               </span>
               <span className={`text-[10px] font-black px-2 py-0.2 rounded-full ${
                 subReg?.nilSearch?.status === 'clear'
@@ -326,8 +326,8 @@ export const OrganizedLandReport: React.FC<OrganizedLandReportProps> = ({
             </div>
             <p className="text-[11px] text-slate-600 leading-snug">
               {subReg?.nilSearch?.status === 'clear'
-                ? (isBn ? '১ নম্বর বালামে কোনো গোপন বন্ধক বা দায় পাওয়া যায়নি।' : 'No undisclosed bank mortgages or prior conveyances.')
-                : (isBn ? 'সাব-রেজিস্ট্রি অফিসে ফর্ম ১২ তল্লাশি রসিদ নিশ্চিত করুন।' : 'Encumbrance Form 12 inspection recommended.')}
+                ? (isBn ? 'বালামে কোনো গোপন বন্ধক বা দায় নেই।' : 'No undisclosed liens or mortgages.')
+                : (isBn ? 'সাব-রেজিস্ট্রি অফিসে তল্লাশি আবশ্যক।' : 'Sub-registry search recommended.')}
             </p>
           </div>
         </div>

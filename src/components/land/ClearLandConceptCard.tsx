@@ -72,19 +72,19 @@ export const ClearLandConceptCard: React.FC<ClearLandConceptCardProps> = ({
             <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-1.5 leading-snug">
               {hasLitigation
                 ? isBn
-                  ? 'সতর্কতা: জমিতে দেওয়ানি মামলা ও নিষেধাজ্ঞা বহাল — ক্রয় বা বায়না সম্পূর্ণ স্থগিত রাখুন'
-                  : 'Warning: Active Lawsuit & Court Injunction — Purchase Prohibited'
+                  ? 'মামলাযুক্ত জমি — ক্রয় নিষিদ্ধ'
+                  : 'Active Lawsuit — Barred'
                 : isNoMajorIssue
                 ? isBn
-                  ? 'মালিকানার ধারাবাহিকতা সঠিক ও মামলাহীন — শর্তসাপেক্ষে বায়না বিবেচনাযোগ্য'
-                  : 'Consistent Title Chain & Dispute Free — Conditional Purchase Recommended'
+                  ? 'নির্দায় জমি — কোনো মামলা নেই'
+                  : 'Clear Title — Clean'
                 : isReviewRecommended
                 ? isBn
-                  ? 'সতর্কতা: নামজারি বা দলিলের তথ্যে অমিল — সমাধান না হওয়া পর্যন্ত বায়না ঝুঁকিপূর্ণ'
-                  : 'Warning: Title Discrepancies — Hold Deposits Pending Review'
+                  ? 'রেকর্ড অমিল — যাচাই প্রয়োজন'
+                  : 'Discrepancy — Review'
                 : isBn
-                ? 'রেকর্ড অসম্পূর্ণ — তথ্য হালনাগাদ ছাড়া আর্থিক লেনদেন থেকে বিরত থাকুন'
-                : 'Incomplete Records — Do Not Transfer Funds Without Further Verification'}
+                ? 'অসম্পূর্ণ রেকর্ড — যাচাই প্রয়োজন'
+                : 'Incomplete Record — Check'}
             </h2>
           </div>
         </div>
@@ -109,19 +109,19 @@ export const ClearLandConceptCard: React.FC<ClearLandConceptCardProps> = ({
             <span>
               {hasLitigation
                 ? isBn
-                  ? 'মামলা বিদ্যমান (ঝুঁকিপূর্ণ)'
-                  : 'Active Litigation'
+                  ? 'মামলা আছে'
+                  : 'Lawsuit'
                 : isNoMajorIssue
                 ? isBn
-                  ? 'গ্রিন সিগন্যাল (মামলামুক্ত)'
-                  : 'Satisfactory & Clean'
+                  ? 'নির্দায়'
+                  : 'Clear'
                 : isReviewRecommended
                 ? isBn
-                  ? 'সতর্কবার্তা (পর্যালোচনা প্রয়োজন)'
-                  : 'Review Needed'
+                  ? 'সতর্কতা'
+                  : 'Review'
                 : isBn
-                ? 'তথ্য অপর্যাপ্ত (অসম্পূর্ণ)'
-                : 'Incomplete Record'}
+                ? 'অসম্পূর্ণ'
+                : 'Incomplete'}
             </span>
           </span>
         </div>
