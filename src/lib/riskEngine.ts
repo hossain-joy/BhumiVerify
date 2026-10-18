@@ -297,6 +297,87 @@ export function evaluateRisk(parcel: ParcelReference): RuleBasedRiskExplanation 
     };
   }
 
+  // Scenario 5: Registered Mortgage Lien & Contested POA (DEMO-PARCEL-005)
+  if (parcel.id === 'DEMO-PARCEL-005' || parcel.encumbranceSignals?.hasMortgage) {
+    return {
+      label: 'Review Recommended',
+      labelBn: 'বিশেষ পর্যালোচনা জরুরি',
+      badgeColor: 'bg-rose-50 text-rose-800 border-rose-300',
+      summary: 'Registered bank mortgage lien and contested Power of Attorney logged in available feeds.',
+      summaryBn: 'ব্যাংক মর্টগেজ দায়বদ্ধতা এবং পাওয়ার অব অ্যাটর্নি প্রত্যাহারের নোটিশ পাওয়া গেছে।',
+      whatDetected: `Active mortgage charge registered with ${parcel.encumbranceSignals?.bankOrLender || 'Scheduled Bank'} (Ref: MORT-2024-CTG-901). Also, a registered Power of Attorney revocation notice was filed by the principal.`,
+      whatDetectedBn: `${parcel.encumbranceSignals?.bankOrLender || 'তফসিলি ব্যাংক'}-এ রেজিস্ট্রিকৃত দায়বদ্ধতা এবং মূল মালিক কর্তৃক আমমোক্তারনামা প্রত্যাহারের নোটিশ রেকর্ড রয়েছে।`,
+      whyItMatters: 'Under Transfer of Property Act, encumbered land cannot convey unencumbered title without Bank No Objection / Redemption Deed. Furthermore, purchasing through a disputed attorney risks complete invalidation.',
+      whyItMattersBn: 'সম্পত্তি হস্তান্তর আইন অনুযায়ী ব্যাংকের দায়মুক্তি সনদ ছাড়া জমি হস্তান্তর করলে ক্রেতা আর্থিক দায় ও নিলামের ঝুঁকিতে পড়বেন। আমমোক্তারনামা প্রত্যাহার হলে প্রতিনিধির বিক্রয় ক্ষমতা থাকে না।',
+      missingInfo: 'Official Bank NOC (দায়মুক্তি সনদ), original deed deposit receipt, and principal direct ratification.',
+      missingInfoBn: 'সংশ্লিষ্ট ব্যাংক হতে ঋণ পরিশোধের চূড়ান্ত ছাড়পত্র (NOC) এবং মূল দলিল অবমুক্তির প্রমাণ অনুপস্থিত।',
+      whatToVerifyNext: [
+        'Visit the lender branch to independently verify whether the mortgage liability is fully liquidated.',
+        'Insist on direct deed execution by the original title holders rather than through an attorney.',
+        'Conduct a registered encumbrance search (তল্লাশ) at the Sub-Registry for Book 1 entries.',
+      ],
+      whatToVerifyNextBn: [
+        'সংশ্লিষ্ট ব্যাংক শাখায় গিয়ে ঋণ সম্পূর্ণ পরিশোধিত কিনা তা সরাসরি নিশ্চিত হোন।',
+        'আমমোক্তারনামার পরিবর্তে মূল মালিককে সরাসরি উপস্থিত থেকে দলিল সম্পাদনের দাবি করুন।',
+        'সাব-রেজিস্ট্রি অফিসে ১ নং রেজিস্ট্রি বহিতে কোনো অতিরিক্ত দায় রয়েছে কিনা তল্লাশ দিন।',
+      ],
+    };
+  }
+
+  // Scenario 6: Land Classification Mismatch / Agricultural Protection (DEMO-PARCEL-006)
+  if (parcel.id === 'DEMO-PARCEL-006') {
+    return {
+      label: 'Review Recommended',
+      labelBn: 'বিশেষ পর্যালোচনা জরুরি',
+      badgeColor: 'bg-amber-50 text-amber-900 border-amber-300',
+      summary: 'Land recorded as agricultural in revenue survey, but transacted as commercial; conversion approval missing.',
+      summaryBn: 'খতিয়ানে কৃষিজমি হিসেবে রেকর্ডভুক্ত, কিন্তু বাণিজ্যিক হিসেবে লেনদেন হচ্ছে; শ্রেণি পরিবর্তন ছাড়পত্র অনুপস্থিত।',
+      whatDetected: 'Plot 201 is classified as Nal (ধানি কৃষিজমি) in RS Khatian 440 with 3 years of land tax arrears. Transaction intended for commercial factory setup.',
+      whatDetectedBn: 'আরএস খতিয়ানে জমিটি নাল (কৃষি) শ্রেণিভুক্ত এবং ৩ বছরের কর বকেয়া। অথচ এটি বাণিজ্যিক শিল্প কারখানা হিসেবে বিক্রয়ের চুক্তি হচ্ছে।',
+      whyItMatters: 'Converting agricultural land to non-agricultural or industrial usage requires prior statutory approval from the Deputy Commissioner (DC) and Environment Department. Unapproved conversion risks demolition or sealing.',
+      whyItMattersBn: 'জেলা প্রশাসকের অনুমতি ব্যতীত কৃষিজমির শ্রেণি পরিবর্তন করে শিল্প স্থাপন করা ভূমি সংস্কার আইন পরিপন্থী। এতে কারখানা স্থাপন স্থগিত বা সিলগালা হতে পারে।',
+      missingInfo: 'DC Office Land Class Conversion Clearance (শ্রেণি পরিবর্তন অনুমতি), DCR payment receipt, and Environmental clearance.',
+      missingInfoBn: 'জেলা প্রশাসকের রাজস্ব শাখা থেকে শ্রেণি পরিবর্তনের চূড়ান্ত আদেশ ও হাল সনের বাণিজ্যিক কর দাখিলা অনুপস্থিত।',
+      whatToVerifyNext: [
+        'Require the seller to produce the verified Land Conversion Order issued by the Deputy Commissioner.',
+        'Inspect the Upazila master plan and agricultural protection demarcations.',
+        'Calculate back taxes and penal interest on commercial conversion before pricing the deal.',
+      ],
+      whatToVerifyNextBn: [
+        'বিক্রেতার নিকট থেকে জেলা প্রশাসক কর্তৃক প্রদত্ত জমি ব্যবহারের বৈধ অনুমতিপত্র তলব করুন।',
+        'উপজেলা মাস্টার প্ল্যানে এটি জলাশয় বা সংরক্ষিত কৃষিজমির তালিকায় আছে কিনা যাচাই করুন।',
+        'বকেয়া কর ও শ্রেণি পরিবর্তনের সরকারি ফি সমন্বয়ের হিসাব চূড়ান্ত করুন।',
+      ],
+    };
+  }
+
+  // Scenario 7: Co-Sharer Pre-emption Objection (DEMO-PARCEL-007)
+  if (parcel.id === 'DEMO-PARCEL-007') {
+    return {
+      label: 'Review Recommended',
+      labelBn: 'বিশেষ পর্যালোচনা জরুরি',
+      badgeColor: 'bg-amber-50 text-amber-900 border-amber-300',
+      summary: 'Co-sharer pre-emption objection lodged under SAT Act Section 96; mutation hearing contested.',
+      summaryBn: 'ধারা ৯৬ অনুযায়ী শরিক কর্তৃক অগ্রক্রয় (Pre-emption) সংক্রান্ত আপত্তি দাখিল; নামজারি শুনানাধীন।',
+      whatDetected: 'Formal legal objection lodged by co-sharer alleging transfer without mandatory statutory notice to family heirs. Mutation petition pending objection hearing.',
+      whatDetectedBn: 'আইনসঙ্গত নোটিশ ছাড়া জমি বিক্রির অভিযোগে শরিক কর্তৃক সহকারী কমিশনার (ভূমি) অফিসে অগ্রক্রয়ের আপত্তি মামলা দায়েরকৃত।',
+      whyItMatters: 'Under Section 96 of the State Acquisition and Tenancy Act, co-sharers possess a statutory pre-emption right to buy back undivided shares through court decree.',
+      whyItMattersBn: 'এসএটি আইনের ৯৬ ধারা অনুযায়ী শরিকের অগ্রক্রয় স্বত্ব কার্যকর হলে ক্রেতাকে জমি ফেরত দিতে হতে পারে। শরিকি আপসের পূর্বে কেনা অত্যন্ত ঝুঁকিপূর্ণ।',
+      missingInfo: 'Registered Partition Deed (আপস বণ্টননামা) demarcating separate shares and written co-sharer waiver.',
+      missingInfoBn: 'রেজিস্ট্রিকৃত আপস বণ্টননামা দলিল এবং অন্যান্য ওয়ারিশানদের অনাপত্তিপত্র (NOC) অনুপস্থিত।',
+      whatToVerifyNext: [
+        'Insist on a registered partition deed between all legal heirs before buying undivided shares.',
+        'Attend the AC (Land) hearing with your legal counsel or demand amicable compromise.',
+        'Check succession certificate (ওয়ারিশান সনদ) issued by local municipal or union parishad.',
+      ],
+      whatToVerifyNextBn: [
+        'অবিভক্ত জমিতে ক্রয়ের পূর্বে সকল ওয়ারিশের মধ্যে রেজিস্ট্রিকৃত বণ্টননামা দলিল সম্পাদন নিশ্চিত করুন।',
+        'সহকারী কমিশনার (ভূমি) কোর্টে আপত্তির শুনানি ও আদেশের জন্য অপেক্ষা করুন।',
+        'পৌরসভা বা ইউনিয়ন পরিষদ কর্তৃক প্রদত্ত মূল ওয়ারিশান সনদের সঠিকতা যাচাই করুন।',
+      ],
+    };
+  }
+
   // Scenario 1: Recent transfer deed recorded, but mutation not completed
   if (deedEvent && !mutCompleteEvent) {
     return {

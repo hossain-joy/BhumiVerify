@@ -47,6 +47,35 @@ export type ParcelRiskStatus =
   | 'conflicting_records'
   | 'insufficient_data';
 
+export interface ParcelTaxStatus {
+  status: 'paid' | 'arrears' | 'unknown';
+  lastPaidYearBS?: string;
+  dakhilaNumber?: string;
+  amountBdt?: number;
+  note?: string;
+}
+
+export interface ParcelEncumbranceSignals {
+  hasMortgage: boolean;
+  bankOrLender?: string;
+  mortgageNote?: string;
+  hasStayOrder: boolean;
+  courtName?: string;
+  caseRef?: string;
+  litigationNote?: string;
+  isKhasOrVested: boolean;
+  vestedNote?: string;
+  hasPowerOfAttorney: boolean;
+  poaDetails?: string;
+}
+
+export interface ParcelBayaDeedChain {
+  chainIntact: boolean;
+  yearsTracked: number;
+  deedsCount: number;
+  note?: string;
+}
+
 export interface ParcelReference {
   id: string;
   division: string;
@@ -60,6 +89,11 @@ export interface ParcelReference {
   area?: string;
   areaUnit?: string;
   boundaryNotes?: string;
+  landClassification?: string;
+  recordedOwners?: string[];
+  taxStatus?: ParcelTaxStatus;
+  encumbranceSignals?: ParcelEncumbranceSignals;
+  bayaChain?: ParcelBayaDeedChain;
   matchConfidence: MatchConfidence;
   riskStatus: ParcelRiskStatus;
   riskSummary: string;

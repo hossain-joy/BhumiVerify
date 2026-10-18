@@ -47,14 +47,18 @@ Instead of fragmented administrative portals, the application is streamlined int
 
 ## 🧪 3. Predefined Fictional Demo Scenarios
 
-The system includes 4 realistic fictional parcel records demonstrating distinct transaction outcomes:
+The system includes 8 realistic fictional parcel records demonstrating distinct transaction outcomes across Bangladesh:
 
 | Parcel ID | Location | Identifiers | Risk Assessment Label | Key Signal & Caveat |
 |---|---|---|---|---|
 | **`DEMO-PARCEL-001`** | Tejgaon, Dhaka | Mouza: Tejgaon I/A<br>Dag: **402**, Khatian: 1204 | **Review Recommended** | **Recent Transfer Deed Recorded:** Saf-Kabala deed executed and Section 89 LT notice dispatched, but e-mutation is not completed in land records. *Deed does not equal mutation.* |
-| **`DEMO-PARCEL-002`** | Dhanmondi, Dhaka | Mouza: Dhanmondi R/A<br>Dag: **118**, Khatian: 541 | **Information Incomplete** | **Mutation Petition Pending:** Online application filed and hearing scheduled at AC Land; final order not yet issued. *Application is not proof of approval.* |
-| **`DEMO-PARCEL-003`** | Gulshan, Dhaka | Mouza: Gulshan<br>Dag: **85**, Khatian: 991 | **No Major Issue Detected in Available Data** | **Mutation Completed:** AC Land order approved and updated mutation khatian issued. *Pre-purchase due diligence, physical beacon check, and civil title search still required.* |
-| **`DEMO-PARCEL-004`** | Savar / Aminbazar | Mouza: Aminbazar<br>Dag: **999**, Khatian: 301 | **Review Recommended** | **Conflicting Survey Records:** Discrepancy detected between historic SA sheet and modern RS digitization with acreage mismatch. *Ground survey required.* |
+| **`DEMO-PARCEL-002`** | Dhanmondi, Dhaka | Mouza: Dhanmondi R/A<br>Dag: **118**, Khatian: 541 | **Information Incomplete** | **Mutation Petition Pending:** Online application filed and hearing scheduled at AC Land; final order not yet issued; registered Power of Attorney. *Application is not proof of approval.* |
+| **`DEMO-PARCEL-003`** | Gulshan, Dhaka | Mouza: Gulshan<br>Dag: **85**, Khatian: 991 | **No Major Issue Detected in Available Data** | **Mutation Completed:** AC Land order approved and updated mutation khatian issued. Tax paid to date. *Pre-purchase due diligence, physical beacon check, and civil title search still required.* |
+| **`DEMO-PARCEL-004`** | Savar / Aminbazar | Mouza: Aminbazar<br>Dag: **999**, Khatian: 301 | **Review Recommended** | **Conflicting Survey Records:** Discrepancy detected between historic SA sheet and modern RS digitization with acreage mismatch. Active civil court stay order flagged. *Ground survey required.* |
+| **`DEMO-PARCEL-005`** | Nasirabad, Chattogram | Mouza: Nasirabad<br>Dag: **210**, Khatian: 540 | **Review Recommended** | **Bank Mortgage & Contested POA:** Registered mortgage charge with Agrani Bank PLC (Ref: MORT-2024-CTG-901) and principal filed Power of Attorney revocation notice. *Bank NOC mandatory.* |
+| **`DEMO-PARCEL-006`** | Joydebpur, Gazipur | Mouza: Joydebpur<br>Dag: **201**, Khatian: 440 | **Review Recommended** | **Land Classification Mismatch:** Recorded as agricultural Nal in RS porcha, but transacted as industrial factory plot without DC Office land conversion clearance. *High penalty risk.* |
+| **`DEMO-PARCEL-007`** | Zindabazar, Sylhet | Mouza: Zindabazar<br>Dag: **64**, Khatian: 190 | **Review Recommended** | **Co-Sharer Pre-Emption Lawsuit:** Family co-sharer lodged formal objection under SAT Act Section 96 alleging lack of statutory notice. *Partition deed needed.* |
+| **`DEMO-PARCEL-008`** | Mirpur, Dhaka | Mouza: Senpara Parbata<br>Dag: **304**, Khatian: 580 | **No Major Issue Detected in Available Data** | **Clean Title Chain & Regular Tax:** CS -> SA -> RS -> City Survey uninterrupted chain, mutated porcha issued, e-Dakhila paid up to 1431 BS. *Standard precautions apply.* |
 
 *Non-Existent Parcels (e.g., Dag 88888)*: Display a clear empty state explaining that no records were found in demo data, along with the warning that missing records do not guarantee the land is unencumbered.
 

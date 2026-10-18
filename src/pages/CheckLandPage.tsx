@@ -30,7 +30,13 @@ import {
   Calendar,
   Sparkles,
   MapPin,
-  ExternalLink,
+  Building,
+  Users,
+  Receipt,
+  Landmark,
+  Scale,
+  FileSpreadsheet,
+  AlertOctagon,
 } from 'lucide-react';
 
 export const CheckLandPage: React.FC = () => {
@@ -104,7 +110,7 @@ export const CheckLandPage: React.FC = () => {
   };
 
   // Pre-fill demo scenarios
-  const applyPresetScenario = (presetId: 'DEMO-PARCEL-001' | 'DEMO-PARCEL-002' | 'DEMO-PARCEL-003' | 'DEMO-PARCEL-004') => {
+  const applyPresetScenario = (presetId: string) => {
     const target = INITIAL_PARCELS.find((p) => p.id === presetId);
     if (!target) return;
 
@@ -134,7 +140,7 @@ export const CheckLandPage: React.FC = () => {
     if (pParam) {
       const match = INITIAL_PARCELS.find((p) => p.id === pParam);
       if (match) {
-        applyPresetScenario(match.id as any);
+        applyPresetScenario(match.id);
         return;
       }
     }
@@ -142,6 +148,10 @@ export const CheckLandPage: React.FC = () => {
     else if (sParam === '2') applyPresetScenario('DEMO-PARCEL-002');
     else if (sParam === '3') applyPresetScenario('DEMO-PARCEL-003');
     else if (sParam === '4') applyPresetScenario('DEMO-PARCEL-004');
+    else if (sParam === '5') applyPresetScenario('DEMO-PARCEL-005');
+    else if (sParam === '6') applyPresetScenario('DEMO-PARCEL-006');
+    else if (sParam === '7') applyPresetScenario('DEMO-PARCEL-007');
+    else if (sParam === '8') applyPresetScenario('DEMO-PARCEL-008');
   }, [searchParams]);
 
   const validateForm = (): boolean => {
@@ -209,8 +219,8 @@ export const CheckLandPage: React.FC = () => {
             </div>
             <p className="text-sm text-slate-600 max-w-3xl">
               {language === 'bn'
-                ? 'বিভাগ, জেলা, উপজেলা, মৌজা এবং দাগ নম্বর প্রবেশ করিয়ে সংশ্লিষ্ট প্লটের সাব-রেজিস্ট্রি দলিল, ধারা ৮৯ নোটিশ ও নামজারির বর্তমান অবস্থা খতিয়ে দেখুন।'
-                : 'Enter multi-level land identifiers (Division, District, Upazila, Mouza, Dag, Khatian) to inspect recorded transfer deeds, Section 89 LT notices, and mutation proceedings.'}
+                ? 'বিভাগ, জেলা, উপজেলা, মৌজা এবং দাগ নম্বর প্রবেশ করিয়ে সংশ্লিষ্ট প্লটের সাব-রেজিস্ট্রি দলিল, ধারা ৮৯ নোটিশ, নামজারি, মালিকানা অংশ, কর দাখিলা এবং আইনগত দায় খতিয়ে দেখুন।'
+                : 'Enter multi-level land identifiers (Division, District, Upazila, Mouza, Dag, Khatian) to inspect recorded transfer deeds, Section 89 LT notices, mutation proceedings, ownership shares, tax receipts, and legal encumbrance signals.'}
             </p>
           </div>
 
@@ -236,66 +246,134 @@ export const CheckLandPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Quick Demo Pre-fill Selector */}
+      {/* Quick Demo Pre-fill Selector (8 Diverse Scenarios) */}
       <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs">
-        <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-slate-700">
-          <Sparkles className="w-4 h-4 text-gov-primary" />
-          <span>{language === 'bn' ? 'দ্রুত পরীক্ষামূলক নমুনা রেকর্ড বাছাই করুন:' : 'Quick Demo Scenarios (One-Click Pre-fill):'}</span>
+        <div className="flex items-center justify-between mb-2.5">
+          <div className="flex items-center gap-2 text-xs font-semibold text-slate-700">
+            <Sparkles className="w-4 h-4 text-gov-primary" />
+            <span>{language === 'bn' ? 'দ্রুত পরীক্ষামূলক নমুনা রেকর্ড বাছাই করুন (১-ক্লিকে ফর্ম পূরণ ও ফলাফল):' : 'Quick Demo Scenarios (1-Click Pre-fill & Instant Evaluation):'}</span>
+          </div>
+          <span className="text-[11px] text-slate-400">৮টি ভিন্ন প্রেক্ষাপট</span>
         </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+          {/* 1. Recent Transfer */}
           <button
             type="button"
             onClick={() => applyPresetScenario('DEMO-PARCEL-001')}
-            className="text-left p-3 rounded-lg border border-amber-200 bg-amber-50/60 hover:bg-amber-100/70 hover:border-amber-300 transition-all cursor-pointer group"
+            className="text-left p-2.5 rounded-lg border border-amber-200 bg-amber-50/50 hover:bg-amber-100/70 transition-all cursor-pointer group"
           >
-            <div className="flex items-center justify-between text-[11px] font-bold text-amber-900 mb-1">
-              <span>{language === 'bn' ? 'নমুনা ১: সাম্প্রতিক হস্তান্তর' : 'Scenario 1: Recent Deed'}</span>
+            <div className="flex items-center justify-between text-[11px] font-bold text-amber-900 mb-0.5">
+              <span>{language === 'bn' ? '১. সাম্প্রতিক দলিল' : '1. Recent Deed'}</span>
               <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-200/70 text-amber-950 font-mono">Dag 402</span>
             </div>
-            <p className="text-[11px] text-amber-800 leading-snug">
-              {language === 'bn' ? 'দলিল ও নোটিশ বিদ্যমান, নামজারি অনিষ্পন্ন।' : 'Registered deed logged, but mutation pending.'}
+            <p className="text-[10px] text-amber-800 leading-snug">
+              {language === 'bn' ? 'তেজগাঁও: দলিল ও নোটিশ আছে, নামজারি অনিষ্পন্ন।' : 'Tejgaon: Registered deed logged; mutation pending.'}
             </p>
           </button>
 
+          {/* 2. Mutation Application */}
           <button
             type="button"
             onClick={() => applyPresetScenario('DEMO-PARCEL-002')}
-            className="text-left p-3 rounded-lg border border-blue-200 bg-blue-50/60 hover:bg-blue-100/70 hover:border-blue-300 transition-all cursor-pointer group"
+            className="text-left p-2.5 rounded-lg border border-blue-200 bg-blue-50/50 hover:bg-blue-100/70 transition-all cursor-pointer group"
           >
-            <div className="flex items-center justify-between text-[11px] font-bold text-blue-900 mb-1">
-              <span>{language === 'bn' ? 'নমুনা ২: নামজারি আবেদন' : 'Scenario 2: Petition Filed'}</span>
+            <div className="flex items-center justify-between text-[11px] font-bold text-blue-900 mb-0.5">
+              <span>{language === 'bn' ? '২. নামজারি আবেদন' : '2. Petition Active'}</span>
               <span className="text-[10px] px-1.5 py-0.2 rounded bg-blue-200/70 text-blue-950 font-mono">Dag 118</span>
             </div>
-            <p className="text-[11px] text-blue-800 leading-snug">
-              {language === 'bn' ? 'আবেদন শুনানাধীন, চূড়ান্ত অনুমোদন হয়নি।' : 'e-Mutation submitted; hearing pending.'}
+            <p className="text-[10px] text-blue-800 leading-snug">
+              {language === 'bn' ? 'ধানমন্ডি: আবেদন শুনানাধীন, পাওয়ার অব অ্যাটর্নি।' : 'Dhanmondi: e-Mutation filed; hearing pending; POA.'}
             </p>
           </button>
 
+          {/* 3. Mutation Complete */}
           <button
             type="button"
             onClick={() => applyPresetScenario('DEMO-PARCEL-003')}
-            className="text-left p-3 rounded-lg border border-emerald-200 bg-emerald-50/60 hover:bg-emerald-100/70 hover:border-emerald-300 transition-all cursor-pointer group"
+            className="text-left p-2.5 rounded-lg border border-emerald-200 bg-emerald-50/50 hover:bg-emerald-100/70 transition-all cursor-pointer group"
           >
-            <div className="flex items-center justify-between text-[11px] font-bold text-emerald-900 mb-1">
-              <span>{language === 'bn' ? 'নমুনা ৩: নামজারি সম্পন্ন' : 'Scenario 3: Mutation Complete'}</span>
+            <div className="flex items-center justify-between text-[11px] font-bold text-emerald-900 mb-0.5">
+              <span>{language === 'bn' ? '৩. নামজারি সম্পন্ন' : '3. Mutation Done'}</span>
               <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-200/70 text-emerald-950 font-mono">Dag 85</span>
             </div>
-            <p className="text-[11px] text-emerald-800 leading-snug">
-              {language === 'bn' ? 'নামজারি খতিয়ান জারিকৃত; বিধিবদ্ধ সতর্কতা।' : 'Mutated RoR issued; standard due diligence.'}
+            <p className="text-[10px] text-emerald-800 leading-snug">
+              {language === 'bn' ? 'গুলশান: নামজারি খতিয়ান জারিকৃত ও দাখিলা হালনাগাদ।' : 'Gulshan: Mutated RoR issued; tax paid to date.'}
             </p>
           </button>
 
+          {/* 4. Conflicting Records */}
           <button
             type="button"
             onClick={() => applyPresetScenario('DEMO-PARCEL-004')}
-            className="text-left p-3 rounded-lg border border-rose-200 bg-rose-50/60 hover:bg-rose-100/70 hover:border-rose-300 transition-all cursor-pointer group"
+            className="text-left p-2.5 rounded-lg border border-rose-200 bg-rose-50/50 hover:bg-rose-100/70 transition-all cursor-pointer group"
           >
-            <div className="flex items-center justify-between text-[11px] font-bold text-rose-900 mb-1">
-              <span>{language === 'bn' ? 'নমুনা ৪: রেকর্ড অসঙ্গতি' : 'Scenario 4: Conflicting Records'}</span>
+            <div className="flex items-center justify-between text-[11px] font-bold text-rose-900 mb-0.5">
+              <span>{language === 'bn' ? '৪. জরিপ বিরোধ' : '4. Survey Clash'}</span>
               <span className="text-[10px] px-1.5 py-0.2 rounded bg-rose-200/70 text-rose-950 font-mono">Dag 999</span>
             </div>
-            <p className="text-[11px] text-rose-800 leading-snug">
-              {language === 'bn' ? 'এসএ ও আরএস খতিয়ানে অসঙ্গতি ও বিরোধ।' : 'SA vs RS survey discrepancy detected.'}
+            <p className="text-[10px] text-rose-800 leading-snug">
+              {language === 'bn' ? 'আমিনবাজার: এসএ ও আরএস অমিল, আদালতের নিষেধাজ্ঞা।' : 'Aminbazar: SA vs RS dispute; court stay order.'}
+            </p>
+          </button>
+
+          {/* 5. Bank Mortgage Lien */}
+          <button
+            type="button"
+            onClick={() => applyPresetScenario('DEMO-PARCEL-005')}
+            className="text-left p-2.5 rounded-lg border border-purple-200 bg-purple-50/50 hover:bg-purple-100/70 transition-all cursor-pointer group"
+          >
+            <div className="flex items-center justify-between text-[11px] font-bold text-purple-900 mb-0.5">
+              <span>{language === 'bn' ? '৫. ব্যাংক মর্টগেজ' : '5. Bank Mortgage'}</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-purple-200/70 text-purple-950 font-mono">Dag 210</span>
+            </div>
+            <p className="text-[10px] text-purple-800 leading-snug">
+              {language === 'bn' ? 'চট্টগ্রাম (নাসিরাবাদ): অগ্রণী ব্যাংক ঋণ দায় ও POA বিরোধ।' : 'Chittagong: Bank mortgage lien & disputed POA.'}
+            </p>
+          </button>
+
+          {/* 6. Classification Mismatch */}
+          <button
+            type="button"
+            onClick={() => applyPresetScenario('DEMO-PARCEL-006')}
+            className="text-left p-2.5 rounded-lg border border-amber-200 bg-amber-50/50 hover:bg-amber-100/70 transition-all cursor-pointer group"
+          >
+            <div className="flex items-center justify-between text-[11px] font-bold text-amber-900 mb-0.5">
+              <span>{language === 'bn' ? '৬. শ্রেণি অমিল' : '6. Class Mismatch'}</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-200/70 text-amber-950 font-mono">Dag 201</span>
+            </div>
+            <p className="text-[10px] text-amber-800 leading-snug">
+              {language === 'bn' ? 'গাজীপুর: খতিয়ানে কৃষিজমি কিন্তু বাণিজ্যিক বিক্রি।' : 'Gazipur: Nal in porcha sold as commercial factory.'}
+            </p>
+          </button>
+
+          {/* 7. Co-Sharer Pre-emption Objection */}
+          <button
+            type="button"
+            onClick={() => applyPresetScenario('DEMO-PARCEL-007')}
+            className="text-left p-2.5 rounded-lg border border-orange-200 bg-orange-50/50 hover:bg-orange-100/70 transition-all cursor-pointer group"
+          >
+            <div className="flex items-center justify-between text-[11px] font-bold text-orange-900 mb-0.5">
+              <span>{language === 'bn' ? '৭. শরিকি আপত্তি' : '7. Co-Sharer Issue'}</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-orange-200/70 text-orange-950 font-mono">Dag 64</span>
+            </div>
+            <p className="text-[10px] text-orange-800 leading-snug">
+              {language === 'bn' ? 'সিলেট (জিন্দাবাজার): ধারা ৯৬ শরিকি অগ্রক্রয় মামলা।' : 'Sylhet: Co-sharer pre-emption objection (SAT Sec 96).'}
+            </p>
+          </button>
+
+          {/* 8. Clean Complete Title */}
+          <button
+            type="button"
+            onClick={() => applyPresetScenario('DEMO-PARCEL-008')}
+            className="text-left p-2.5 rounded-lg border border-emerald-200 bg-emerald-50/50 hover:bg-emerald-100/70 transition-all cursor-pointer group"
+          >
+            <div className="flex items-center justify-between text-[11px] font-bold text-emerald-900 mb-0.5">
+              <span>{language === 'bn' ? '৮. নিখুঁত ধারাবাহিকতা' : '8. Clean Record'}</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-200/70 text-emerald-950 font-mono">Dag 304</span>
+            </div>
+            <p className="text-[10px] text-emerald-800 leading-snug">
+              {language === 'bn' ? 'মিরপুর: সিএস-এসএ-আরএস ধারাবাহিক, কর পরিশোধিত।' : 'Mirpur: CS-SA-RS uninterrupted chain & tax paid.'}
             </p>
           </button>
         </div>
@@ -426,7 +504,7 @@ export const CheckLandPage: React.FC = () => {
                 type="text"
                 value={dagNumber}
                 onChange={(e) => setDagNumber(e.target.value)}
-                placeholder={language === 'bn' ? 'যেমন: 402, 118, 85, 999' : 'e.g. 402, 118, 85, 999'}
+                placeholder={language === 'bn' ? 'যেমন: 402, 118, 85, 999, 210' : 'e.g. 402, 118, 85, 999, 210'}
                 className={`w-full text-xs rounded-lg border p-2.5 ${
                   errors.dagNumber ? 'border-rose-500 bg-rose-50/50' : 'border-slate-300'
                 }`}
@@ -448,7 +526,7 @@ export const CheckLandPage: React.FC = () => {
                 type="text"
                 value={khatianNumber}
                 onChange={(e) => setKhatianNumber(e.target.value)}
-                placeholder={language === 'bn' ? 'যেমন: 1204, 541, 991, 301' : 'e.g. 1204, 541, 991, 301'}
+                placeholder={language === 'bn' ? 'যেমন: 1204, 541, 991, 301, 540' : 'e.g. 1204, 541, 991, 301, 540'}
                 className="w-full text-xs rounded-lg border border-slate-300 p-2.5"
               />
               <p className="text-[10px] text-slate-400 mt-1">
@@ -520,9 +598,9 @@ export const CheckLandPage: React.FC = () => {
               </div>
             </div>
           ) : (
-            /* Matched State */
+            /* Matched State with Comprehensive Data Sections */
             <div className="space-y-6">
-              {/* 1. Parcel Identification Summary */}
+              {/* 1. Primary Parcel Identification & Land Classification Card */}
               <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-2xs">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
                   <div>
@@ -534,6 +612,12 @@ export const CheckLandPage: React.FC = () => {
                       {evaluation.matchType === 'ambiguous' && (
                         <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-200">
                           {language === 'bn' ? 'রেকর্ড অসঙ্গতি' : 'Record Conflict'}
+                        </span>
+                      )}
+                      {evaluation.parcel?.landClassification && (
+                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-700 border border-slate-200 flex items-center gap-1">
+                          <Building className="w-3 h-3 text-slate-500" />
+                          <span>{evaluation.parcel.landClassification}</span>
                         </span>
                       )}
                     </div>
@@ -605,6 +689,7 @@ export const CheckLandPage: React.FC = () => {
                   </div>
                 </div>
 
+                {/* Boundaries & Physical Demarcations */}
                 {evaluation.parcel?.boundaryNotes && (
                   <div className="mt-3 p-2.5 rounded-lg bg-slate-50 text-[11px] text-slate-600 border border-slate-100">
                     <strong className="text-slate-700">{language === 'bn' ? 'চৌহদ্দি বা সীমানা বিবরণ:' : 'Boundary Notes:'}</strong>{' '}
@@ -613,7 +698,214 @@ export const CheckLandPage: React.FC = () => {
                 )}
               </div>
 
-              {/* 2. Core Status Checkpoints: Transfer, Mutation Application, Mutation Completion */}
+              {/* 2. Recorded Ownership, Co-Sharers & Tax Revenue Status */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* A. Recorded Owners in RoR */}
+                <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs space-y-2.5">
+                  <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+                    <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
+                      <Users className="w-4 h-4 text-gov-primary" />
+                      <span>{language === 'bn' ? 'খতিয়ানভুক্ত রেকর্ডীয় মালিক ও অংশীদার' : 'Recorded Owners in RoR & Shares'}</span>
+                    </div>
+                    <span className="text-[10px] text-slate-400 font-medium">
+                      {evaluation.parcel?.recordedOwners?.length || 0} জন মালিক
+                    </span>
+                  </div>
+
+                  {evaluation.parcel?.recordedOwners && evaluation.parcel.recordedOwners.length > 0 ? (
+                    <ul className="space-y-1.5 text-xs text-slate-700">
+                      {evaluation.parcel.recordedOwners.map((owner, idx) => (
+                        <li key={idx} className="p-2 rounded bg-slate-50 border border-slate-100 flex items-start gap-2">
+                          <span className="w-4 h-4 rounded-full bg-teal-100 text-teal-800 text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">
+                            {idx + 1}
+                          </span>
+                          <span className="leading-snug">{owner}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-xs text-slate-500 italic">
+                      {language === 'bn' ? 'মালিকানার বিস্তারিত নাম উপলব্ধ রেকর্ডে নেই।' : 'Detailed claimant names not recorded in available demo feed.'}
+                    </p>
+                  )}
+                  <p className="text-[10px] text-slate-400 leading-tight pt-1">
+                    {language === 'bn'
+                      ? 'সতর্কতা: শরিকদের সম্মতি ছাড়া একা কোনো অংশীদারের বিক্রয় অগ্রক্রয় (Pre-emption) বা স্বত্ব মামলার ঝুঁকিতে পড়তে পারে।'
+                      : 'Notice: Purchasing undivided shares without co-sharer partition exposes buyers to Section 96 SAT Act pre-emption.'}
+                  </p>
+                </div>
+
+                {/* B. Land Development Tax & Revenue Clearance */}
+                <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs space-y-2.5">
+                  <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+                    <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
+                      <Receipt className="w-4 h-4 text-gov-primary" />
+                      <span>{language === 'bn' ? 'ভূমি উন্নয়ন কর (খাজনা) ও দাখিলা স্থিতি' : 'Land Development Tax & Dakhila Status'}</span>
+                    </div>
+                    {evaluation.parcel?.taxStatus?.status === 'paid' ? (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">
+                        {language === 'bn' ? 'পরিশোধিত' : 'Paid Up to Date'}
+                      </span>
+                    ) : evaluation.parcel?.taxStatus?.status === 'arrears' ? (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-900 border border-rose-300">
+                        {language === 'bn' ? 'বকেয়া কর' : 'Tax Arrears'}
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
+                        {language === 'bn' ? 'অনিশ্চিত' : 'Status Unknown'}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="space-y-1.5 text-xs">
+                    <div className="flex justify-between py-1 border-b border-slate-50">
+                      <span className="text-slate-500">{language === 'bn' ? 'সর্বশেষ পরিশোধিত বছর:' : 'Last Paid Year:'}</span>
+                      <span className="font-semibold text-slate-800">{evaluation.parcel?.taxStatus?.lastPaidYearBS || 'রেকর্ড নেই (N/A)'}</span>
+                    </div>
+
+                    {evaluation.parcel?.taxStatus?.dakhilaNumber && (
+                      <div className="flex justify-between py-1 border-b border-slate-50 font-mono text-[11px]">
+                        <span className="text-slate-500">{language === 'bn' ? 'দাখিলা / রসিদ নং:' : 'Dakhila / Receipt #:'}</span>
+                        <span className="font-bold text-slate-800">{evaluation.parcel.taxStatus.dakhilaNumber}</span>
+                      </div>
+                    )}
+
+                    {evaluation.parcel?.taxStatus?.amountBdt && (
+                      <div className="flex justify-between py-1 border-b border-slate-50">
+                        <span className="text-slate-500">{language === 'bn' ? 'ধার্যকৃত করের পরিমাণ:' : 'Assessed Amount:'}</span>
+                        <span className="font-bold text-slate-800">৳{evaluation.parcel.taxStatus.amountBdt.toLocaleString('en-BD')}</span>
+                      </div>
+                    )}
+
+                    <p className="text-[11px] text-slate-600 pt-1 leading-snug">
+                      {evaluation.parcel?.taxStatus?.note}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* 3. Institutional Encumbrances, Litigation, Mortgage & Baya Deed Chain */}
+              <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-2xs space-y-3.5">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                  <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
+                    <Landmark className="w-4 h-4 text-gov-primary" />
+                    <span>{language === 'bn' ? 'প্রাতিষ্ঠানিক দায়, নিষেধাজ্ঞা ও বায়া দলিলের ধারাবাহিকতা' : 'Encumbrance, Court Orders & Baya Deed Chain Signals'}</span>
+                  </div>
+                  <span className="text-[10px] text-slate-400">
+                    {language === 'bn' ? 'ব্যাংক, আদালত ও রেজিস্ট্রেশন রেকর্ড সংকেত' : 'Bank, Court, and Deed Registry Signals'}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                  {/* Mortgage Check */}
+                  <div className={`p-3 rounded-lg border ${
+                    evaluation.parcel?.encumbranceSignals?.hasMortgage
+                      ? 'bg-rose-50/80 border-rose-300 text-rose-950'
+                      : 'bg-slate-50 border-slate-200 text-slate-800'
+                  }`}>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[10px] uppercase font-bold text-slate-500">
+                        {language === 'bn' ? 'ব্যাংক মর্টগেজ / দায়' : 'Bank Mortgage / Lien'}
+                      </span>
+                      {evaluation.parcel?.encumbranceSignals?.hasMortgage ? (
+                        <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-rose-200 text-rose-900">মর্টগেজ বিদ্যমান</span>
+                      ) : (
+                        <span className="px-1.5 py-0.2 rounded text-[9px] font-medium bg-emerald-100 text-emerald-800">দায়মুক্ত</span>
+                      )}
+                    </div>
+                    <p className="text-[11px] leading-snug">
+                      {evaluation.parcel?.encumbranceSignals?.hasMortgage
+                        ? `${evaluation.parcel.encumbranceSignals.bankOrLender} — ${evaluation.parcel.encumbranceSignals.mortgageNote}`
+                        : language === 'bn'
+                        ? 'সিমুলেটেড লেজারে কোনো রেজিস্ট্রিকৃত ব্যাংক চার্জ নেই।'
+                        : 'No active registered bank mortgage on demo record.'}
+                    </p>
+                  </div>
+
+                  {/* Court Stay Order Check */}
+                  <div className={`p-3 rounded-lg border ${
+                    evaluation.parcel?.encumbranceSignals?.hasStayOrder
+                      ? 'bg-rose-50/80 border-rose-300 text-rose-950'
+                      : 'bg-slate-50 border-slate-200 text-slate-800'
+                  }`}>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[10px] uppercase font-bold text-slate-500">
+                        {language === 'bn' ? 'আদালতের নিষেধাজ্ঞা' : 'Civil Court Injunction'}
+                      </span>
+                      {evaluation.parcel?.encumbranceSignals?.hasStayOrder ? (
+                        <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-rose-200 text-rose-900">নিষেধাজ্ঞা জারি</span>
+                      ) : (
+                        <span className="px-1.5 py-0.2 rounded text-[9px] font-medium bg-emerald-100 text-emerald-800">অর্ডার নেই</span>
+                      )}
+                    </div>
+                    <p className="text-[11px] leading-snug">
+                      {evaluation.parcel?.encumbranceSignals?.hasStayOrder
+                        ? `${evaluation.parcel.encumbranceSignals.courtName} (${evaluation.parcel.encumbranceSignals.caseRef}) — ${evaluation.parcel.encumbranceSignals.litigationNote}`
+                        : language === 'bn'
+                        ? 'উপলব্ধ রেকর্ডে কোনো আদালতের স্থগিতাদেশ নেই।'
+                        : 'No pending civil court injunction reported in demo data.'}
+                    </p>
+                  </div>
+
+                  {/* Khas / Vested Property */}
+                  <div className={`p-3 rounded-lg border ${
+                    evaluation.parcel?.encumbranceSignals?.isKhasOrVested
+                      ? 'bg-rose-50/80 border-rose-300 text-rose-950'
+                      : 'bg-slate-50 border-slate-200 text-slate-800'
+                  }`}>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[10px] uppercase font-bold text-slate-500">
+                        {language === 'bn' ? 'খাস / অর্পিত সম্পত্তি' : 'Khas / Vested Property'}
+                      </span>
+                      {evaluation.parcel?.encumbranceSignals?.isKhasOrVested ? (
+                        <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-rose-200 text-rose-900">তালিকাভুক্ত</span>
+                      ) : (
+                        <span className="px-1.5 py-0.2 rounded text-[9px] font-medium bg-emerald-100 text-emerald-800">মুক্ত</span>
+                      )}
+                    </div>
+                    <p className="text-[11px] leading-snug">
+                      {evaluation.parcel?.encumbranceSignals?.isKhasOrVested
+                        ? evaluation.parcel.encumbranceSignals.vestedNote
+                        : language === 'bn'
+                        ? 'সরকারি খাস বা অর্পিত সম্পত্তি তালিকায় অন্তর্ভুক্ত নয়।'
+                        : 'Not listed in government khas or vested property schedule.'}
+                    </p>
+                  </div>
+
+                  {/* Baya Deed Chain (25 Years) */}
+                  <div className={`p-3 rounded-lg border ${
+                    evaluation.parcel?.bayaChain?.chainIntact
+                      ? 'bg-slate-50 border-slate-200 text-slate-800'
+                      : 'bg-amber-50/80 border-amber-300 text-amber-950'
+                  }`}>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[10px] uppercase font-bold text-slate-500">
+                        {language === 'bn' ? '২৫ বছরের বায়া দলিল' : '25-Year Baya Chain'}
+                      </span>
+                      {evaluation.parcel?.bayaChain?.chainIntact ? (
+                        <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-emerald-100 text-emerald-800">অবিচ্ছিন্ন</span>
+                      ) : (
+                        <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-200 text-amber-900">ধারাবাহিকতায় ফাঁক</span>
+                      )}
+                    </div>
+                    <p className="text-[11px] leading-snug">
+                      {evaluation.parcel?.bayaChain?.note || (language === 'bn' ? 'বায়া দলিলের রেকর্ড পরীক্ষিত।' : 'Baya deeds verified in record.')}
+                    </p>
+                  </div>
+                </div>
+
+                {evaluation.parcel?.encumbranceSignals?.hasPowerOfAttorney && (
+                  <div className="p-2.5 rounded-lg bg-blue-50 border border-blue-200 text-[11px] text-blue-900 flex items-start gap-2">
+                    <FileText className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong>{language === 'bn' ? 'আমমোক্তারনামা (Power of Attorney) সতর্কতা:' : 'Power of Attorney Notice:'}</strong>{' '}
+                      {evaluation.parcel.encumbranceSignals.poaDetails}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 4. Core Status Checkpoints: Transfer, Mutation Application, Mutation Completion */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Checkpoint 1: Transfer / Registered Deed */}
                 <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs space-y-2">
@@ -719,7 +1011,7 @@ export const CheckLandPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* 3. Transparent Rule-Based Risk Assessment Card */}
+              {/* 5. Transparent Rule-Based Risk Assessment Card */}
               {evaluation.risk && (
                 <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-2xs space-y-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
@@ -808,7 +1100,7 @@ export const CheckLandPage: React.FC = () => {
                 </div>
               )}
 
-              {/* 4. Chronological Transaction Activity Timeline */}
+              {/* 6. Chronological Transaction Activity Timeline */}
               <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-2xs space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                   <div className="flex items-center gap-2">

@@ -71,6 +71,54 @@ export const HomePage: React.FC = () => {
         ? 'সাবেক এসএ এবং সাম্প্রতিক আরএস জরিপের মধ্যে সীমানা ও খতিয়ান অসঙ্গতি পাওয়া গেছে।'
         : 'Discrepancy detected between historic SA sheet and modern RS record. Acreage mismatch flagged.',
     },
+    {
+      id: 'DEMO-PARCEL-005',
+      scenarioNum: 5,
+      title: language === 'bn' ? 'ব্যাংক মর্টগেজ ও আমমোক্তারনামা' : 'Bank Mortgage & Disputed POA',
+      badge: language === 'bn' ? 'পর্যালোচনা জরুরি' : 'Review Recommended',
+      badgeClass: 'bg-purple-100 text-purple-900 border-purple-300',
+      dag: '210',
+      mouza: 'Nasirabad (Ctg)',
+      desc: language === 'bn'
+        ? 'অগ্রণী ব্যাংকে রেজিস্ট্রিকৃত মর্টগেজ দায় ও মূল মালিক কর্তৃক পাওয়ার অব অ্যাটর্নি প্রত্যাহারের নোটিশ।'
+        : 'Registered bank mortgage lien with Agrani Bank PLC and disputed Power of Attorney revocation.',
+    },
+    {
+      id: 'DEMO-PARCEL-006',
+      scenarioNum: 6,
+      title: language === 'bn' ? 'জমির শ্রেণি অমিল (কৃষি বনাম শিল্প)' : 'Classification Mismatch',
+      badge: language === 'bn' ? 'পর্যালোচনা জরুরি' : 'Review Recommended',
+      badgeClass: 'bg-amber-100 text-amber-900 border-amber-300',
+      dag: '201',
+      mouza: 'Joydebpur (Gzp)',
+      desc: language === 'bn'
+        ? 'খতিয়ানে কৃষিজমি হিসেবে চিহ্নিত কিন্তু বাণিজ্যিক শিল্প কারখানা হিসেবে বিক্রয়ের চুক্তি; ডিসি অনুমোদন নেই।'
+        : 'Classified as agricultural Nal in porcha, sold as industrial factory plot without DC clearance.',
+    },
+    {
+      id: 'DEMO-PARCEL-007',
+      scenarioNum: 7,
+      title: language === 'bn' ? 'শরিকি অগ্রক্রয় মামলা (ধারা ৯৬)' : 'Co-Sharer Pre-emption Case',
+      badge: language === 'bn' ? 'পর্যালোচনা জরুরি' : 'Review Recommended',
+      badgeClass: 'bg-orange-100 text-orange-900 border-orange-300',
+      dag: '64',
+      mouza: 'Zindabazar (Syl)',
+      desc: language === 'bn'
+        ? 'নোটিশ ব্যতীত জমি বিক্রির অভিযোগে শরিক কর্তৃক এসএটি আইন ধারা ৯৬ অনুযায়ী অগ্রক্রয় মোকদ্দমা দায়ের।'
+        : 'Sibling co-sharer lodged formal pre-emption objection under SAT Act Section 96; mutation contested.',
+    },
+    {
+      id: 'DEMO-PARCEL-008',
+      scenarioNum: 8,
+      title: language === 'bn' ? 'নিখুঁত ধারাবাহিকতা ও নিয়মিত কর' : 'Clean Title Chain & Paid Tax',
+      badge: language === 'bn' ? 'বড় অসঙ্গতি পাওয়া যায়নি' : 'No Major Issue Detected',
+      badgeClass: 'bg-emerald-100 text-emerald-900 border-emerald-300',
+      dag: '304',
+      mouza: 'Senpara (Mirpur)',
+      desc: language === 'bn'
+        ? 'সিএস-এসএ-আরএস খতিয়ান ও বায়া দলিলের অবিকল ধারাবাহিকতা, নামজারি সম্পন্ন ও হাল সনের কর পরিশোধিত।'
+        : 'CS-SA-RS uninterrupted chain of title, completed mutation porcha, and tax paid to date.',
+    },
   ];
 
   return (
