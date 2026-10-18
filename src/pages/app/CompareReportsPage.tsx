@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useSavedChecks } from '../../context/SavedChecksContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { formatStatusLabel, toBengaliNumerals } from '../../utils/formatStatus';
+import { getTaskTitle } from '../../utils/taskTranslations';
 import { GitCompare, AlertTriangle, ArrowRight, CheckCircle, Scale, Clock, MapPin, Layers } from 'lucide-react';
 import { DiligenceSubNav } from '../../components/layout/DiligenceSubNav';
 
@@ -154,7 +155,7 @@ export const CompareReportsPage: React.FC = () => {
                 <div className="space-y-1.5 pt-1">
                   {(checkA.verificationTasks || []).map((t) => (
                     <div key={t.id} className="p-2 bg-slate-50 rounded border border-slate-200 text-[11px] flex items-center justify-between">
-                      <span className="truncate pr-2">{t.title}</span>
+                      <span className="truncate pr-2">{getTaskTitle(t, isBn)}</span>
                       <span className={`px-1.5 py-0.2 rounded text-[9px] font-bold uppercase shrink-0 ${
                         t.status === 'completed' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-700'
                       }`}>
@@ -255,7 +256,7 @@ export const CompareReportsPage: React.FC = () => {
                 <div className="space-y-1.5 pt-1">
                   {(checkB.verificationTasks || []).map((t) => (
                     <div key={t.id} className="p-2 bg-slate-50 rounded border border-slate-200 text-[11px] flex items-center justify-between">
-                      <span className="truncate pr-2">{t.title}</span>
+                      <span className="truncate pr-2">{getTaskTitle(t, isBn)}</span>
                       <span className={`px-1.5 py-0.2 rounded text-[9px] font-bold uppercase shrink-0 ${
                         t.status === 'completed' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-700'
                       }`}>

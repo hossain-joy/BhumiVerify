@@ -3,6 +3,7 @@ import { useSearchParams, Link } from 'react-router-dom';
 import { useSavedChecks } from '../../context/SavedChecksContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { toBengaliNumerals } from '../../utils/formatStatus';
+import { getTaskTitle, getTaskDescription, getTaskNotes } from '../../utils/taskTranslations';
 import {
   CheckSquare,
   Plus,
@@ -345,6 +346,9 @@ export const VerificationPlanPage: React.FC = () => {
                   filteredTasks.map((task) => {
                     const isCompleted = task.status === 'completed';
                     const isInProgress = task.status === 'in_progress';
+                    const taskTitle = getTaskTitle(task, isBn);
+                    const taskDesc = getTaskDescription(task, isBn);
+                    const taskNotes = getTaskNotes(task, isBn);
 
                     return (
                       <div
@@ -369,7 +373,7 @@ export const VerificationPlanPage: React.FC = () => {
                                 ? 'bg-amber-100 border-amber-300 text-amber-800'
                                 : 'border-slate-300 hover:border-gov-primary bg-white text-transparent'
                             }`}
-                            aria-label={`Toggle status for task: ${task.title}`}
+                            aria-label={`Toggle status for task: ${taskTitle}`}
                             title={isBn ? 'অবস্থা পরিবর্তন করতে ক্লিক করুন' : 'Click to cycle task status'}
                           >
                             {isCompleted && <Check className="w-3.5 h-3.5" />}
@@ -383,7 +387,7 @@ export const VerificationPlanPage: React.FC = () => {
                                   isCompleted ? 'line-through text-slate-500' : 'text-slate-900'
                                 }`}
                               >
-                                {task.title}
+                                {taskTitle}
                               </h3>
                               <button
                                 type="button"
@@ -405,12 +409,12 @@ export const VerificationPlanPage: React.FC = () => {
                             </div>
 
                             <p className="text-xs text-slate-600 leading-relaxed">
-                              {task.description}
+                              {taskDesc}
                             </p>
 
-                            {task.notes && (
+                            {taskNotes && (
                               <p className="text-[11px] text-slate-500 italic bg-slate-50 p-2 rounded-lg border border-slate-100">
-                                <span className="font-semibold text-slate-600 not-italic">{isBn ? 'অনুসন্ধান নোট:' : 'Diligence Note:'}</span> {task.notes}
+                                <span className="font-semibold text-slate-600 not-italic">{isBn ? 'অনুসন্ধান নোট:' : 'Diligence Note:'}</span> {taskNotes}
                               </p>
                             )}
 

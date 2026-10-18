@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useSavedChecks, SavedVerificationTask } from '../../context/SavedChecksContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { toBengaliNumerals } from '../../utils/formatStatus';
+import { getTaskTitle, getTaskDescription } from '../../utils/taskTranslations';
 import {
   FileText,
   CheckSquare,
@@ -270,7 +271,7 @@ export const DashboardPage: React.FC = () => {
                           t.status === 'completed' ? 'line-through text-slate-500' : 'text-slate-900'
                         }`}
                       >
-                        {t.title}
+                        {getTaskTitle(t, isBn)}
                       </p>
                       <span
                         className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
@@ -290,7 +291,7 @@ export const DashboardPage: React.FC = () => {
                     </div>
 
                     <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">
-                      {t.description}
+                      {getTaskDescription(t, isBn)}
                     </p>
 
                     <div className="flex items-center gap-2 mt-2 text-[10px] text-slate-400">

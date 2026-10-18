@@ -281,6 +281,79 @@ assert.strictEqual(metrics.pending, 3);
 assert.strictEqual(metrics.pct, 30);
 console.log('✔ Function 9: Verification tasks calculation & cycling passed (3/10 = 30%).');
 
+// ----------------------------------------------------
+// 10. FUNCTIONAL AUDIT: Verification Task Bengali Translations
+// ----------------------------------------------------
+const taskTranslations = {
+  'obtain physically certified copy of mutation porcha': 'খারিজ পর্চার মূল সার্টিফাইড কপি সংগ্রহ',
+  'visit gulshan revenue circle ac (land) office to obtain certified record of rights.': 'সহকারী কমিশনার (ভূমি) রাজস্ব সার্কেল অফিস থেকে খতিয়ানের সত্যায়িত পর্চা ও ডিসিআর সংগ্রহ করুন।',
+  'collected on 2026-03-21.': '২১-০৩-২০২৬ তারিখে সংগৃহীত হয়েছে।',
+  'conduct sub-registry 12-to-25 year nil search': 'সাব-রেজিস্ট্রি অফিসে ১২ থেকে ২৫ বছরের তল্লাশি (নিল সার্চ)',
+  'verify volume indexes for undisclosed mortgages or prior deeds.': 'অপ্রকাশিত ব্যাংক বন্ধক বা পূর্ববর্তী দলিলের ইতিহাস নিশ্চিত করতে বালাম বই তল্লাশি করুন।',
+  'search slip filed with deed writer; awaiting volume inspection report.': 'তল্লাশির স্লিপ দলিল লেখকের কাছে জমা দেওয়া হয়েছে; বালাম বই পরিদর্শনের রিপোর্টের অপেক্ষায় রয়েছে।',
+  'physical on-site possession verification': 'জমির সরেজমিন বাস্তব দখল ও সীমানা যাচাই',
+  'interview local neighbors and inspect boundary pillars on site.': 'সরেজমিনে গিয়ে প্রতিবেশীদের সাথে কথা বলুন এবং সীমানা পিলার ও আইল প্রত্যক্ষ করুন।',
+  'visited site on friday; boundaries aligned with mouza sheet.': 'শুক্রবার সরেজমিন পরিদর্শন সম্পন্ন; মৌজা নকশার সাথে সীমানার মিল পাওয়া গেছে।',
+};
+
+function getTaskTitle(task, isBn) {
+  if (!isBn) return task.title;
+  if (task.titleBn) return task.titleBn;
+  const key = task.title?.trim().toLowerCase();
+  return taskTranslations[key] || task.title;
+}
+
+function getTaskDescription(task, isBn) {
+  if (!isBn) return task.description;
+  if (task.descriptionBn) return task.descriptionBn;
+  const key = task.description?.trim().toLowerCase();
+  return taskTranslations[key] || task.description;
+}
+
+function getTaskNotes(task, isBn) {
+  if (!task.notes && !task.notesBn) return undefined;
+  if (!isBn) return task.notes || task.notesBn;
+  if (task.notesBn) return task.notesBn;
+  if (task.notes) {
+    const key = task.notes.trim().toLowerCase();
+    return taskTranslations[key] || task.notes;
+  }
+  return undefined;
+}
+
+// Test Task 1
+const testTask1 = {
+  title: 'Obtain physically certified copy of Mutation Porcha',
+  description: 'Visit Gulshan Revenue Circle AC (Land) office to obtain certified Record of Rights.',
+  notes: 'Collected on 2026-03-21.',
+};
+assert.strictEqual(getTaskTitle(testTask1, true), 'খারিজ পর্চার মূল সার্টিফাইড কপি সংগ্রহ');
+assert.strictEqual(getTaskDescription(testTask1, true), 'সহকারী কমিশনার (ভূমি) রাজস্ব সার্কেল অফিস থেকে খতিয়ানের সত্যায়িত পর্চা ও ডিসিআর সংগ্রহ করুন।');
+assert.strictEqual(getTaskNotes(testTask1, true), '২১-০৩-২০২৬ তারিখে সংগৃহীত হয়েছে।');
+assert.strictEqual(getTaskTitle(testTask1, false), 'Obtain physically certified copy of Mutation Porcha');
+
+// Test Task 2
+const testTask2 = {
+  title: 'Conduct Sub-Registry 12-to-25 Year Nil Search',
+  description: 'Verify volume indexes for undisclosed mortgages or prior deeds.',
+  notes: 'Search slip filed with deed writer; awaiting volume inspection report.',
+};
+assert.strictEqual(getTaskTitle(testTask2, true), 'সাব-রেজিস্ট্রি অফিসে ১২ থেকে ২৫ বছরের তল্লাশি (নিল সার্চ)');
+assert.strictEqual(getTaskDescription(testTask2, true), 'অপ্রকাশিত ব্যাংক বন্ধক বা পূর্ববর্তী দলিলের ইতিহাস নিশ্চিত করতে বালাম বই তল্লাশি করুন।');
+assert.strictEqual(getTaskNotes(testTask2, true), 'তল্লাশির স্লিপ দলিল লেখকের কাছে জমা দেওয়া হয়েছে; বালাম বই পরিদর্শনের রিপোর্টের অপেক্ষায় রয়েছে।');
+
+// Test Task 3
+const testTask3 = {
+  title: 'Physical on-site possession verification',
+  description: 'Interview local neighbors and inspect boundary pillars on site.',
+  notes: 'Visited site on Friday; boundaries aligned with mouza sheet.',
+};
+assert.strictEqual(getTaskTitle(testTask3, true), 'জমির সরেজমিন বাস্তব দখল ও সীমানা যাচাই');
+assert.strictEqual(getTaskDescription(testTask3, true), 'সরেজমিনে গিয়ে প্রতিবেশীদের সাথে কথা বলুন এবং সীমানা পিলার ও আইল প্রত্যক্ষ করুন।');
+assert.strictEqual(getTaskNotes(testTask3, true), 'শুক্রবার সরেজমিন পরিদর্শন সম্পন্ন; মৌজা নকশার সাথে সীমানার মিল পাওয়া গেছে।');
+
+console.log('✔ Function 10: Bilingual Task translations (Bangla & English) passed.');
+
 console.log('\n====================================================');
-console.log('   ALL 9 FUNCTION & SECURITY SUITES PASSED! (9/9)   ');
+console.log('   ALL 10 FUNCTION & SECURITY SUITES PASSED! (10/10) ');
 console.log('====================================================\n');

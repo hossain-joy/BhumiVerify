@@ -6,6 +6,7 @@ import { Modal } from '../../components/common/Modal';
 import { ClearLandConceptCard } from '../../components/land/ClearLandConceptCard';
 import { useLanguage } from '../../context/LanguageContext';
 import { formatStatusLabel, toBengaliNumerals } from '../../utils/formatStatus';
+import { getTaskTitle, getTaskDescription, getTaskNotes } from '../../utils/taskTranslations';
 import {
   FileText,
   Printer,
@@ -450,6 +451,9 @@ export const CheckReportPage: React.FC = () => {
             {(check.verificationTasks || []).map((task) => {
               const isDone = task.status === 'completed';
               const isInProgress = task.status === 'in_progress';
+              const taskTitle = getTaskTitle(task, isBn);
+              const taskDesc = getTaskDescription(task, isBn);
+              const taskNotes = getTaskNotes(task, isBn);
 
               return (
                 <div
@@ -478,7 +482,7 @@ export const CheckReportPage: React.FC = () => {
                           isDone ? 'line-through text-slate-500' : 'text-slate-900'
                         }`}
                       >
-                        {task.title}
+                        {taskTitle}
                       </h3>
                       <span
                         className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
@@ -497,11 +501,11 @@ export const CheckReportPage: React.FC = () => {
                       </span>
                     </div>
                     <p className="text-xs text-slate-600 leading-relaxed">
-                      {task.description}
+                      {taskDesc}
                     </p>
-                    {task.notes && (
+                    {taskNotes && (
                       <p className="text-[11px] text-slate-500 italic pt-0.5">
-                        {isBn ? 'নোট:' : 'Note:'} {task.notes}
+                        {isBn ? 'নোট:' : 'Note:'} {taskNotes}
                       </p>
                     )}
                   </div>

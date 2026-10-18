@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { StorageAdapter, STORAGE_KEYS } from '../lib/storageAdapter';
 import { SEED_SAVED_CHECKS, SavedLandCheck, SavedVerificationTask } from '../data/seedSavedChecks';
+import { TASK_TEXT_TRANSLATIONS } from '../utils/taskTranslations';
 export type { SavedLandCheck, SavedVerificationTask };
 
 interface SavedChecksContextType {
@@ -36,10 +37,26 @@ export const SavedChecksProvider: React.FC<{ children: React.ReactNode }> = ({ c
         SEED_SAVED_CHECKS
       );
       if (Array.isArray(loaded)) {
-        return loaded.map((c) => ({
-          ...c,
-          verificationTasks: Array.isArray(c?.verificationTasks) ? c.verificationTasks : [],
-        }));
+        return loaded.map((c) => {
+          const seedCheck = SEED_SAVED_CHECKS.find((s) => s.id === c.id);
+          const tasks = Array.isArray(c?.verificationTasks) ? c.verificationTasks : [];
+          const enrichedTasks = tasks.map((t) => {
+            const seedTask = seedCheck?.verificationTasks.find((st) => st.id === t.id);
+            const titleLower = t.title ? t.title.trim().toLowerCase() : '';
+            const descLower = t.description ? t.description.trim().toLowerCase() : '';
+            const notesLower = t.notes ? t.notes.trim().toLowerCase() : '';
+            return {
+              ...t,
+              titleBn: t.titleBn || seedTask?.titleBn || (titleLower ? TASK_TEXT_TRANSLATIONS[titleLower] : undefined),
+              descriptionBn: t.descriptionBn || seedTask?.descriptionBn || (descLower ? TASK_TEXT_TRANSLATIONS[descLower] : undefined),
+              notesBn: t.notesBn || seedTask?.notesBn || (notesLower ? TASK_TEXT_TRANSLATIONS[notesLower] : undefined),
+            };
+          });
+          return {
+            ...c,
+            verificationTasks: enrichedTasks,
+          };
+        });
       }
     } catch {
       // ignore
@@ -70,19 +87,25 @@ export const SavedChecksProvider: React.FC<{ children: React.ReactNode }> = ({ c
         {
           id: `TASK-${Date.now()}-1`,
           title: 'Obtain certified copy of Mutation Porcha from AC (Land)',
+          titleBn: 'সহকারী কমিশনার (ভূমি) অফিস থেকে নামজারি পর্চার সার্টিফাইড কপি সংগ্রহ',
           description: 'Apply at the local Revenue Circle office for a signed, certified Record of Rights.',
+          descriptionBn: 'উপজেলা/সার্কেল ভূমি অফিস থেকে নামজারি অনুমোদনের সত্যায়িত খতিয়ান ও ডিসিআর সংগ্রহ করুন।',
           status: 'not_started',
         },
         {
           id: `TASK-${Date.now()}-2`,
           title: 'Conduct Nil Search at Sub-Registry Office',
+          titleBn: 'সাব-রেজিস্ট্রি অফিসে ১২-২৫ বছরের বালাম তল্লাশি (Nil Search)',
           description: 'Search Book 1 indexes for at least 12-25 years to uncover unrecorded transfers or mortgages.',
+          descriptionBn: '১ নম্বর বালামের ইনডেক্স তল্লাশ করে অপ্রকাশিত কোনো রেজিস্ট্রি দলিল বা ব্যাংক বন্ধক রয়েছে কি না তা নিশ্চিত করুন।',
           status: 'not_started',
         },
         {
           id: `TASK-${Date.now()}-3`,
           title: 'On-site physical possession and boundary verification',
+          titleBn: 'মাঠপর্যায়ে সশরীরে দখল ও সীমানা নির্ধারণ যাচাই',
           description: 'Inspect physical ground boundaries and interview adjacent landholders.',
+          descriptionBn: 'জমির চারপাশের সীমানা খুঁটি এবং দাগের প্রকৃত অবস্থান সরেজমিনে যাচাই করুন।',
           status: 'not_started',
         },
       ],
@@ -159,9 +182,15 @@ export const SavedChecksProvider: React.FC<{ children: React.ReactNode }> = ({ c
       prev.map((c) => {
         if (c.id !== checkId) return c;
         const tasksList = Array.isArray(c.verificationTasks) ? c.verificationTasks : [];
+        const titleLower = task.title ? task.title.trim().toLowerCase() : '';
+        const descLower = task.description ? task.description.trim().toLowerCase() : '';
+        const notesLower = task.notes ? task.notes.trim().toLowerCase() : '';
         const newTask: SavedVerificationTask = {
           ...task,
           id: `TASK-${Date.now()}`,
+          titleBn: task.titleBn || (titleLower ? TASK_TEXT_TRANSLATIONS[titleLower] : undefined),
+          descriptionBn: task.descriptionBn || (descLower ? TASK_TEXT_TRANSLATIONS[descLower] : undefined),
+          notesBn: task.notesBn || (notesLower ? TASK_TEXT_TRANSLATIONS[notesLower] : undefined),
         };
         return {
           ...c,
