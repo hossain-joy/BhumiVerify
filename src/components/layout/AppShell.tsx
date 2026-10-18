@@ -1,5 +1,4 @@
 import React from 'react';
-import { DisclaimerBanner } from './DisclaimerBanner';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { ToastContainer } from '../common/ToastContainer';
@@ -17,9 +16,6 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
 
       {/* Notifications / Toast container */}
       <ToastContainer />
-
-      {/* Mandatory Statutory Disclaimer Banner */}
-      <DisclaimerBanner />
 
       {/* Minimal Navigation Header */}
       <Header />
