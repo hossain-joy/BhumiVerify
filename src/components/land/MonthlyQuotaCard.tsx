@@ -55,9 +55,15 @@ export const MonthlyQuotaCard: React.FC<MonthlyQuotaCardProps> = ({
             <span className="font-mono">
               {isBn ? toBengaliNumerals(quota.used) : quota.used}/{isBn ? toBengaliNumerals(quota.limit) : quota.limit}
             </span>{' '}
-            <span className="text-xs font-semibold text-slate-600">
-              ({isBn ? `${toBengaliNumerals(quota.remaining)}টি বাকি` : `${quota.remaining} left`})
-            </span>
+            {quota.isTestingMode ? (
+              <span className="text-[11px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-300">
+                {isBn ? 'টেস্টিং মোড' : 'Testing'}
+              </span>
+            ) : (
+              <span className="text-xs font-semibold text-slate-600">
+                ({isBn ? `${toBengaliNumerals(quota.remaining)}টি বাকি` : `${quota.remaining} left`})
+              </span>
+            )}
           </span>
         </div>
 
@@ -107,9 +113,16 @@ export const MonthlyQuotaCard: React.FC<MonthlyQuotaCardProps> = ({
             )}
           </div>
           <div>
-            <h2 className="text-base font-bold text-slate-900">
-              {isBn ? 'মাসিক আবেদন কোটা' : 'Monthly Verification Quota'}
-            </h2>
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="text-base font-bold text-slate-900">
+                {isBn ? 'মাসিক আবেদন কোটা' : 'Monthly Verification Quota'}
+              </h2>
+              {quota.isTestingMode && (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                  {isBn ? 'টেস্টিং মোড: সীমাহীন আবেদন উন্মুক্ত' : 'Testing Mode: Unlimited'}
+                </span>
+              )}
+            </div>
             <span className="text-xs text-slate-500 font-medium">
               {isBn ? `নবায়ন: ${quota.resetDateFormattedBn}` : `Resets: ${quota.resetDateFormatted}`}
             </span>
@@ -126,7 +139,9 @@ export const MonthlyQuotaCard: React.FC<MonthlyQuotaCardProps> = ({
             {isBn ? toBengaliNumerals(quota.limit) : quota.limit}
           </span>
           <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ml-1 ${getTierColor()}`}>
-            {quota.isExceeded
+            {quota.isTestingMode
+              ? (isBn ? 'উন্মুক্ত' : 'UNLIMITED')
+              : quota.isExceeded
               ? (isBn ? 'পূর্ণ' : 'FULL')
               : (isBn ? `${toBengaliNumerals(quota.remaining)}টি বাকি` : `${quota.remaining} LEFT`)}
           </span>

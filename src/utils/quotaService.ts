@@ -23,6 +23,7 @@ export interface QuotaStatus {
   used: number;
   remaining: number;
   isExceeded: boolean;
+  isTestingMode?: boolean;
   percentage: number;
   resetDateFormatted: string;
   resetDateFormattedBn: string;
@@ -32,6 +33,13 @@ export interface QuotaStatus {
 }
 
 export const MONTHLY_QUOTA_LIMIT = 5;
+
+/**
+ * Testing Mode Switch:
+ * While the application is in testing/development phase, the 5-application monthly block
+ * is temporarily disabled to prevent testing friction. Applications are still recorded cleanly.
+ */
+export const IS_TESTING_MODE = true;
 const STORAGE_KEY = 'bhumiverify_monthly_quotas_v2';
 
 const BN_MONTHS = [
@@ -123,7 +131,8 @@ export function getMonthlyQuota(userId: string = 'USER-DEMO-001'): QuotaStatus {
 
   const used = monthlyApplications.length;
   const remaining = Math.max(0, MONTHLY_QUOTA_LIMIT - used);
-  const isExceeded = used >= MONTHLY_QUOTA_LIMIT;
+  // During testing mode, the 5-application limit is bypassed to avoid testing friction
+  const isExceeded = IS_TESTING_MODE ? false : used >= MONTHLY_QUOTA_LIMIT;
   const percentage = Math.min(100, Math.round((used / MONTHLY_QUOTA_LIMIT) * 100));
 
   // Next reset date is the 1st of the next month
@@ -136,6 +145,7 @@ export function getMonthlyQuota(userId: string = 'USER-DEMO-001'): QuotaStatus {
     used,
     remaining,
     isExceeded,
+    isTestingMode: IS_TESTING_MODE,
     percentage,
     resetDateFormatted,
     resetDateFormattedBn,
@@ -151,6 +161,7 @@ export function getMonthlyQuota(userId: string = 'USER-DEMO-001'): QuotaStatus {
  * Checks whether user has remaining quota to perform an application
  */
 export function canApply(userId: string = 'USER-DEMO-001'): boolean {
+  if (IS_TESTING_MODE) return true;
   const status = getMonthlyQuota(userId);
   return !status.isExceeded;
 }
@@ -163,7 +174,7 @@ export function recordVerificationApplication(
 ): { success: boolean; error?: string; errorBn?: string; quota: QuotaStatus } {
   const currentQuota = getMonthlyQuota(app.userId);
 
-  if (currentQuota.isExceeded) {
+  if (!IS_TESTING_MODE && currentQuota.isExceeded) {
     return {
       success: false,
       error: `Monthly quota reached (${MONTHLY_QUOTA_LIMIT}/${MONTHLY_QUOTA_LIMIT}). Anti-scraping policy restricts accounts to 5 checks per month.`,
