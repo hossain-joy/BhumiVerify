@@ -46,13 +46,11 @@ export const Header: React.FC = () => {
 
   // Dropdown states
   const [recordsDropdownOpen, setRecordsDropdownOpen] = useState(false);
-  const [diligenceDropdownOpen, setDiligenceDropdownOpen] = useState(false);
   const [resourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   const recordsRef = useRef<HTMLDivElement>(null);
-  const diligenceRef = useRef<HTMLDivElement>(null);
   const resourcesRef = useRef<HTMLDivElement>(null);
   const notificationsRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
@@ -63,9 +61,6 @@ export const Header: React.FC = () => {
       const target = e.target as Node;
       if (recordsRef.current && !recordsRef.current.contains(target)) {
         setRecordsDropdownOpen(false);
-      }
-      if (diligenceRef.current && !diligenceRef.current.contains(target)) {
-        setDiligenceDropdownOpen(false);
       }
       if (resourcesRef.current && !resourcesRef.current.contains(target)) {
         setResourcesDropdownOpen(false);
@@ -85,7 +80,6 @@ export const Header: React.FC = () => {
   useEffect(() => {
     setMobileMenuOpen(false);
     setRecordsDropdownOpen(false);
-    setDiligenceDropdownOpen(false);
     setResourcesDropdownOpen(false);
     setNotificationsOpen(false);
     setUserMenuOpen(false);
@@ -104,17 +98,10 @@ export const Header: React.FC = () => {
 
   // Metrics for badges
   const totalChecks = savedChecks?.length || 0;
-  const pendingTasks = (savedChecks || [])
-    .flatMap((c) => c?.verificationTasks || [])
-    .filter((t) => t && t.status !== 'completed').length;
 
   const isRecordsActive =
     location.pathname.startsWith('/checks') ||
     location.pathname.startsWith('/compare');
-
-  const isDiligenceActive =
-    location.pathname.startsWith('/verification-plan') ||
-    location.pathname.startsWith('/documents');
 
   const isResourcesActive =
     location.pathname.startsWith('/how-it-works') ||
@@ -202,7 +189,6 @@ export const Header: React.FC = () => {
                   type="button"
                   onClick={() => {
                     setRecordsDropdownOpen(!recordsDropdownOpen);
-                    setDiligenceDropdownOpen(false);
                     setResourcesDropdownOpen(false);
                   }}
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs xl:text-sm font-semibold transition-all cursor-pointer ${
@@ -251,68 +237,13 @@ export const Header: React.FC = () => {
               </div>
             )}
 
-            {/* Section 2: Diligence & Checklist */}
-            <div className="relative" ref={diligenceRef}>
-              <button
-                type="button"
-                onClick={() => {
-                  setDiligenceDropdownOpen(!diligenceDropdownOpen);
-                  setRecordsDropdownOpen(false);
-                  setResourcesDropdownOpen(false);
-                }}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs xl:text-sm font-semibold transition-all cursor-pointer ${
-                  isDiligenceActive
-                    ? 'bg-emerald-50 text-gov-primary font-bold shadow-2xs border border-emerald-200/70'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
-                }`}
-                aria-expanded={diligenceDropdownOpen}
-              >
-                <CheckSquare className="w-4 h-4 text-slate-500" />
-                <span>{isBn ? 'যাচাই চেকলিস্ট' : 'Due Diligence'}</span>
-                {pendingTasks > 0 && (
-                  <span className="text-[11px] px-1.5 py-0.2 rounded-full bg-amber-50 text-amber-800 font-mono font-bold border border-amber-200">
-                    {isBn ? toBengaliNumerals(pendingTasks) : pendingTasks}
-                  </span>
-                )}
-                <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
-              </button>
-
-              {diligenceDropdownOpen && (
-                <div className="absolute top-full left-0 mt-2 w-60 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 animate-scale-up">
-                  <Link
-                    to="/verification-plan"
-                    className="flex items-center justify-between px-4 py-2.5 text-xs xl:text-sm font-semibold text-slate-800 hover:bg-slate-50 hover:text-gov-primary transition-colors"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <CheckSquare className="w-4 h-4 text-gov-primary" />
-                      <span>{isBn ? 'যাচাই পরিকল্পনা ট্র্যাকার' : 'Verification Plan Tracker'}</span>
-                    </div>
-                    {pendingTasks > 0 && (
-                      <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
-                        {isBn ? `${toBengaliNumerals(pendingTasks)} বাকি` : `${pendingTasks} left`}
-                      </span>
-                    )}
-                  </Link>
-
-                  <Link
-                    to="/documents"
-                    className="flex items-center gap-2.5 px-4 py-2.5 text-xs xl:text-sm font-semibold text-slate-800 hover:bg-slate-50 hover:text-gov-primary transition-colors"
-                  >
-                    <FolderOpen className="w-4 h-4 text-gov-primary" />
-                    <span>{isBn ? 'প্রয়োজনীয় দলিল চেকলিস্ট' : 'Document Checklist'}</span>
-                  </Link>
-                </div>
-              )}
-            </div>
-
-            {/* Section 3: Resources & Guides */}
+            {/* Section 2: Resources & Guides */}
             <div className="relative" ref={resourcesRef}>
               <button
                 type="button"
                 onClick={() => {
                   setResourcesDropdownOpen(!resourcesDropdownOpen);
                   setRecordsDropdownOpen(false);
-                  setDiligenceDropdownOpen(false);
                 }}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs xl:text-sm font-semibold transition-all cursor-pointer ${
                   isResourcesActive
@@ -613,40 +544,10 @@ export const Header: React.FC = () => {
               )}
             </div>
 
-            {/* Section 2: Verification Checklist & Plan */}
+            {/* Section 2: Resources & Guides */}
             <div className="space-y-1 pt-2 border-t border-slate-100">
               <span className="text-[10px] uppercase font-bold text-slate-400 px-3 tracking-wider block">
-                {isBn ? '২. যাচাই চেকলিস্ট ও পরিকল্পনা' : '2. Verification Checklist & Plan'}
-              </span>
-
-              <Link
-                to="/verification-plan"
-                className="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold text-slate-800 hover:bg-slate-100"
-              >
-                <div className="flex items-center gap-2.5">
-                  <CheckSquare className="w-4 h-4 text-gov-primary" />
-                  <span>{isBn ? 'যাচাই পরিকল্পনা ট্র্যাকার' : 'Verification Plan Tracker'}</span>
-                </div>
-                {pendingTasks > 0 && (
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">
-                    {isBn ? `${toBengaliNumerals(pendingTasks)} বাকি` : `${pendingTasks} left`}
-                  </span>
-                )}
-              </Link>
-
-              <Link
-                to="/documents"
-                className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold text-slate-800 hover:bg-slate-100"
-              >
-                <FolderOpen className="w-4 h-4 text-gov-primary" />
-                <span>{isBn ? 'আবশ্যকীয় দলিল চেকলিস্ট' : 'Document Checklist'}</span>
-              </Link>
-            </div>
-
-            {/* Section 3: Resources & Guides */}
-            <div className="space-y-1 pt-2 border-t border-slate-100">
-              <span className="text-[10px] uppercase font-bold text-slate-400 px-3 tracking-wider block">
-                {isBn ? '৩. সহায়িকা ও নির্দেশিকা' : '3. Guides & Information'}
+                {isBn ? '২. সহায়িকা ও নির্দেশিকা' : '2. Guides & Information'}
               </span>
 
               <Link
@@ -674,11 +575,11 @@ export const Header: React.FC = () => {
               </Link>
             </div>
 
-            {/* Section 4: Account Actions */}
+            {/* Section 3: Account Actions */}
             {isAuthenticated ? (
               <div className="space-y-1 pt-2 border-t border-slate-100">
                 <span className="text-[10px] uppercase font-bold text-slate-400 px-3 tracking-wider block">
-                  {isBn ? '৪. অ্যাকাউন্ট ও সেটিংস' : '4. Account & Settings'}
+                  {isBn ? '৩. অ্যাকাউন্ট ও সেটিংস' : '3. Account & Settings'}
                 </span>
                 <Link
                   to="/profile"

@@ -155,7 +155,7 @@ export const HomePage: React.FC = () => {
                 {isBn ? 'প্রতিবেদন গ্রহণ' : '3. Get Report'}
               </h3>
               <p className="text-[11px] text-slate-500 font-medium mt-0.5">
-                {isBn ? 'যাচাই রিপোর্ট ও চেকলিস্ট' : 'Verified report and checklist'}
+                {isBn ? 'যাচাই রিপোর্ট ও ফলাফল' : 'Verified report and verdict'}
               </p>
             </div>
           </div>

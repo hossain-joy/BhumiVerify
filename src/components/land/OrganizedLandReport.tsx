@@ -746,7 +746,7 @@ export const OrganizedLandReport: React.FC<OrganizedLandReportProps> = ({
             <div>
               <h3 className="text-base sm:text-lg font-black text-slate-900 flex items-center gap-2">
                 <CheckCircle2 className="w-5 h-5 text-gov-primary" />
-                <span>{isBn ? 'মাঠপর্যায়ে ক্রেতার করণীয় ও চেকলিস্ট' : 'Field Diligence & Action Plan'}</span>
+                <span>{isBn ? 'মাঠপর্যায়ে ক্রেতার করণীয় পদক্ষেপ' : 'Field Action Steps'}</span>
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
                 {isBn

@@ -31,17 +31,11 @@ export const DiligenceSubNav: React.FC<DiligenceSubNavProps> = ({
 
   // Compute counts
   const totalChecks = savedChecks?.length || 0;
-  const allTasks = (savedChecks || []).flatMap((c) => c?.verificationTasks || []);
-  const pendingTasks = allTasks.filter((t) => t && t.status !== 'completed').length;
 
   const currentActive =
     activeTab ||
     (location.pathname.startsWith('/compare')
       ? 'compare'
-      : location.pathname.startsWith('/verification-plan')
-      ? 'plan'
-      : location.pathname.startsWith('/documents')
-      ? 'documents'
       : 'checks');
 
   const tabs = [
@@ -59,20 +53,6 @@ export const DiligenceSubNav: React.FC<DiligenceSubNavProps> = ({
       label: isBn ? 'প্রতিবেদন তুলনা' : 'Compare Reports',
       icon: <GitCompare className="w-4 h-4" aria-hidden="true" />,
     },
-    {
-      id: 'plan',
-      to: '/verification-plan',
-      label: isBn ? 'যাচাই পরিকল্পনা' : 'Verification Plan',
-      icon: <CheckSquare className="w-4 h-4" aria-hidden="true" />,
-      badge: pendingTasks > 0 ? (isBn ? `${toBengaliNumerals(pendingTasks)} বাকি` : `${pendingTasks} pending`) : undefined,
-      badgeColor: 'bg-amber-100 text-amber-900',
-    },
-    {
-      id: 'documents',
-      to: '/documents',
-      label: isBn ? 'দলিল চেকলিস্ট ও গাইড' : 'Document Checklist',
-      icon: <FolderOpen className="w-4 h-4" aria-hidden="true" />,
-    },
   ];
 
   return (
@@ -82,7 +62,7 @@ export const DiligenceSubNav: React.FC<DiligenceSubNavProps> = ({
         <div>
           <div className="flex items-center gap-2">
             <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-50 text-gov-primary border border-emerald-200">
-              {isBn ? 'ডিউ ডিলিজেন্স ওয়ার্কস্পেস' : 'Due Diligence Workspace'}
+              {isBn ? 'সংরক্ষিত রেকর্ড ও তুলনা' : 'Saved Records & Comparison'}
             </span>
           </div>
           {title && (

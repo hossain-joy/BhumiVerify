@@ -140,32 +140,7 @@ export const CompareReportsPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Verification Tasks Status */}
-            <div className="space-y-2">
-              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                <CheckCircle className="w-3.5 h-3.5 text-gov-primary" />
-                <span>{isBn ? 'স্বাধীন অনুসন্ধান চেকলিস্ট' : 'Independent Verification Tasks'}</span>
-              </h3>
-              <div className="text-xs text-slate-600 space-y-1">
-                <p>
-                  {isBn
-                    ? `মোট ${toBengaliNumerals((checkA.verificationTasks || []).length)} কাজের মধ্যে ${toBengaliNumerals((checkA.verificationTasks || []).filter((t) => t && t.status === 'completed').length)}টি সম্পন্ন`
-                    : `${(checkA.verificationTasks || []).filter((t) => t && t.status === 'completed').length} of ${(checkA.verificationTasks || []).length} tasks marked done.`}
-                </p>
-                <div className="space-y-1.5 pt-1">
-                  {(checkA.verificationTasks || []).map((t) => (
-                    <div key={t.id} className="p-2 bg-slate-50 rounded border border-slate-200 text-[11px] flex items-center justify-between">
-                      <span className="truncate pr-2">{getTaskTitle(t, isBn)}</span>
-                      <span className={`px-1.5 py-0.2 rounded text-[9px] font-bold uppercase shrink-0 ${
-                        t.status === 'completed' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-700'
-                      }`}>
-                        {t.status === 'completed' ? (isBn ? 'সম্পন্ন' : 'COMPLETED') : (isBn ? 'বাকি' : 'PENDING')}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+
 
             {/* User Notes */}
             {checkA.userNotes && (
@@ -241,32 +216,7 @@ export const CompareReportsPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Verification Tasks Status */}
-            <div className="space-y-2">
-              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                <CheckCircle className="w-3.5 h-3.5 text-gov-primary" />
-                <span>{isBn ? 'স্বাধীন অনুসন্ধান চেকলিস্ট' : 'Independent Verification Tasks'}</span>
-              </h3>
-              <div className="text-xs text-slate-600 space-y-1">
-                <p>
-                  {isBn
-                    ? `মোট ${toBengaliNumerals((checkB.verificationTasks || []).length)} কাজের মধ্যে ${toBengaliNumerals((checkB.verificationTasks || []).filter((t) => t && t.status === 'completed').length)}টি সম্পন্ন`
-                    : `${(checkB.verificationTasks || []).filter((t) => t && t.status === 'completed').length} of ${(checkB.verificationTasks || []).length} tasks marked done.`}
-                </p>
-                <div className="space-y-1.5 pt-1">
-                  {(checkB.verificationTasks || []).map((t) => (
-                    <div key={t.id} className="p-2 bg-slate-50 rounded border border-slate-200 text-[11px] flex items-center justify-between">
-                      <span className="truncate pr-2">{getTaskTitle(t, isBn)}</span>
-                      <span className={`px-1.5 py-0.2 rounded text-[9px] font-bold uppercase shrink-0 ${
-                        t.status === 'completed' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-700'
-                      }`}>
-                        {t.status === 'completed' ? (isBn ? 'সম্পন্ন' : 'COMPLETED') : (isBn ? 'বাকি' : 'PENDING')}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+
 
             {/* User Notes */}
             {checkB.userNotes && (
