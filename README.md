@@ -1,134 +1,120 @@
-# 🌿 BhumiVerify (ভূমিভেরিফাই)
-### জমি ক্রয়ের পূর্ববর্তী রেকর্ড ও স্বত্ব যাচাইকরণ প্ল্যাটফর্ম
-**Pre-Registration Land Parcel Due Diligence & Title Verification System • Bangladesh**
+# 🌿 ভূমিভেরিফাই (BhumiVerify)
+> **জমি কেনার পূর্বে রেকর্ড, খতিয়ান ও মালিকানা যাচাইকরণের আধুনিক প্ল্যাটফর্ম**  
+> *Pre-Registration Land Due Diligence Platform for Bangladesh*
 
-[![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![TailwindCSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Tests](https://img.shields.io/badge/Tests-14%2F14%20Passed-10B981?logo=checkmarx&logoColor=white)](https://github.com/hossain-joy/BhumiVerify)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+<div align="center">
 
----
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Tests](https://img.shields.io/badge/Tests-14%2F14%20Passed-10B981?style=for-the-badge&logo=checkmarx&logoColor=white)](https://github.com/hossain-joy/BhumiVerify)
 
-## 🇧🇩 প্রকল্পের পরিচিতি ও উদ্দেশ্য (About the Project in Bengali)
-
-বাংলাদেশে জমি ক্রয় ও রেজিস্ট্রেশনের ক্ষেত্রে সাধারণ ক্রেতারা প্রায়শই নানা ধরনের বিভ্রান্তি, জটিলতা ও আর্থিক ঝুঁকির মুখে পড়েন। জমি কেনার পর অনেক ক্ষেত্রে দেখা যায় দলিলটি জাল, বায়া দলিলে নামের অমিল রয়েছে, খতিয়ান বা খাজনা হালনাগাদ নেই, কিংবা একই জমি একাধিক ক্রেতার কাছে প্রতারণামূলকভাবে বিক্রি করার অপচেষ্টা চলছে।
-
-**ভূমিভেরিফাই (BhumiVerify)** হলো একটি আধুনিক, নির্ভরযোগ্য ও নাগরিকবান্ধব প্রি-রেজিস্ট্রেশন ল্যান্ড ডিউ-ডিলিজেন্স প্ল্যাটফর্ম। জমি কেনার চূড়ান্ত সিদ্ধান্ত কিংবা বায়না করার পূর্বেই যাতে একজন ক্রেতা জমির দাগ, খতিয়ান, জেএল নম্বর ও মালিকানা শৃঙ্খল সঠিকভাবে মিলিয়ে দেখতে পারেন এবং মাঠে ও সাব-রেজিস্ট্রি অফিসে কী কী তথ্য যাচাই করতে হবে তার একটি পরিষ্কার চেকলিস্ট পান—সেই উদ্দেশ্যেই এই সিস্টেমটি তৈরি করা হয়েছে।
-
-### 🔍 ভূমিভেরিফাই এর মূল কার্যকারিতা ও সুবিধাসমূহ:
-1. **কম্পোজিট আইডেন্টিফায়ার সার্চ (নির্ভুল ভূমি শনাক্তকরণ):**  
-   শুধু একটি দাগ নম্বর দিয়ে নয়—বিভাগ, জেলা, উপজেলা, মৌজা, খতিয়ান এবং দাগ নম্বর একত্রে মিলিয়ে নির্ভুলভাবে রেকর্ড বিশ্লেষণ করা হয়।
-2. **মালিকানা ও ইভেন্ট ট্রেইল পর্যালোচনা:**  
-   বায়া দলিল, সিএস/এসএ/আরএস/বিএস খতিয়ান ও ই-নামজারির ধাপগুলোকে আলাদাভাবে প্রদর্শন করে যাতে ক্রেতা বুঝতে পারেন মালিকানার ধারাবাহিকতা সঠিক আছে কিনা।
-3. **ইন্টারেক্টিভ ভেরিফিকেশন চেকলিস্ট (টাস্ক ট্র্যাকার):**  
-   জমি কেনার আগে সহকারী কমিশনার (ভূমি) অফিস থেকে মূল পর্চা তোলা, সাব-রেজিস্ট্রি অফিসে ১২-২৫ বছরের তল্লাশি (Nil Search), এবং সরেজমিনে গিয়ে শারীরিক দখল যাচাইয়ের মতো গুরুত্বপূর্ণ কাজগুলো ট্র্যাক করার সুবিধা।
-4. **অ্যান্টি-স্ক্র্যাপিং মাসিক কোটা পলিসি:**  
-   ভূমি দালালি ও অনৈতিক বাল্ক ডেটা স্ক্র্যাপিং রোধে সাধারণ নাগরিকদের জন্য প্রতি মাসে সর্বোচ্চ ৫টি আবেদনের কঠোর নিরাপত্তা কোটা।
-5. **ভয়েস রিডার ও অডিও অ্যাসিস্ট্যান্ট:**  
-   সহজে বোধগম্য করার জন্য সম্পূর্ণ প্রতিবেদন ও বিশ্লেষণ বাংলায় শুনে বোঝার জন্য বিল্ট-ইন ভয়েস অ্যাসিস্ট্যান্ট।
-6. **দ্বিভাষিক ইন্টারফেস (বাংলা ও ইংরেজি):**  
-   সকল নাগরিকের সুবিধার্থে এক ক্লিকেই সম্পূর্ণ ইন্টারফেস ও প্রতিবেদন বাংলা বা ইংরেজিতে পরিবর্তনের সুবিধা।
+</div>
 
 ---
 
-## 🇬🇧 Project Overview (English)
+## 📌 এক নজরে প্রকল্প (Overview)
 
-**BhumiVerify** is a modern civic-tech due-diligence web application tailored for the land administration ecosystem of Bangladesh. It empowers prospective buyers to systematically verify property records, identify discrepancies (such as disjointed chains of title, pending mutation petitions, or survey mismatches), and follow an actionable due-diligence workflow *before* transferring deposits or registering deeds.
-
-### Core Value Pillars
-- **Zero Ambiguity Matching:** Eliminates single-dag guessing by enforcing composite matching across Division, District, Upazila, Mouza, JL, Khatian, and Dag.
-- **Categorical Integrity:** Distinctly separates registered deeds, mutation petitions, and mutation decree approvals to prevent misleading ownership assumptions.
-- **Actionable Buyer Checklists:** Converts raw parcel queries into structured fieldwork verification tasks.
-- **Anti-Fraud Quota Guard:** Limits verification requests to 5 applications per calendar month to protect public records from speculative scraping.
+**ভূমিভেরিফাই (BhumiVerify)** হলো জমি কেনার আগে সাধারণ ক্রেতাদের জন্য একটি আধুনিক প্রি-রেজিস্ট্রেশন যাচাইকরণ প্ল্যাটফর্ম। জমি কেনার পর যাতে কোনো আইনি বা আর্থিক জটিলতায় পড়তে না হয়, সেজন্য বায়না করার আগেই জমির যাবতীয় রেকর্ড ও মাঠপর্যায়ের যাচাই চেকলিস্ট তৈরি করতে এই সিস্টেম সাহায্য করে।
 
 ---
 
-## ⚙️ Key Technical Features & Capabilities
+## 💡 কেন এই প্ল্যাটফর্ম? (Why BhumiVerify?)
 
-| Feature | Description |
+বাংলাদেশে জমি ক্রয়ে ক্রেতারা যেসব প্রধান সমস্যার মুখোমুখি হন:
+- **জাল বা ভুয়া দলিল:** পূর্বের মালিকানার ধারাবাহিকতা (Chain of Title) স্পষ্ট না থাকা।
+- **নামজারি গোপন রাখা:** জমি বিক্রির আবেদন হলেও খতিয়ানে এখনো পূর্বের মালিকের নাম থাকা।
+- **একই জমি একাধিক বিক্রি:** সাব-রেজিস্ট্রি অফিসে সঠিক তল্লাশি না করে বায়না দেওয়া।
+- **দালালি ও অসত্য তথ্য:** মাঠপর্যায়ের শারীরিক দখল ও সীমানা নিয়ে বিরোধ।
+
+ভূমিভেরিফাই এসব ঝুঁকি কমাতে ক্রেতাকে একটি নির্ভরযোগ্য ও কাঠামোগত যাচাইকরণ পদ্ধতি প্রদান করে।
+
+---
+
+## ✨ মূল ফিচারসমূহ (Core Features)
+
+| ফিচার | বিবরণ |
 | :--- | :--- |
-| **Complete CRUD Subsystems** | Full lifecycle support (Create, Read, Update, Delete) for Saved Land Checks, Verification Tasks, Notifications, and Monthly Quotas. |
-| **Composite Rule Engine** | Deterministic matching logic evaluating legal conflicts, JL consistency, and ownership chains. |
-| **PII & Data Protection** | Automatic client-side masking for National ID (NID) and Bangladeshi mobile numbers. |
-| **Audio Voice Reader** | Web Speech API integration for instant Bengali/English screen reading. |
-| **Print & PDF Reports** | Professional formatted reports ready for legal consultation with property lawyers. |
-| **Responsive Modern UI** | Clean card-based visual hierarchy, accessible contrast, and zero clutter. |
+| **🔍 নির্ভুল কম্পোজিট সার্চ** | বিভাগ, জেলা, উপজেলা, মৌজা, খতিয়ান ও দাগ—সবগুলো মিলিয়ে সঠিক রেকর্ড যাচাই। |
+| **📜 মালিকানা টাইমলাইন** | বায়া দলিল, আরএস/বিএস খতিয়ান ও নামজারি আবেদনের ধারাবাহিক ইতিহাস প্রদর্শন। |
+| **📋 মাঠপর্যায়ের চেকলিস্ট** | এসি ল্যান্ড অফিস, সাব-রেজিস্ট্রিতে নিল সার্চ এবং শারীরিক দখল যাচাইয়ের টাস্ক ট্র্যাকার। |
+| **🛡️ অ্যান্টি-স্ক্র্যাপিং কোটা** | অসদুপায় ও তথ্য চুরি রোধে প্রতি মাসে সর্বোচ্চ ৫টি আবেদনের স্বয়ংক্রিয় সীমা। |
+| **🔊 বাংলা ভয়েস রিডার** | পুরো রিপোর্ট ও ফলাফল বাংলায় শুনে বোঝার জন্য বিল্ট-ইন অডিও সুবিধা। |
+| **🌐 দ্বিভাষিক ইন্টারফেস** | এক ক্লিকেই সম্পূর্ণ সিস্টেম বাংলা বা ইংরেজিতে ব্যবহারের সুযোগ। |
+| **📄 প্রিন্ট ও পিডিএফ রিপোর্ট** | আইনজীবীর সাথে পরামর্শের উপযোগী পরিচ্ছন্ন প্রিন্ট ও পিডিএফ ডাউনলোড। |
 
 ---
 
-## 📂 System Architecture & Routes
+## 🔄 কীভাবে কাজ করে? (Workflow)
 
 ```
-src/
-├── components/          # Reusable UI components & dialogs
-│   ├── common/          # Header, Footer, Audio Reader, Command Palette
-│   └── land/            # Monthly Quota Card, Digital Banking Modal, Task Checklist
-├── context/             # State Providers (Auth, Language, Notifications, Saved Checks)
-├── data/                # Seed parcels, Bangladesh administrative geography, notifications
-├── lib/                 # Storage adapter, localization dictionaries, speech synthesis
-├── pages/               # Main route views
-│   ├── app/             # Authenticated workspace (Dashboard, Checks, Tasks, Compare)
-│   ├── CheckLandPage    # 6-tier composite parcel lookup form
-│   └── ParcelResults    # Comprehensive due diligence findings report
-└── utils/               # Quota enforcement, data formatting, security helpers
+[১. তথ্য প্রদান]           [২. সিস্টেম বিশ্লেষণ]        [৩. ফলাফল ও টাইমলাইন]        [৪. মাঠপর্যায়ে যাচাই]
+বিভাগ, মৌজা,       ➔     ৬ স্তরের কম্পোজিট    ➔     মালিকানার ইতিহাস     ➔     প্রিন্ট রিপোর্ট নিয়ে
+খতিয়ান ও দাগ নম্বর        আইডেন্টিফায়িং ম্যাচ            ও ঝুঁকির পূর্বাভাস         অফিস ও জমি পরিদর্শন
 ```
-
-### Route Map
-- **Public:** `/` (Home), `/check-land` (Search), `/results` (Report), `/how-it-works` (Guide), `/about`, `/login`, `/register`
-- **Authenticated:** `/dashboard` (Workspace), `/checks` (Saved Checks), `/checks/:id` (Details), `/compare` (Side-by-side comparison), `/verification-plan` (Tasks), `/notifications`, `/profile`
 
 ---
 
-## 🛠️ Quick Start & Developer Guide
+## 💻 প্রযুক্তিগত কাঠামো (Tech Stack)
 
-### Prerequisites
-- [Node.js](https://nodejs.org/) (v18.0.0 or later)
-- `npm` (v9.0.0 or later)
+- **Frontend:** React 18, TypeScript, Tailwind CSS
+- **Build Tool:** Vite 6
+- **Icons:** Lucide React
+- **Storage:** Local Storage Adapter (রিবুট প্রতিরোধী)
+- **Voice Engine:** Web Speech Synthesis API (বাংলা ও ইংরেজি)
+- **Testing:** Node.js Assert Suite (Security + CRUD: 14/14 Passed)
 
-### Installation
+---
+
+## 🚀 লোকাল সেটআপ ও রান (Setup Guide)
+
+### ১. ক্লোন ও ইনস্টল
 ```bash
-# Clone the repository
 git clone https://github.com/hossain-joy/BhumiVerify.git
-
-# Navigate into project directory
 cd BhumiVerify
-
-# Install dependencies
 npm install
 ```
 
-### Running Locally
+### ২. লোকাল সার্ভার চালু
 ```bash
 npm run dev
 ```
-Open [http://localhost:5173/](http://localhost:5173/) in your web browser.
+ব্রাউজারে ওপেন করুন: `http://localhost:5173/`
 
-### Automated Testing
-Run the complete automated test suite (Security, Deterministic Assessment, and Full CRUD):
+### ৩. স্বয়ংক্রিয় টেস্ট রান
 ```bash
 npm test
 ```
-*Executes both `verify-all-functions.js` (9/9 passed) and `verify-all-crud.js` (5/5 passed).*
+*(নিরাপত্তা, ইনপুট ভ্যালিডেশন, কোটা এবং সম্পূর্ণ CRUD অপারেশনের টেস্ট রান হয়)*
 
-### Production Build
+### ৪. প্রডাকশন বিল্ড
 ```bash
 npm run build
 ```
-Typechecks via TypeScript and produces optimized assets in `/dist`.
 
 ---
 
-## ⚖️ আইনি ও প্রযুক্তিগত সতর্কবার্তা (Statutory Disclaimer)
+## 📁 ফোল্ডার স্ট্রাকচার (Directory Structure)
 
-> **বাংলা:**  
-> ভূমিভেরিফাই (BhumiVerify) একটি স্বাধীন প্রযুক্তিগত ও শিক্ষামূলক প্ল্যাটফর্ম। এটি বাংলাদেশ সরকারের কোনো অফিশিয়াল ডাটাবেজ কিংবা সাব-রেজিস্ট্রি অফিসের সাথে সরাসরি যুক্ত নয়। এই প্ল্যাটফর্মের কোনো ফলাফলকে আইনি দলিল কিংবা চূড়ান্ত মালিকানার সনদ হিসেবে বিবেচনা করা যাবে না। জমি কেনার পূর্বে স্থানীয় সহকারী কমিশনার (ভূমি) অফিস থেকে মূল পর্চা যাচাই, সাব-রেজিস্ট্রি অফিসে নিল সার্চ (তল্লাশি) করা এবং অভিজ্ঞ আইনজীবীর পরামর্শ নেওয়া আবশ্যক।
->
-> **English:**  
-> BhumiVerify is an independent digital prototype designed for educational and due-diligence organization purposes. It does not provide legal title insurance or replace statutory government processes. Physical search at the Sub-Registry Office, obtaining certified copies of porchas from the AC (Land) office, and consulting an accredited property advocate remain legally mandatory before purchasing real property in Bangladesh.
+```
+src/
+├── components/       # রিইউজেবল বাটন, হেডার, ফুটার ও মডাল
+├── context/          # স্টেট ম্যানেজমেন্ট (Auth, Language, Checks, Notifications)
+├── data/             # ডেমো পার্সেল ও বাংলাদেশের প্রশাসনিক ভৌগোলিক তথ্য
+├── lib/              # স্টোরেজ অ্যাডাপ্টার ও অনুবাদ ডিকশনারি
+├── pages/            # অ্যাপ ও পাবলিক পেজসমূহ (Dashboard, CheckLand, Results)
+└── utils/            # কোটা সার্ভিস, নিরাপত্তা ও ডেটা প্রসেসিং হেল্পার
+```
 
 ---
 
-## 📄 License
-This project is licensed under the [MIT License](LICENSE).
+## ⚠️ গুরুত্বপূর্ণ সতর্কতা (Disclaimer)
+
+> **ভূমিভেরিফাই একটি স্বাধীন ডিজিটাল শিক্ষামূলক প্ল্যাটফর্ম।**  
+> এটি বাংলাদেশ সরকারের কোনো অফিশিয়াল ডাটাবেজ কিংবা সাব-রেজিস্ট্রি অফিসের সাথে সরাসরি যুক্ত নয়। এই প্ল্যাটফর্মের কোনো ফলাফলকে আইনি দলিল হিসেবে গণ্য করা যাবে না। জমি কেনার পূর্বে স্থানীয় সহকারী কমিশনার (ভূমি) অফিস থেকে মূল পর্চা যাচাই, সাব-রেজিস্ট্রি অফিসে নিল সার্চ (তল্লাশি) করা এবং অভিজ্ঞ আইনজীবীর পরামর্শ নেওয়া আইনত বাধ্যতামূলক।
+
+---
+
+## 📄 লাইসেন্স (License)
+প্রকল্পটি [MIT License](LICENSE) এর আওতাভুক্ত।
