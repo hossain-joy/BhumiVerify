@@ -10,7 +10,6 @@ import { assessParcel } from '../../utils/assessParcel';
 import { sortTimelineEvents } from '../../utils/sortEvents';
 import { useLanguage } from '../../context/LanguageContext';
 import { formatStatusLabel, toBengaliNumerals } from '../../utils/formatStatus';
-import { getTaskTitle, getTaskDescription, getTaskNotes } from '../../utils/taskTranslations';
 import {
   FileText,
   Printer,
@@ -25,7 +24,6 @@ import {
   Layers,
   MapPin,
   Save,
-  CheckSquare,
   ShieldAlert,
   Info,
   GitCompare,
@@ -40,7 +38,6 @@ export const CheckReportPage: React.FC = () => {
     savedChecks,
     updateCheck,
     deleteCheck,
-    toggleTaskStatus,
     updateNotes,
     toggleCompareId,
     compareIds,
@@ -314,86 +311,6 @@ export const CheckReportPage: React.FC = () => {
             sortedEvents={sortedEvents}
           />
         )}
-
-        {/* Section: Interactive Verification Plan Tasks */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-              <CheckSquare className="w-4 h-4 text-gov-primary" />
-              <span>{isBn ? 'এই জমির জন্য স্বাধীন যাচাইকরণ চেকলিস্ট' : 'Independent Verification Tasks for this Parcel'}</span>
-            </h2>
-            <span className="text-xs text-slate-400">
-              {isBn ? 'স্ট্যাটাস পরিবর্তন করতে চেকবক্সে ক্লিক করুন' : 'Click task checkbox to update status'}
-            </span>
-          </div>
-
-          <div className="space-y-2">
-            {(check.verificationTasks || []).map((task) => {
-              const isDone = task.status === 'completed';
-              const isInProgress = task.status === 'in_progress';
-              const taskTitle = getTaskTitle(task, isBn);
-              const taskDesc = getTaskDescription(task, isBn);
-              const taskNotes = getTaskNotes(task, isBn);
-
-              return (
-                <div
-                  key={task.id}
-                  onClick={() => toggleTaskStatus(check.id, task.id)}
-                  className={`p-3.5 rounded-xl border flex items-start gap-3 cursor-pointer transition-colors ${
-                    isDone
-                      ? 'bg-emerald-50/60 border-emerald-200'
-                      : isInProgress
-                      ? 'bg-amber-50/50 border-amber-200'
-                      : 'bg-white border-slate-200 hover:border-slate-300'
-                  }`}
-                >
-                  <div className="pt-0.5">
-                    <input
-                      type="checkbox"
-                      checked={isDone}
-                      onChange={() => {}} // Handled by parent click
-                      className="w-4 h-4 rounded border-slate-300 text-gov-primary focus:ring-gov-primary cursor-pointer"
-                    />
-                  </div>
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center justify-between gap-2">
-                      <h3
-                        className={`text-xs font-bold ${
-                          isDone ? 'line-through text-slate-500' : 'text-slate-900'
-                        }`}
-                      >
-                        {taskTitle}
-                      </h3>
-                      <span
-                        className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          isDone
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : isInProgress
-                            ? 'bg-amber-100 text-amber-800'
-                            : 'bg-slate-100 text-slate-600'
-                        }`}
-                      >
-                        {isDone
-                          ? (isBn ? 'সম্পন্ন' : 'Completed')
-                          : isInProgress
-                          ? (isBn ? 'চলমান' : 'In Progress')
-                          : (isBn ? 'শুরু হয়নি' : 'Not Started')}
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-600 leading-relaxed">
-                      {taskDesc}
-                    </p>
-                    {taskNotes && (
-                      <p className="text-[11px] text-slate-500 italic pt-0.5">
-                        {isBn ? 'নোট:' : 'Note:'} {taskNotes}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
 
         {/* Section: User Notes */}
         <div className="space-y-3 print:hidden">
